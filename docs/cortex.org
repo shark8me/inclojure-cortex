@@ -1,0 +1,31 @@
+
+#+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
+#+TITLE:  Introduction to Cortex
+#+AUTHOR: Kiran Karkera 
+#+EMAIL: kiran.karkera@gmail.com
+#+GITHUB: shark8me
+#+TWITTER: kaal_daari
+#+REVEAL_THEME: night
+#+STARTUP: overview
+#+STARTUP: content
+#+STARTUP: showall
+#+STARTUP: showeverything
+#+OPTIONS: num:nil
+#+OPTIONS: toc:0
+#+OPTIONS: org-reveal-title-slide:%t %a %e
+#+REVEAL_EXTRA_CSS: ./presentation.css
+#+REVEAL_EXTRA_CSS: ./night.css
+# #+REVEAL_MARGIN: 0.2
+#+REVEAL_MAX_SCALE: 5 
+# * An introduction to Cortex
+
+* Deep learning in Clojure with Cortex 
+
+* Why use Clojure for Machine Learning?
+
+- Perception that languages like R/Python are ideal for machine learning. 
+- show charts 
+* Who is this for?
+
+
+- 

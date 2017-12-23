@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Introduction to Cortex</title>
+<meta name="author" content="(Kiran Karkera)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/reveal.js/3.0.0/css/reveal.css"/>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/reveal.js/3.0.0/css/theme/night.css" id="theme"/>
+
+<link rel="stylesheet" href="./presentation.css"/>
+
+<link rel="stylesheet" href="./night.css"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'http://cdn.jsdelivr.net/reveal.js/3.0.0/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Introduction to Cortex</h1><h2 class="author">Kiran Karkera</h2><p class="date">Created: 2017-07-28 Fri 15:22</p>
+</section>
+
+<section>
+<section id="slide-orgbdb5716">
+<h2 id="orgbdb5716">Neural Networks in Clojure</h2>
+<p>
+A machine learning task's pipeline comprises of the following tasks 
+</p>
+
+<ul>
+<li>Data Extraction (from databases/web crawls/other sources)</li>
+<li>Data Preprocessing and cleaning</li>
+<li>Model training and evaluation</li>
+<li>Using trained model for inference</li>
+
+</ul>
+
+</section>
+<section id="slide-orgfe23076">
+<h4 id="orgfe23076"></h4>
+<ul>
+<li>Clojure (+Java) libraries are quite capable in all parts of the pipeline</li>
+<li>Excellent support for (non-neural network) machine learning toolkits</li>
+<li>Using a NN toolkit in a different language (such as Python) requires clunky cross-language interactions.</li>
+<li>Cortex fills an  important need 
+<ul>
+<li>Pure Clojure NN toolkit</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-orgf9eba74">
+<h4 id="orgf9eba74">Exceptions</h4>
+<ul>
+<li>Pretrained networks available for the task 
+<ul>
+<li>Relevant when training network from scratch can take weeks</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-orgfd12f62">
+<h4 id="orgfd12f62">Alternatives:</h4>
+<ul>
+<li>Data collection, preparation, cleaning in Clojure</li>
+<li>Train in a different toolset, inference in Clojure/Java
+<ul>
+<li>For example, train in Tensorflow / DeepLearning4J</li>
+<li>Use trained network for inference from Java or Clojure</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org3db3019">
+<h2 id="org3db3019">Machine Learning Digression</h2>
+<div class="outline-text-2" id="text-org3db3019">
+</div></section>
+<section id="slide-orged18880">
+<h4 id="orged18880">Supervised Machine Learning:</h4>
+<blockquote nil>
+<p>
+When you are a kid and you see different types of animals, your father tells you that this particular animal is a dog. After doing this a few times, 
+you see a new type of dog that you never saw before - you identify it as a dog and not as a cat or a monkey or a potato.
+</p>
+</blockquote>
+
+
+<div class="figure">
+<p><img src="./images/woof_meow.jpg" alt="woof_meow.jpg" />
+</p>
+</div>
+
+
+<p>
+<a href="https://www.quora.com/What-is-the-difference-between-supervised-and-unsupervised-learning-algorithms/answer/Shehroz-Khan-2?srid=o0Wh">Quora post reference</a>
+</p>
+
+</section>
+<section id="slide-org06d4e2c">
+<h3 id="org06d4e2c">Applications of Supervised Learning</h3>
+</section>
+<section >
+<ul>
+<li>One of the early successes for supervised machine learning was reading <a href="http://yann.lecun.com/exdb/publis/pdf/matan-92.pdf">the zip code</a> in postal mail.</li>
+<li>Dataset called MNIST is a benchmark dataset in machine learning</li>
+
+</ul>
+
+
+<div class="figure">
+<p><img src="./images/MNIST.png" alt="MNIST.png" /> 
+</p>
+<p><span class="figure-number">Figure 2: </span>Handwritten digits</p>
+</div>
+
+</section>
+<section >
+<ul>
+<li>A Kaggle competition to distinguish between cats and dogs was conducted in 2014.</li>
+<li>Training on 25,000 images of dogs and cats, 
+<ul>
+<li>the leading teams got to 98.9% <a href="https://www.kaggle.com/c/dogs-vs-cats/leaderboard">accuracy</a>.</li>
+
+</ul></li>
+<li><a href="#/slide-orgfe23076">Here's</a> the classifier implemented in Cortex.</li>
+
+</ul>
+
+</section>
+<section >
+
+<div class="figure">
+<p><img src="./images/cat_or_dog.jpg" alt="cat_or_dog.jpg" height="50%," width="50%" />
+</p>
+</div>
+
+
+</section>
+<section id="slide-org9fac541">
+<h4 id="org9fac541"></h4>
+<ul>
+<li>Classifying aspects of human faces such as gender, age, type of expression and skin colour</li>
+
+</ul>
+
+
+<div class="figure">
+<p><img src="./images/face_gender.png" alt="face_gender.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org0d38d20">
+<h2 id="org0d38d20">Why are Neural Networks popular?</h2>
+<ul>
+<li>NNs offer state of the art performance in several classification tasks. 
+<ul>
+<li>0.21% <a href="http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html#4d4e495354">error rate</a> on MNIST, close to or better than human performance</li>
+
+</ul></li>
+<li>Composable abstractions 
+<ul>
+<li>different layers can be combined in a <a href="http://colah.github.io/posts/2014-07-Conv-Nets-Modular/">modular fashion</a> and computations are straightforward</li>
+
+</ul></li>
+<li>Distributed learning is feasible</li>
+<li>GPUs enabled several breakthroughs</li>
+
+</ul>
+
+</section>
+<section id="slide-org1d2cbdc">
+<h4 id="org1d2cbdc">Flexibility</h4>
+<ul>
+<li>NNs can accommodate several outputs:
+<ul>
+<li>Single target classification (e.g. Spam classification)</li>
+<li>Multi target classification (e.g multiple objects in an image)</li>
+<li>Sequences (e.g. sentence generation)</li>
+
+</ul></li>
+
+<li>Composability extends to different domains 
+<ul>
+<li>(e.g the <a href="https://github.com/tensorflow/models/tree/master/im2txt">im2txt</a> model, which takes an image as input and returns a text description as output).</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section >
+
+<div class="figure">
+<p><img src="./images/example_captions.jpg" alt="example_captions.jpg" height="70%," width="70%" />
+</p>
+</div>
+
+</section>
+<section id="slide-org1d977df">
+<h4 id="org1d977df">Architecture of Feedforward Networks</h4>
+<ul>
+<li>A feedforward network is one where units do not form a cycle.</li>
+<li>Networks contain 1 input layer, 1 output layer and one or more hidden layers</li>
+<li>According to the <a href="https://en.wikipedia.org/wiki/Universal_approximation_theorem">Universal approximation theorem</a> just one hidden layer is enough
+<ul>
+<li>But may not be optimal for learning</li>
+
+</ul></li>
+
+</ul>
+
+
+<div class="figure">
+<p><img src="./images/feedforward.jpg" alt="feedforward.jpg" />
+</p>
+</div>
+
+</section>
+<section id="slide-org3745bdf">
+<h4 id="org3745bdf">Weights in a network</h4>
+<ul>
+<li>Each of the connections between layers has a weight attached to it.</li>
+
+</ul>
+
+
+
+<div class="figure">
+<p><img src="./images/weights.png" alt="weights.png" />
+</p>
+</div>
+
+</section>
+<section id="slide-org861511f">
+<h4 id="org861511f">Transfer function</h4>
+<ul>
+<li>Activation function combines the inputs</li>
+<li>Transfer function modifies the scalar output (e.g. squashes it)</li>
+<li>The terms activation/transfer function used interchangeably.</li>
+
+</ul>
+
+
+<div class="figure">
+<p><img src="./images/neuron_model.jpeg" alt="neuron_model.jpeg" />
+</p>
+</div>
+
+<p>
+<a href="http://cs231n.github.io/neural-networks-1/">link</a>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org91e5722">
+<h2 id="org91e5722">Cortex</h2>
+<p>
+The <a href="https://github.com/thinktopic/cortex">Cortex library</a> is a relatively recent library that implements Neural Networks in pure Clojure.
+</p>
+
+<p>
+<b>Features</b>:
+</p>
+
+<ol>
+<li>Multiple backends (GPU and CPU)</li>
+<li>Supports popular network types (Feedforward/CNNs) 
+<ul>
+<li>Other types of cells (e.g. GRU/LSTM) can be implemented</li>
+
+</ul></li>
+<li>Model serialization supported in multiple formats (edn/nippy)</li>
+<li>Fairly active (~900 commits/11 releases/24 contributors)</li>
+
+</ol>
+
+
+</section>
+<section id="slide-org141547a">
+<h4 id="org141547a">Steps to create, train and do inference with Cortex</h4>
+<ul>
+<li>Define a network with input, output and hidden layers</li>
+<li>Create train / test datasets</li>
+<li>Create a listener if required</li>
+<li>Train the classifier using the <i>perform-experiment</i> or <i>train-n</i> API
+<ul>
+<li>While training, evaluate performance of key metrics</li>
+
+</ul></li>
+<li>Run inference on test instances</li>
+
+</ul>
+
+</section>
+<section id="slide-orgfd7e741">
+<h4 id="orgfd7e741">Network Definition</h4>
+<ul>
+<li>A Cortex network is vector consisting of layer definitions</li>
+<li>Arguments depend on the type of layers</li>
+<li>First layer is the input, last is output, rest are hidden layers</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">network</span> 
+  <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">2</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:weights</span> <span style="color: #67b11d;">[</span><span style="color: #b1951d;">[</span><span style="color: #a45bad;">-0.2</span> <span style="color: #a45bad;">0.2</span><span style="color: #b1951d;">]</span><span style="color: #67b11d;">]</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>logistic <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:labels</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+</section>
+<section id="slide-org633bdbd">
+<h4 id="org633bdbd">Layer Examples</h4>
+<ul>
+<li>Input layer takes the shape of the x, y and z axes of a cube</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">Example Input layer for a 28 x 28 pixel monochrome image </span>
+
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">28</span> <span style="color: #a45bad;">28</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">Input layer for 2 scalar inputs, rest of the dimensions are set to 1 </span>
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">2</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+</section>
+<section id="slide-orgf2302ae">
+<h4 id="orgf2302ae">Hidden Layers</h4>
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">- Linear layer with 1 hidden unit  </span>
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear <span style="color: #a45bad;">1</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">dropout  layer</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">argument is the probability of surviving, value of 1 means no dropout</span>
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>dropout <span style="color: #a45bad;">0.75</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">batch normalization</span>
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>batch-normalization<span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+</section>
+<section id="slide-org4be511d">
+<h4 id="org4be511d">Softmax Output Layer</h4>
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">pre-final linear layer with 1 output</span>
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear <span style="color: #a45bad;">1</span><span style="color: #4f97d7;">)</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">output is a bernoulli distribution (probability of 1 or 0)</span>
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>logistic <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:labels</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">pre-final linear layer with 10 outputs</span>
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear <span style="color: #a45bad;">10</span><span style="color: #4f97d7;">)</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">output the probabilities of 10 outcomes </span>
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>softmax <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:labels</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+
+</section>
+<section id="slide-org31d4ae4">
+<h4 id="org31d4ae4">Creating train (and test) datasets</h4>
+<ul>
+<li>Dataset is a vector of training instances</li>
+<li>Each training instance is a map with 2 keys</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">2 training instances</span>
+<span style="color: #4f97d7;">[</span><span style="color: #bc6ec5;">{</span><span style="color: #a45bad;">:data</span> <span style="color: #2d9574;">[</span><span style="color: #a45bad;">0.9</span> <span style="color: #a45bad;">0.1</span><span style="color: #2d9574;">]</span> <span style="color: #a45bad;">:labels</span> <span style="color: #2d9574;">[</span><span style="color: #a45bad;">1.0</span><span style="color: #2d9574;">]</span><span style="color: #bc6ec5;">}</span>
+ <span style="color: #bc6ec5;">{</span><span style="color: #a45bad;">:data</span> <span style="color: #2d9574;">[</span><span style="color: #a45bad;">0.1</span> <span style="color: #a45bad;">0.1</span><span style="color: #2d9574;">]</span> <span style="color: #a45bad;">:labels</span> <span style="color: #2d9574;">[</span><span style="color: #a45bad;">0.0</span><span style="color: #2d9574;">]</span><span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">]</span>
+</pre>
+</div>
+
+
+</section>
+<section id="slide-orge69df8a">
+<h4 id="orge69df8a">Create a listener (if required)</h4>
+<p>
+Why create a listener? 
+</p>
+<ul>
+<li>To observe progress of training</li>
+<li>To stop training when performance is optimal</li>
+<li>To checkpoint/save network state at 
+<ul>
+<li>Fixed number of iterations (e.g 1 million, 2 million )</li>
+<li>Accuracy milestones (e.g. 80%, 85%)</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section >
+
+<ul class="org-ul"><li><a id="org26000d0"></a>Default listener<br /><ul>
+<li>Live updates on a local webserver</li>
+<li>Creates png images from training instances to observe training progress</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #a45bad;">:require</span> <span style="color: #bc6ec5;">[</span><span style="color: #ce537a; font-weight: bold;">cortex.experiment.classification</span> <span style="color: #a45bad;">:as</span> cls<span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">defn</span> <span style="color: #bc6ec5; font-weight: bold;">create-listener</span>
+  <span style="color: #2aa1ae;">"initializes any prerequisites for listening functions, and returns a listener</span>
+<span style="color: #2aa1ae;">  function. Arguments:</span>
+<span style="color: #2aa1ae;">  - observation-&gt;image-fn: A function that can take observation data and return png data for web display.</span>
+<span style="color: #2aa1ae;">    - class-mapping: A map with two entries</span>
+<span style="color: #2aa1ae;">      - `</span><span style="color: #a45bad;">:class-name-&gt;index</span><span style="color: #2aa1ae;">` a map from class name strings to softmax indexes</span>
+<span style="color: #2aa1ae;">      - `</span><span style="color: #a45bad;">:index-&gt;class-name</span><span style="color: #2aa1ae;">` a map from softmax indexes to class name strings</span>
+<span style="color: #2aa1ae;">   Trains the net indefinitely on the provided training data, evaluating against the test data, </span>
+<span style="color: #2aa1ae;">  and gives live updates on a local webserver hosted at http://localhost:8091."</span>  
+  <span style="color: #bc6ec5;">[</span>observation-&gt;image-fn class-mapping argmap<span style="color: #bc6ec5;">]</span>
+  <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">... </span>
+  <span style="color: #4f97d7;">)</span>
+
+ <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">example for MNIST</span>
+ <span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">cls</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>create-listener mnist-observation-&gt;image class-mapping args<span style="color: #4f97d7;">)</span>  
+</pre>
+</div>
+
+</section>
+<section >
+
+<div class="figure">
+<p><img src="./images/confmat.png" alt="confmat.png" />
+</p>
+</div>
+
+</section>
+<section >
+
+<div class="figure">
+<p><img src="./images/mnistdataset.png" alt="mnistdataset.png" />
+</p>
+</div></li></ul>
+
+</section>
+<section id="slide-org79f8c1f">
+<h4 id="org79f8c1f">Digression: Tensorboard</h4>
+<ul>
+<li><a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard">Tensorboard</a> is a suite of visualization tools to understand, debug and optimize Tensorflow</li>
+<li>Users can view plots of   
+<ul>
+<li>Scalar metrics such as Accuracy/ error / F1 score</li>
+<li>Tensor metrics such as weights, biases</li>
+<li>Histograms of metric's progressions over time.</li>
+
+</ul></li>
+<li>Can help debug training problems such as the vanishing gradient <a href="https://www.quora.com/What-is-the-vanishing-gradient-problem">problem</a></li>
+
+</ul>
+
+</section>
+<section >
+
+
+<div class="figure">
+<p><img src="./images/tb-stats.png" alt="tb-stats.png" /> 
+</p>
+</div>
+
+
+</section>
+<section id="slide-org82ca605">
+<h4 id="org82ca605">Tensorboard listener</h4>
+<ul>
+<li>Listen for Cortex events and convert it to Tensorboard compatible events</li>
+<li>Out of the box support for 
+<ul>
+<li>train loss and cross validation loss</li>
+<li>weight and bias histograms</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-orgaa9c4c3">
+<h4 id="orgaa9c4c3">Usage:</h4>
+<ul>
+<li>Pass a map with the file name to log events to 
+<ul>
+<li>(Note: it need to have "tfevents.*" as part of the name)</li>
+
+</ul></li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #a45bad;">:require</span> <span style="color: #bc6ec5;">[</span><span style="color: #ce537a; font-weight: bold;">cortex.experiment.classification</span> <span style="color: #a45bad;">:as</span> cls<span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
+   <span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">cls</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>create-tensorboard-listener
+                   <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">file name should include "tfevents"</span>
+                   <span style="color: #bc6ec5;">{</span><span style="color: #a45bad;">:file-path</span> <span style="color: #2d9574;">"/tmp/tflogs/linear/tfevents.linear.out"</span><span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">launch tensorboard with log path</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">tensorboard --logdir=/tmp/tflogs</span>
+</pre>
+</div>
+
+</section>
+<section id="slide-org5fc2c3d">
+<h4 id="org5fc2c3d">Train the model</h4>
+<ul>
+<li>Using the cortex.experiment.classification/perform-experiment API</li>
+<li>Specify additional options such as number of <a href="https://stackoverflow.com/a/31842945/845843">epochs </a> 
+<ul>
+<li>If :epoch-count not provided, it trains forever</li>
+
+</ul></li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #a45bad;">:require</span> <span style="color: #bc6ec5;">[</span><span style="color: #ce537a; font-weight: bold;">cortex.experiment.classification</span> <span style="color: #a45bad;">:as</span> cls<span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
+    <span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">cls</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>perform-experiment description train-ds test-ds
+                            listener
+                            <span style="color: #bc6ec5;">{</span><span style="color: #a45bad;">:epoch-count</span> <span style="color: #a45bad;">10</span><span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+</section>
+<section id="slide-orgf462682">
+<h4 id="orgf462682">Perform inference</h4>
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #a45bad;">:require</span> <span style="color: #bc6ec5;">[</span><span style="color: #ce537a; font-weight: bold;">cortex.nn.execute</span> <span style="color: #a45bad;">:as</span> execute<span style="color: #bc6ec5;">]</span>
+          <span style="color: #bc6ec5;">[</span><span style="color: #ce537a; font-weight: bold;">cortex.experiment.train</span> <span style="color: #a45bad;">:as</span> train<span style="color: #bc6ec5;">]</span>
+          <span style="color: #bc6ec5;">[</span><span style="color: #ce537a; font-weight: bold;">cortex.nn.network</span> <span style="color: #a45bad;">:as</span> network<span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">let</span> <span style="color: #bc6ec5;">[</span>trained-network <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">train</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>load-network <span style="color: #2d9574;">"trained-network.nippy"</span><span style="color: #2d9574;">)</span>
+      input-data <span style="color: #2d9574;">[</span><span style="color: #67b11d;">{</span><span style="color: #a45bad;">:data</span> <span style="color: #b1951d;">[</span><span style="color: #a45bad;">5000.0</span> <span style="color: #a45bad;">10.0</span><span style="color: #b1951d;">]</span><span style="color: #67b11d;">}</span> 
+                  <span style="color: #67b11d;">{</span><span style="color: #a45bad;">:data</span> <span style="color: #b1951d;">[</span><span style="color: #a45bad;">5.0</span> <span style="color: #a45bad;">100000.0</span><span style="color: #b1951d;">]</span><span style="color: #67b11d;">}</span><span style="color: #2d9574;">]</span><span style="color: #bc6ec5;">]</span>
+    <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">execute</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>run trained-network input-data<span style="color: #2d9574;">)</span>
+         <span style="color: #2d9574;">(</span>map <span style="color: #a45bad;">:labels</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orga620871">
+<h2 id="orga620871">Training on the loan dataset</h2>
+<ul>
+<li>Simulated dataset with 10000 observations</li>
+<li>The aim here is to predict which customers will default on their credit card debt
+<ul>
+<li><b>default</b> A factor with levels No and Yes indicating whether the customer defaulted on their debt</li>
+
+</ul></li>
+<li>These are the independent variables
+<ul>
+<li><b>balance</b> The average balance that the customer has remaining on their credit card after making their monthly payment</li>
+<li><b>income</b> Income of customer</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-org83999f7">
+<h4 id="org83999f7">Read the dataset</h4>
+<ul>
+<li>Dataset consists of vector of 10k instances</li>
+<li>Each instance is a map with :data and :labels</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> <span style="color: #2d9574;">"test/data/default.csv"</span>
+     <span style="color: #bc6ec5;">(</span>slurp<span style="color: #bc6ec5;">)</span>
+     <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">s</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>split-lines<span style="color: #bc6ec5;">)</span>
+     <span style="color: #bc6ec5;">(</span>rest<span style="color: #bc6ec5;">)</span>                                     <span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">ignore the header row</span>
+     <span style="color: #bc6ec5;">(</span>map <span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">fn</span> <span style="color: #67b11d;">[</span>l<span style="color: #67b11d;">]</span> <span style="color: #67b11d;">(</span>drop <span style="color: #a45bad;">2</span> <span style="color: #b1951d;">(</span><span style="color: #ce537a; font-weight: bold;">s</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>split l #<span style="color: #2d9574;">","</span> <span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span>  <span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">ignore id, student cols</span>
+     <span style="color: #bc6ec5;">(</span>mapv <span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">fn</span> <span style="color: #67b11d;">[</span><span style="color: #b1951d;">[</span>^<span style="color: #ce537a; font-weight: bold;">String</span> default ^<span style="color: #ce537a; font-weight: bold;">String</span> balance ^<span style="color: #ce537a; font-weight: bold;">String</span> income<span style="color: #b1951d;">]</span><span style="color: #67b11d;">]</span>
+            <span style="color: #67b11d;">{</span><span style="color: #a45bad;">:data</span> <span style="color: #b1951d;">[</span><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Double.</span> balance<span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Double.</span> income<span style="color: #4f97d7;">)</span><span style="color: #b1951d;">]</span>
+             <span style="color: #a45bad;">:labels</span> <span style="color: #b1951d;">(</span><span style="color: #4f97d7; font-weight: bold;">if</span> <span style="color: #4f97d7;">(</span>= default <span style="color: #2d9574;">"</span><span style="color: #2d9574; font-weight: bold;">\"</span><span style="color: #2d9574;">Yes</span><span style="color: #2d9574; font-weight: bold;">\"</span><span style="color: #2d9574;">"</span><span style="color: #4f97d7;">)</span> <span style="color: #4f97d7;">[</span><span style="color: #a45bad;">1.0</span><span style="color: #4f97d7;">]</span> <span style="color: #4f97d7;">[</span><span style="color: #a45bad;">0.0</span><span style="color: #4f97d7;">]</span><span style="color: #b1951d;">)</span><span style="color: #67b11d;">}</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span><span style="color: #e0211d; text-decoration: overline;">)</span>
+
+</pre>
+</div>
+
+</section>
+<section id="slide-org006db20">
+<h4 id="org006db20">Define the network</h4>
+<ul>
+<li>Define input and output layers along with 1 hidden layer</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">description</span>
+  <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">2</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">width height channels &amp; args</span>
+   <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">Fix the weights to make the unit test work.</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:weights</span> <span style="color: #67b11d;">[</span><span style="color: #b1951d;">[</span><span style="color: #a45bad;">-0.2</span> <span style="color: #a45bad;">0.2</span><span style="color: #b1951d;">]</span><span style="color: #67b11d;">]</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>logistic <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:labels</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
+
+</pre>
+</div>
+
+</section>
+<section id="slide-org8224c59">
+<h4 id="org8224c59">Run training</h4>
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">let</span> <span style="color: #bc6ec5;">[</span>ds <span style="color: #2d9574;">(</span>shuffle <span style="color: #67b11d;">(</span><span style="color: #ce537a; font-weight: bold;">logtest</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span><span style="color: #4f97d7; font-weight: bold;">default-dataset</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span>
+        ds-count <span style="color: #2d9574;">(</span>count ds<span style="color: #2d9574;">)</span>
+        <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">do a 90-10 split into train/test</span>
+        cutoff <span style="color: #2d9574;">(</span>int <span style="color: #67b11d;">(</span>* <span style="color: #a45bad;">0.9</span> ds-count<span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span>
+        train-ds <span style="color: #2d9574;">(</span>take cutoff ds<span style="color: #2d9574;">)</span>
+        test-ds <span style="color: #2d9574;">(</span>drop cutoff ds<span style="color: #2d9574;">)</span>
+        listener <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">cls</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>create-tensorboard-listener
+                   <span style="color: #67b11d;">{</span><span style="color: #a45bad;">:file-path</span> <span style="color: #2d9574;">"/tmp/tflogs/linear/tfevents.linear.out"</span><span style="color: #67b11d;">}</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">]</span>
+    <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">cls</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>perform-experiment description train-ds test-ds
+                            listener
+                            <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">run for 10 training epochs</span>
+                            <span style="color: #2d9574;">{</span><span style="color: #a45bad;">:epoch-count</span> <span style="color: #a45bad;">10</span><span style="color: #2d9574;">}</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org6d5e183">
+<h2 id="org6d5e183">Demo</h2>
+<div class="outline-text-2" id="text-org6d5e183">
+</div></section>
+<section id="slide-org049a5da">
+<h4 id="org049a5da">Logistic demo</h4>
+<div class="org-src-container">
+
+<pre  class="src src-sh"><span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">assumes pwd is cortex root folder</span>
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">checkout the latest tag</span>
+git checkout v0.9.11
+<span style="color: #4f97d7;">cd</span> experiment/
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">create output folder for log files</span>
+mkdir /tmp/tflogs
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">run test that compares performance of 4 different networks</span>
+lein test :only cortex.experiment.tensorboard-test
+
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">docker</span>
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">load the latest tensorflow instance to load files from /tmp/tflogs</span>
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">this is mounted on the docker instance at the /tflogs folder</span>
+docker run -it -p <span style="color: #a45bad;">8888:8888</span> --entrypoint <span style="color: #2d9574;">"/bin/bash"</span> -v /tmp/tflogs/:/tflogs tensorflow/tensorflow
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">to get IP address of container </span>
+docker inspect -f <span style="color: #2d9574;">'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'</span> &lt;containerid&gt;
+<span style="color: #2aa1ae; background-color: #292e34;">#</span><span style="color: #2aa1ae; background-color: #292e34;">returns dockerip</span>
+</pre>
+</div>
+
+</section>
+<section >
+
+<ul>
+<li>Inside the docker container, execute</li>
+
+</ul>
+<div class="org-src-container">
+
+<pre  class="src src-sh">tensorboard --port <span style="color: #a45bad;">8888</span> --logdir=/tflogs
+</pre>
+</div>
+
+<ul>
+<li>Navigate to <a href="http://dockerip:8888">http://dockerip:8888</a></li>
+
+</ul>
+
+</section>
+<section id="slide-orge8af530">
+<h4 id="orge8af530">MNIST demo</h4>
+<div class="org-src-container">
+
+<pre  class="src src-sh"><span style="color: #4f97d7;">cd</span> examples/mnist-classification
+mkdir /tmp/tflogs/mnist
+lein run --tensorboard-output /tmp/tflogs/mnist/mnist.tfevents.out
+
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org66c6b1b">
+<h2 id="org66c6b1b">Resources</h2>
+<ul>
+<li><a href="https://github.com/thinktopic/cortex">Cortex project @ Github</a></li>
+<li><a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard">Tensorboard documentation</a></li>
+<li><a href="https://github.com/shark8me/tfevent-sink">tfevent-sink project @ Github</a>
+<ul>
+<li>This project converts Cortex events to Tensorflow compatible events</li>
+
+</ul></li>
+<li>This presentation is at <a href="https://github.com/shark8me/cortex-tensorboard-presentation">https://github.com/shark8me/cortex-tensorboard-presentation</a>
+<ul>
+<li>(<a href="https://github.com/shark8me/cortex-tensorboard-presentation/blob/master/presentation/cortex.html">html</a>) and the <a href="https://github.com/shark8me/cortex-tensorboard-presentation/blob/master/presentation/cortex.org">org-mode source</a>.</li>
+
+</ul></li>
+
+</ul>
+
+
+</section>
+<section id="slide-org3153dce">
+<h3 id="org3153dce">Thanks to</h3>
+<ul>
+<li>Team that created Cortex</li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/head.min.js"></script>
+<script src="https://cdn.jsdelivr.net/reveal.js/3.0.0/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+maxScale: 5.00,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: 'https://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+ { src: 'https://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'https://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'https://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'https://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>
