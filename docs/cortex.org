@@ -21,11 +21,113 @@
 
 * Deep learning in Clojure with Cortex 
 
+* Outline of the talk
+
+- what aspect of machine learning do we focus on
+- why use Clojure for machine learning
+- quick and dirty trial of cortex
+- challenges in design
+- functional lenses
+- when cortex may not be a good fit.
+ 
+* Context 
+
+- machine learning/data science is an overloaded term
+
+#+REVEAL: split
+#+CAPTION: Blind men and the elephant 
+
+[[./images/blind_men.png]]
+
+- Two axes on which we can examine use cases or scenarios
+- our use case using example of spam filtering. (Classification) 
+
+- Inference vs prediction
+-- (e.g Understand the causes of being labeled as spam. Too many links? misspellings? vs prediction where we ignore causes)
+ 
+- Exploration vs production use 
+-- exploration (given a dataset, train a classifier, produce a report) as opposed to production 
+
 * Why use Clojure for Machine Learning?
 
 - Perception that languages like R/Python are ideal for machine learning. 
-- show charts 
-* Who is this for?
+
+#+REVEAL: split
+#+CAPTION: Popularity of languages used in ML
+
+[[./images/mltrends.png
+]]
+[[https://trends.google.com/trends/explore?date=2012-11-23%202017-12-23&q=java%20machine%20learning,python%20machine%20learning,clojure%20machine%20learning,scala%20machine%20learning,R%20machine%20learning][Google searches for ML]]
+
+- Upto 80% of the time, the tasks in machine learning is data extraction and cleaning.
+- Not just in time, but code volume is disproportional. Given a dataset, training and prediction a simple classifier is
+
+#+BEGIN_SRC clojure
+
+(defn train-and-evaluate
+  "train and evaluate classification "
+  [spam-dataset]
+  (let [ email (-> (weka-dataset spam-dataset "email")
+                   (cmd/dataset-set-class "spam"))
+        classifier (-> (cls/make-classifier :decision-tree :random-forest)
+                       (cls/classifier-train email))]
+    (:summary (cls/classifier-evaluate classifier :cross-validation email 10))))
+   
+#+END_SRC
 
 
-- 
+* Data oriented design
+
+- Neural networks are graphs <insert graph pic>
+
+- A graph is a vector of layers. 
+- Each layer is a map 
+
+#+BEGIN_SRC clojure
+
+(layers/input 2 1 1 :id :data)
+;;when eval'd returns
+;;[{:type :input, :output-size 2, :output-width 2, :output-height 1, :output-channels 1, :id :data}]
+
+#+END_SRC
+
+#+BEGIN_SRC clojure
+(def description
+  [(layers/input 2 1 1 :id :data)
+   (layers/batch-normalization)
+   ;;Fix the weights to make the unit test work.
+   (layers/linear 1 :weights [[-0.2 0.2]])
+   (layers/logistic :id :labels)])
+
+(def g (network/linear-network description))
+(-> g :compute-graph keys)
+
+;;returns 
+;;(:nodes :edges :buffers :streams)
+
+#+END_SRC
+
+- how does this help? 
+- Create visual representations of the network (nodes/edges)
+-  
+#+BEGIN_SRC clojure
+
+(->> g :compute-graph :nodes (mapv (comp :input-dimensions second)))
+;;output
+[[{:channels 1, :height 1, :width 2, :stream :data}] 
+ [{:channels 1, :height 1, :width 2, :id :data}] 
+ [{:channels 1, :height 1, :width 2, :id :batch-normalization-1}] 
+ [{:channels 1, :height 1, :width 1, :id :linear-1}] 
+ [{:channels 1, :height 1, :width 1, :id :labels}]]
+
+#+END_SRC
+
+* traversing a network:
+
+- why: while training:
+- backpropogation: forward pass: calculate the output given an input
+- backward pass: calculate the gradients 
+
+* References
+- (labeled for noncommercial use with modification) [[https://c1.staticflickr.com/3/2898/13944682478_772a50ce5c_b.jpg][blind men and elephant image]]
+- [[https://www.kdnuggets.com/2017/01/most-popular-language-machine-learning-data-science.html][data science languages by popularity]] 

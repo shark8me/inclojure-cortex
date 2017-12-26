@@ -15,4 +15,6 @@
                  [org.clojure/data.csv "0.1.3"]
                  [core-matrix-gorilla "0.1.0"]
                  [net.mikera/core.matrix "0.61.0"]  
+                 ;viz
+                 [aysylu/loom "1.0.0"]
                  ])
