@@ -1,4 +1,3 @@
-
 #+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
 #+TITLE:  Introduction to Cortex
 #+AUTHOR: Kiran Karkera 
@@ -23,13 +22,12 @@
 
 * Outline of the talk
 
-- what aspect of machine learning do we focus on
-- why use Clojure for machine learning
-- quick and dirty trial of cortex
-- challenges in design
-- functional lenses
-- when cortex may not be a good fit.
- 
+- Context: Clojure, Cortex, Machine Learning
+- Overview of Cortex
+- TLDR versions of using Cortex
+- Peeking under the hood.
+
+
 * Context 
 
 - machine learning/data science is an overloaded term
@@ -37,16 +35,70 @@
 #+REVEAL: split
 #+CAPTION: Blind men and the elephant 
 
-[[./images/blind_men.png]]
+[[./images/blind_men.jpg]]
+
+#+REVEAL: split
+
+* Machine Learning Digression
+
+*** Supervised Machine Learning:
+
+#+BEGIN_QUOTE
+When you are a kid and you see different types of animals, your father tells you that this particular animal is a dog. After doing this a few times, 
+you see a new type of dog that you never saw before - you identify it as a dog and not as a cat or a monkey or a potato.
+#+END_QUOTE
+
+#+CAPTION: Dogs vs cats
+
+[[./images/woof_meow.jpg]]
+
+[[https://www.quora.com/What-is-the-difference-between-supervised-and-unsupervised-learning-algorithms/answer/Shehroz-Khan-2?srid=o0Wh][Quora post reference]]
+
+** Applications of Supervised Learning 
+
+#+REVEAL: split
+- One of the early successes for supervised machine learning was reading [[http://yann.lecun.com/exdb/publis/pdf/matan-92.pdf][the zip code]] in postal mail.
+- Dataset called MNIST is a benchmark dataset in machine learning
+- Its also the "Hello World" program equivalent in machine learning.
+
+#+CAPTION: Handwritten digits  
+    [[./images/MNIST.png]] 
+
+#+REVEAL: split
+
+- A Kaggle competition to distinguish between cats and dogs was conducted in 2014.
+- Training on 25,000 images of dogs and cats, 
+  - the leading teams got to 98.9% [[https://www.kaggle.com/c/dogs-vs-cats/leaderboard][accuracy]]. 
+- [[ ][Here's]] the classifier implemented in Cortex.
+
+#+REVEAL: split
+#+CAPTION: Differentiating between dogs and cats
+
+#+ATTR_HTML: :height 50%, :width 50%
+[[./images/cat_or_dog.jpg]]
+
+*** 
+
+- Classifying aspects of human faces such as gender, age, type of expression and skin colour
+
+#+CAPTION: Classifying gender, age and skin colour
+
+[[./images/face_gender.png]]
+
+** 
 
 - Two axes on which we can examine use cases or scenarios
-- our use case using example of spam filtering. (Classification) 
+- use case using example of spam filtering. (Classification) 
 
-- Inference vs prediction
--- (e.g Understand the causes of being labeled as spam. Too many links? misspellings? vs prediction where we ignore causes)
- 
-- Exploration vs production use 
--- exploration (given a dataset, train a classifier, produce a report) as opposed to production 
+**  Inference vs prediction
+-- (e.g Understand the causes of being labeled as spam. Too many links? misspellings? )
+-- Much more useful in where a human intervention is required to make decisions (e.g. healthcare: predicting re-admission rates)
+-- prediction where we ignore causes)
+
+** Research vs production use 
+
+-- exploration (given a dataset, train a classifier, produce a report) 
+-- production (putting a trained model into a production environment)
 
 * Why use Clojure for Machine Learning?
 
@@ -55,8 +107,8 @@
 #+REVEAL: split
 #+CAPTION: Popularity of languages used in ML
 
-[[./images/mltrends.png
-]]
+[[./images/mltrends.png]]
+
 [[https://trends.google.com/trends/explore?date=2012-11-23%202017-12-23&q=java%20machine%20learning,python%20machine%20learning,clojure%20machine%20learning,scala%20machine%20learning,R%20machine%20learning][Google searches for ML]]
 
 - Upto 80% of the time, the tasks in machine learning is data extraction and cleaning.
@@ -75,6 +127,151 @@
    
 #+END_SRC
 
+* Features of Cortex
+
+- Deep learning library written in Clojure
+- support training on CPU and GPUs
+- supports feedforward and Convolutional nets
+- supports activations types such as logistic/tanh/relu/selu
+- has out of box UI / can leverage other UI such as Tensorboard (from Tensorflow)
+- data centric interface
+
+* How to train a simple network 
+
+** Data 
+
+The [[http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+][room occupancy]] dataset 
+
+- Contains measurements of light, temperature, humidity and CO2 of an office room. 
+- Goal is to predict where the room is occupied.
+- Or: Predict the class (occupied or not) given the observations. 
+ 
+#+REVEAL: split
+
+[[./images/occupancy_dataset.png]]
+
+*** Data ingestion
+
+#+BEGIN_SRC clojure
+
+(def data-vectors (->> "resources/occupancy/datatraining.csv"
+                       (slurp)
+                       (clojure.string/split-lines)
+                       ;; ignore the header row
+                       (rest)                                     
+                       ;; id, date 
+                       (map (fn [l] (drop 2 (clojure.string/split l #"," ))))  
+                       (mapv (fn [m] (mapv #(Double. %) m)))))
+(take 2 data-vectors)
+
+#+END_SRC
+
+----- 
+
+#+BEGIN_SRC sh 
+([23.18 27.272 426.0 721.25 0.00479298817650529 1.0] 
+ [23.15 27.2675 429.5 714.0 0.00478344094931065 1.0])
+#+END_SRC
+
+
+*** Create training data format
+
+
+#+BEGIN_SRC clojure
+
+(defn make-feature-vec
+  [data-vectors]
+  (->> data-vectors 
+       (mapv (fn[m] {:data (-> m butlast vec) :labels (-> m last vector)}))
+       shuffle))
+  
+(->> (make-feature-vec data-vectors)
+     (take 2))
+
+#+END_SRC
+
+- Each instance is a map with keys for data and labels
+
+#+BEGIN_SRC sh 
+({:data [22.15 27.245 0.0 586.5 0.0044959713579516], :labels [0.0]} 
+ {:data [20.89 23.445 0.0 450.5 0.00357640828064061], :labels [1.0]})
+
+#+END_SRC
+
+*** Split the data into train and test
+
+#+BEGIN_SRC clojure
+
+(def train-test-ds 
+  (let [ds (make-feature-vec data-vectors)
+        ds-count (count ds)
+        ;;do a 90-10 split into train/test
+        cutoff (int (* 0.9 ds-count))
+        train-ds (take cutoff ds)
+        test-ds (drop cutoff ds)]
+    [train-ds test-ds]))
+
+#+END_SRC
+
+** Define the layers 
+
+- Network is defined as a vector of layers
+- Each layer may have specific arguments
+- input layer take 3 arguments, the *x y z* dimensions of the input cube
+- The :id key specifies the key in the input instance map
+
+#+BEGIN_SRC clojure
+  ;;input layer for an image of size 28 (length) x 28 (breadth) x 3 (depth)
+  (layers/input 28 28 3 :id :data)
+
+  ;;input layer for room occupancy is 5(inputs) x 1 x 1 
+  (layers/input 5 1 1 :id :data)
+
+#+END_SRC
+
+
+#+BEGIN_SRC sh 
+{:data [22.15 27.245 0.0 586.5 0.0044959713579516], :labels [0.0]}
+#+END_SRC
+
+*** Entire network for room occupancy
+
+#+BEGIN_SRC clojure
+
+(def description
+  [(layers/input 5 1 1 :id :data)
+   (layers/batch-normalization)
+   (layers/linear 1)
+   (layers/logistic :id :labels)])
+
+#+END_SRC
+
+*** Train the network and evaluate the results
+
+- Train it for 10 *epochs*
+- One epoch is an iteration where the neural network gets to see each instance in the dataset *once*
+
+#+BEGIN_SRC sh 
+
+(def res 
+  (let [[train-ds test-ds] train-test-ds]
+    (train-n description train-ds test-ds                            
+             ;;run for 10 training epochs
+             :batch-size 50 :epoch-count 10 )))
+
+#+END_SRC
+
+|     :type |              :value | :lambda | :node-id | :argument |
+|-----------+---------------------+---------+----------+-----------|
+| :mse-loss | 0.03046061750823965 |     1.0 |  :labels |           |
+
+Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
+
+
+
+* Look under the hood
+
+[[./images/underthehood.jpg]]
 
 * Data oriented design
 
@@ -124,9 +321,54 @@
 
 * traversing a network:
 
-- why: while training:
+- this is a 'moded' operation: 
+
+** while training:
 - backpropogation: forward pass: calculate the output given an input
-- backward pass: calculate the gradients 
+- backward pass: calculate the gradients  (or the correction)
+
+** While inference/prediction
+
+- forward pass 
+
+* Pre-training checks
+
+- check network structure 
+- number of weights/biases/connections between layers
+- number of loss functions and how they are connected
+- memory allocation 
+
+* while-training checks
+
+- find causes for issues like
+- no learning or learning too slow.
+- test what individual layers are doing. (e.g. show images from mnist/ cat and dog )
+
+* Net surgery
+
+- see example in mnist example core.clj
+
+* Post-training checks
+
+- compare performance on multiple metrics
+
+
+* Summary 
+* When Cortex is a good fit
+
+- Training feedforward networks for classification and regression
+- Observing training progress
+
+
+* When Cortex may not be a good fit
+
+- training sequences (which requires a type of network called RNN)
+- a Java based alternative is Deeplearning4j
+- training networks with newer network structures (e.g. Inception / Capsule networks). 
+- networks with new types of units (e.g. ? LST/GRU)
+- distributed training (usually needed only after a stable network is determined, and you have a lot of data)
+- ingesting certain types of pre-trained networks
+- there is support for ingesting certain kinds of networks (e.g. Keras/Caffe), but may not work out of the box.
 
 * References
 - (labeled for noncommercial use with modification) [[https://c1.staticflickr.com/3/2898/13944682478_772a50ce5c_b.jpg][blind men and elephant image]]

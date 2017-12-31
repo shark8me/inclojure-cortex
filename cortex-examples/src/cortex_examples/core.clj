@@ -1,5 +1,5 @@
 (ns cortex-examples.core
-  (:require [loom.io :refer [dot-str]]
+  (:require [loom.io :refer [dot-str view]]
             [cortex-examples.draw-graph :as dg]
             [loom.graph :as lg]
             [think.parallel.core :as parallel]
@@ -39,15 +39,15 @@
    view
    ))
 
-(draw-nn [2 3 2])
-(draw-nn [5 10 2])
+;(draw-nn [2 3 2])
+;(draw-nn [5 10 2])
 
 
 
 
-(add-k layer-map)
+;(add-k layer-map)
 
-(render-to-bytes "aaaa" :fmt :a :alg :neato)
+;(render-to-bytes "aaaa" :fmt :a :alg :neato)
 #_(let [dot (apply dot-str g (apply concat opts))
       {:keys [out]} (sh (name alg) (str "-T" (name fmt)) :in dot :out-enc :bytes)]
   out)
@@ -71,7 +71,7 @@
 (->> g traverse/forward-traversal )
 (->> g traverse/training-traversal :forward)
 
-desc (defn mnist-initial-description
+(defn mnist-initial-description
   [input-w input-h num-classes]
   [(layers/input input-w input-h 1 :id :data)
    (layers/convolutional 5 0 1 20)

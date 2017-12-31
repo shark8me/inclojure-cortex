@@ -95,7 +95,7 @@ mnist
 ;; <=
 
 ;; @@
-(-> cec/mnist-desc :compute-graph keys)
+(-> mnist-net :compute-graph keys)
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-unkown'>(:nodes :edges :buffers :streams)</span>","value":"(:nodes :edges :buffers :streams)"}
@@ -117,7 +117,7 @@ mnist
 ;; **
 
 ;; @@
-(->> cec/mnist-desc :compute-graph :buffers (mapv (fn[[k v]] (m/shape (:buffer v)))))
+(->> mnist-net :compute-graph :buffers (mapv (fn[[k v]] (m/shape (:buffer v)))))
 ;; @@
 ;; =>
 ;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>50</span>","value":"50"},{"type":"html","content":"<span class='clj-long'>500</span>","value":"500"}],"value":"[50 500]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>50</span>","value":"50"}],"value":"[50]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>10</span>","value":"10"},{"type":"html","content":"<span class='clj-long'>1000</span>","value":"1000"}],"value":"[10 1000]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>20</span>","value":"20"},{"type":"html","content":"<span class='clj-long'>25</span>","value":"25"}],"value":"[20 25]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>1000</span>","value":"1000"}],"value":"[1000]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>800</span>","value":"800"}],"value":"[800]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>10</span>","value":"10"}],"value":"[10]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>20</span>","value":"20"}],"value":"[20]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>800</span>","value":"800"}],"value":"[800]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>10</span>","value":"10"},{"type":"html","content":"<span class='clj-long'>1000</span>","value":"1000"}],"value":"[10 1000]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>800</span>","value":"800"}],"value":"[800]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>1000</span>","value":"1000"},{"type":"html","content":"<span class='clj-long'>800</span>","value":"800"}],"value":"[1000 800]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>800</span>","value":"800"}],"value":"[800]"}],"value":"[[50 500] [50] [10 1000] [20 25] [1000] [800] [10] [20] [800] [10 1000] [800] [1000 800] [800]]"}
@@ -144,8 +144,29 @@ mnist
 ;; <=
 
 ;; @@
-
+(network/print-layer-summary mnist-net (traverse/training-traversal mnist-net))
 ;; @@
+;; ->
+;;; 
+;;; |                 type |            input |           output |  :bias | :centers | :means | :scale | :variances |   :weights |
+;;; |----------------------+------------------+------------------+--------+----------+--------+--------+------------+------------|
+;;; |       :convolutional |    1x28x28 - 784 | 20x24x24 - 11520 |   [20] |          |        |        |            |    [20 25] |
+;;; |         :max-pooling | 20x24x24 - 11520 |  20x12x12 - 2880 |        |          |        |        |            |            |
+;;; |                :relu |  20x12x12 - 2880 |  20x12x12 - 2880 |        |          |        |        |            |            |
+;;; |       :convolutional |  20x12x12 - 2880 |    50x8x8 - 3200 |   [50] |          |        |        |            |   [50 500] |
+;;; |         :max-pooling |    50x8x8 - 3200 |     50x4x4 - 800 |        |          |        |        |            |            |
+;;; | :batch-normalization |     50x4x4 - 800 |     50x4x4 - 800 |  [800] |          |  [800] |  [800] |      [800] |            |
+;;; |              :linear |     50x4x4 - 800 |  1x1x1000 - 1000 | [1000] |          |        |        |            | [1000 800] |
+;;; |                :relu |  1x1x1000 - 1000 |  1x1x1000 - 1000 |        |          |        |        |            |            |
+;;; |             :dropout |  1x1x1000 - 1000 |  1x1x1000 - 1000 |        |          |        |        |            |            |
+;;; |              :linear |  1x1x1000 - 1000 |      1x1x10 - 10 |   [10] |          |        |        |            |  [10 1000] |
+;;; |             :softmax |      1x1x10 - 10 |      1x1x10 - 10 |        |          |        |        |            |            |
+;;; Parameter count: 849780
+;;; 
+;; <-
+;; =>
+;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
+;; <=
 
 ;; **
 ;;; We can see that the 11th layer contributes almost 800k. What is this information useful for? To determine the memory requirements in a network (and know if it will fit into the GPU memory of your card). (Note: What if it doesn't fit into memory/how do we check if it fits or doesnt fit.)

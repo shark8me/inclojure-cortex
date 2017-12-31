@@ -17,4 +17,5 @@
                  [net.mikera/core.matrix "0.61.0"]  
                  ;viz
                  [aysylu/loom "1.0.0"]
-                 ])
+                 ;;metrics
+                 [datacraft-sciences/confuse "0.1.1"]])
