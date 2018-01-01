@@ -1,0 +1,317 @@
+;; gorilla-repl.fileformat = 1
+
+;; **
+;;; # Debugging network issues
+;;; 
+;;; - Debug a Mnist network with hidden layers
+;; **
+
+;; @@
+(ns occupancy
+  (:require [gorilla-plot.core :as plot]
+            [loom.io :refer [dot-str]]
+            [cortex-examples.draw-graph :as dg]
+            [loom.graph :as lg]
+            [think.parallel.core :as parallel]
+            [cortex.optimize :as opt]
+            [cortex.optimize.adam :as adam]
+            [cortex.nn.execute :as execute]
+            [cortex.nn.compute-binding :as compute-binding]
+            [cortex.nn.network :as network]
+            [clojure.java.io :refer [file]]
+            [cortex.experiment.train :as etrain :refer [train-n]]
+           [cortex.experiment.classification :refer [perform-experiment]]
+            ;[clojure.java.shell :refer [sh]]
+            [cortex.nn.traverse :as traverse]
+            [cortex.graph :as graph]
+            [cortex.nn.layers :as layers]
+            [cortex.util :as util]
+            [cortex.loss.core :as loss]
+            [clojure.core.matrix :as m]
+            [clojure.core.matrix.dataset :as cd]
+            [core-matrix-gorilla.render :refer [mview]]
+            [confuse.binary-class-metrics :refer [accuracy f1-score]]
+            ;[cortex-examples.core :as cec]
+            [cortex-examples.common-networks :as cn]
+            [mnist-classification.core :as mcore]
+            [cortex.experiment.util :as experiment-util]
+            ))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
+;; <=
+
+;; **
+;;; Create the network by describing each layer
+;; **
+
+;; @@
+(def description (cn/initial-description  28 28 10))
+(def mnist-net (network/linear-network description))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;occupancy/mnist-net</span>","value":"#'occupancy/mnist-net"}
+;; <=
+
+;; @@
+description
+;; @@
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:input</span>","value":":input"}],"value":"[:type :input]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:output-size</span>","value":":output-size"},{"type":"html","content":"<span class='clj-long'>784</span>","value":"784"}],"value":"[:output-size 784]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:output-width</span>","value":":output-width"},{"type":"html","content":"<span class='clj-long'>28</span>","value":"28"}],"value":"[:output-width 28]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:output-height</span>","value":":output-height"},{"type":"html","content":"<span class='clj-long'>28</span>","value":"28"}],"value":"[:output-height 28]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:output-channels</span>","value":":output-channels"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"}],"value":"[:output-channels 1]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:id</span>","value":":id"},{"type":"html","content":"<span class='clj-keyword'>:data</span>","value":":data"}],"value":"[:id :data]"}],"value":"{:type :input, :output-size 784, :output-width 28, :output-height 28, :output-channels 1, :id :data}"}],"value":"[{:type :input, :output-size 784, :output-width 28, :output-height 28, :output-channels 1, :id :data}]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad-y</span>","value":":pad-y"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad-y 0]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride-y</span>","value":":stride-y"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"}],"value":"[:stride-y 1]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:convolutional</span>","value":":convolutional"}],"value":"[:type :convolutional]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:num-kernels</span>","value":":num-kernels"},{"type":"html","content":"<span class='clj-long'>20</span>","value":"20"}],"value":"[:num-kernels 20]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-dim</span>","value":":kernel-dim"},{"type":"html","content":"<span class='clj-long'>5</span>","value":"5"}],"value":"[:kernel-dim 5]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride-x</span>","value":":stride-x"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"}],"value":"[:stride-x 1]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-width</span>","value":":kernel-width"},{"type":"html","content":"<span class='clj-long'>5</span>","value":"5"}],"value":"[:kernel-width 5]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad</span>","value":":pad"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad 0]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-height</span>","value":":kernel-height"},{"type":"html","content":"<span class='clj-long'>5</span>","value":"5"}],"value":"[:kernel-height 5]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:dimension-op</span>","value":":dimension-op"},{"type":"html","content":"<span class='clj-keyword'>:floor</span>","value":":floor"}],"value":"[:dimension-op :floor]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride</span>","value":":stride"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"}],"value":"[:stride 1]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad-x</span>","value":":pad-x"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad-x 0]"}],"value":"{:pad-y 0, :stride-y 1, :type :convolutional, :num-kernels 20, :kernel-dim 5, :stride-x 1, :kernel-width 5, :pad 0, :kernel-height 5, :dimension-op :floor, :stride 1, :pad-x 0}"}],"value":"[{:pad-y 0, :stride-y 1, :type :convolutional, :num-kernels 20, :kernel-dim 5, :stride-x 1, :kernel-width 5, :pad 0, :kernel-height 5, :dimension-op :floor, :stride 1, :pad-x 0}]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pool-op</span>","value":":pool-op"},{"type":"html","content":"<span class='clj-keyword'>:max</span>","value":":max"}],"value":"[:pool-op :max]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad-y</span>","value":":pad-y"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad-y 0]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride-y</span>","value":":stride-y"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:stride-y 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:max-pooling</span>","value":":max-pooling"}],"value":"[:type :max-pooling]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:num-kernels</span>","value":":num-kernels"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:num-kernels 0]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-dim</span>","value":":kernel-dim"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:kernel-dim 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride-x</span>","value":":stride-x"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:stride-x 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-width</span>","value":":kernel-width"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:kernel-width 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad</span>","value":":pad"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad 0]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-height</span>","value":":kernel-height"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:kernel-height 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:dimension-op</span>","value":":dimension-op"},{"type":"html","content":"<span class='clj-keyword'>:ceil</span>","value":":ceil"}],"value":"[:dimension-op :ceil]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride</span>","value":":stride"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:stride 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad-x</span>","value":":pad-x"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad-x 0]"}],"value":"{:pool-op :max, :pad-y 0, :stride-y 2, :type :max-pooling, :num-kernels 0, :kernel-dim 2, :stride-x 2, :kernel-width 2, :pad 0, :kernel-height 2, :dimension-op :ceil, :stride 2, :pad-x 0}"}],"value":"[{:pool-op :max, :pad-y 0, :stride-y 2, :type :max-pooling, :num-kernels 0, :kernel-dim 2, :stride-x 2, :kernel-width 2, :pad 0, :kernel-height 2, :dimension-op :ceil, :stride 2, :pad-x 0}]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:tanh</span>","value":":tanh"}],"value":"[:type :tanh]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>100</span>","value":"100"},{"type":"html","content":"<span class='clj-long'>50</span>","value":"50"}],"value":"[100 50]"}],"value":"{:type :tanh, 100 50}"}],"value":"[{:type :tanh, 100 50}]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad-y</span>","value":":pad-y"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad-y 0]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride-y</span>","value":":stride-y"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"}],"value":"[:stride-y 1]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:convolutional</span>","value":":convolutional"}],"value":"[:type :convolutional]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:num-kernels</span>","value":":num-kernels"},{"type":"html","content":"<span class='clj-long'>50</span>","value":"50"}],"value":"[:num-kernels 50]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-dim</span>","value":":kernel-dim"},{"type":"html","content":"<span class='clj-long'>5</span>","value":"5"}],"value":"[:kernel-dim 5]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride-x</span>","value":":stride-x"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"}],"value":"[:stride-x 1]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-width</span>","value":":kernel-width"},{"type":"html","content":"<span class='clj-long'>5</span>","value":"5"}],"value":"[:kernel-width 5]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad</span>","value":":pad"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad 0]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-height</span>","value":":kernel-height"},{"type":"html","content":"<span class='clj-long'>5</span>","value":"5"}],"value":"[:kernel-height 5]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:dimension-op</span>","value":":dimension-op"},{"type":"html","content":"<span class='clj-keyword'>:floor</span>","value":":floor"}],"value":"[:dimension-op :floor]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride</span>","value":":stride"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"}],"value":"[:stride 1]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad-x</span>","value":":pad-x"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad-x 0]"}],"value":"{:pad-y 0, :stride-y 1, :type :convolutional, :num-kernels 50, :kernel-dim 5, :stride-x 1, :kernel-width 5, :pad 0, :kernel-height 5, :dimension-op :floor, :stride 1, :pad-x 0}"}],"value":"[{:pad-y 0, :stride-y 1, :type :convolutional, :num-kernels 50, :kernel-dim 5, :stride-x 1, :kernel-width 5, :pad 0, :kernel-height 5, :dimension-op :floor, :stride 1, :pad-x 0}]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pool-op</span>","value":":pool-op"},{"type":"html","content":"<span class='clj-keyword'>:max</span>","value":":max"}],"value":"[:pool-op :max]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad-y</span>","value":":pad-y"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad-y 0]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride-y</span>","value":":stride-y"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:stride-y 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:max-pooling</span>","value":":max-pooling"}],"value":"[:type :max-pooling]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:num-kernels</span>","value":":num-kernels"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:num-kernels 0]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-dim</span>","value":":kernel-dim"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:kernel-dim 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride-x</span>","value":":stride-x"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:stride-x 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-width</span>","value":":kernel-width"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:kernel-width 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad</span>","value":":pad"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad 0]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:kernel-height</span>","value":":kernel-height"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:kernel-height 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:dimension-op</span>","value":":dimension-op"},{"type":"html","content":"<span class='clj-keyword'>:ceil</span>","value":":ceil"}],"value":"[:dimension-op :ceil]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stride</span>","value":":stride"},{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"}],"value":"[:stride 2]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:pad-x</span>","value":":pad-x"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[:pad-x 0]"}],"value":"{:pool-op :max, :pad-y 0, :stride-y 2, :type :max-pooling, :num-kernels 0, :kernel-dim 2, :stride-x 2, :kernel-width 2, :pad 0, :kernel-height 2, :dimension-op :ceil, :stride 2, :pad-x 0}"}],"value":"[{:pool-op :max, :pad-y 0, :stride-y 2, :type :max-pooling, :num-kernels 0, :kernel-dim 2, :stride-x 2, :kernel-width 2, :pad 0, :kernel-height 2, :dimension-op :ceil, :stride 2, :pad-x 0}]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:batch-normalization</span>","value":":batch-normalization"}],"value":"[:type :batch-normalization]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:average-factor</span>","value":":average-factor"},{"type":"html","content":"<span class='clj-double'>0.9</span>","value":"0.9"}],"value":"[:average-factor 0.9]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:epsilon</span>","value":":epsilon"},{"type":"html","content":"<span class='clj-double'>1.0E-4</span>","value":"1.0E-4"}],"value":"[:epsilon 1.0E-4]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:mode</span>","value":":mode"},{"type":"html","content":"<span class='clj-keyword'>:elementwise</span>","value":":elementwise"}],"value":"[:mode :elementwise]"}],"value":"{:type :batch-normalization, :average-factor 0.9, :epsilon 1.0E-4, :mode :elementwise}"}],"value":"[{:type :batch-normalization, :average-factor 0.9, :epsilon 1.0E-4, :mode :elementwise}]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:tanh</span>","value":":tanh"}],"value":"[:type :tanh]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>50</span>","value":"50"},{"type":"html","content":"<span class='clj-long'>30</span>","value":"30"}],"value":"[50 30]"}],"value":"{:type :tanh, 50 30}"}],"value":"[{:type :tanh, 50 30}]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:probability</span>","value":":probability"},{"type":"html","content":"<span class='clj-double'>0.5</span>","value":"0.5"}],"value":"[:probability 0.5]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:dropout</span>","value":":dropout"}],"value":"[:type :dropout]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:distribution</span>","value":":distribution"},{"type":"html","content":"<span class='clj-keyword'>:bernoulli</span>","value":":bernoulli"}],"value":"[:distribution :bernoulli]"}],"value":"{:probability 0.5, :type :dropout, :distribution :bernoulli}"}],"value":"[{:probability 0.5, :type :dropout, :distribution :bernoulli}]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:output-size</span>","value":":output-size"},{"type":"html","content":"<span class='clj-long'>10</span>","value":"10"}],"value":"[:output-size 10]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:linear</span>","value":":linear"}],"value":"[:type :linear]"}],"value":"{:output-size 10, :type :linear}"}],"value":"[{:output-size 10, :type :linear}]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:softmax</span>","value":":softmax"}],"value":"[:type :softmax]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:id</span>","value":":id"},{"type":"html","content":"<span class='clj-keyword'>:labels</span>","value":":labels"}],"value":"[:id :labels]"}],"value":"{:type :softmax, :id :labels}"}],"value":"[{:type :softmax, :id :labels}]"}],"value":"[[{:type :input, :output-size 784, :output-width 28, :output-height 28, :output-channels 1, :id :data}] [{:pad-y 0, :stride-y 1, :type :convolutional, :num-kernels 20, :kernel-dim 5, :stride-x 1, :kernel-width 5, :pad 0, :kernel-height 5, :dimension-op :floor, :stride 1, :pad-x 0}] [{:pool-op :max, :pad-y 0, :stride-y 2, :type :max-pooling, :num-kernels 0, :kernel-dim 2, :stride-x 2, :kernel-width 2, :pad 0, :kernel-height 2, :dimension-op :ceil, :stride 2, :pad-x 0}] [{:type :tanh, 100 50}] [{:pad-y 0, :stride-y 1, :type :convolutional, :num-kernels 50, :kernel-dim 5, :stride-x 1, :kernel-width 5, :pad 0, :kernel-height 5, :dimension-op :floor, :stride 1, :pad-x 0}] [{:pool-op :max, :pad-y 0, :stride-y 2, :type :max-pooling, :num-kernels 0, :kernel-dim 2, :stride-x 2, :kernel-width 2, :pad 0, :kernel-height 2, :dimension-op :ceil, :stride 2, :pad-x 0}] [{:type :batch-normalization, :average-factor 0.9, :epsilon 1.0E-4, :mode :elementwise}] [{:type :tanh, 50 30}] [{:probability 0.5, :type :dropout, :distribution :bernoulli}] [{:output-size 10, :type :linear}] [{:type :softmax, :id :labels}]]"}
+;; <=
+
+;; @@
+(network/print-layer-summary mnist-net (traverse/training-traversal mnist-net))
+;; @@
+;; ->
+;;; 
+;;; |                 type |            input |           output | :bias | :means | :scale | :variances | :weights |
+;;; |----------------------+------------------+------------------+-------+--------+--------+------------+----------|
+;;; |       :convolutional |    1x28x28 - 784 | 20x24x24 - 11520 |  [20] |        |        |            |  [20 25] |
+;;; |         :max-pooling | 20x24x24 - 11520 |  20x12x12 - 2880 |       |        |        |            |          |
+;;; |                :tanh |  20x12x12 - 2880 |  20x12x12 - 2880 |       |        |        |            |          |
+;;; |       :convolutional |  20x12x12 - 2880 |    50x8x8 - 3200 |  [50] |        |        |            | [50 500] |
+;;; |         :max-pooling |    50x8x8 - 3200 |     50x4x4 - 800 |       |        |        |            |          |
+;;; | :batch-normalization |     50x4x4 - 800 |     50x4x4 - 800 | [800] |  [800] |  [800] |      [800] |          |
+;;; |                :tanh |     50x4x4 - 800 |     50x4x4 - 800 |       |        |        |            |          |
+;;; |             :dropout |     50x4x4 - 800 |     50x4x4 - 800 |       |        |        |            |          |
+;;; |              :linear |     50x4x4 - 800 |      1x1x10 - 10 |  [10] |        |        |            | [10 800] |
+;;; |             :softmax |      1x1x10 - 10 |      1x1x10 - 10 |       |        |        |            |          |
+;;; Parameter count: 36780
+;;; 
+;; <-
+;; =>
+;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
+;; <=
+
+;; @@
+
+(def trained-room-net
+  (let [_ (mcore/ensure-images-on-disk!)
+         training-folder (str mcore/dataset-folder "training")
+         test-folder (str mcore/dataset-folder "test")
+         [train-ds test-ds] [(-> training-folder
+                                 (experiment-util/create-dataset-from-folder mcore/class-mapping)
+                                 (experiment-util/infinite-class-balanced-dataset))
+                             (-> test-folder
+                                 (experiment-util/create-dataset-from-folder mcore/class-mapping)) ]
+        ; [train-ds test-ds] train-test
+        ]
+    (train-n description train-ds test-ds                            
+             ;;run for 10 training epochs
+             :batch-size 50 :epoch-count 10 :save-gradients? true)))
+;; @@
+;; ->
+;;; Building dataset from folder: mnist/training
+;;; Building dataset from folder: mnist/test
+;;;  save gradients?  true
+;;; CUDA backend creation failed, reverting to CPU
+;;; Training network:
+;;; 
+;;; |                 type |            input |           output | :bias | :means | :scale | :variances | :weights |
+;;; |----------------------+------------------+------------------+-------+--------+--------+------------+----------|
+;;; |       :convolutional |    1x28x28 - 784 | 20x24x24 - 11520 |  [20] |        |        |            |  [20 25] |
+;;; |         :max-pooling | 20x24x24 - 11520 |  20x12x12 - 2880 |       |        |        |            |          |
+;;; |                :tanh |  20x12x12 - 2880 |  20x12x12 - 2880 |       |        |        |            |          |
+;;; |       :convolutional |  20x12x12 - 2880 |    50x8x8 - 3200 |  [50] |        |        |            | [50 500] |
+;;; |         :max-pooling |    50x8x8 - 3200 |     50x4x4 - 800 |       |        |        |            |          |
+;;; | :batch-normalization |     50x4x4 - 800 |     50x4x4 - 800 | [800] |  [800] |  [800] |      [800] |          |
+;;; |                :tanh |     50x4x4 - 800 |     50x4x4 - 800 |       |        |        |            |          |
+;;; |             :dropout |     50x4x4 - 800 |     50x4x4 - 800 |       |        |        |            |          |
+;;; |              :linear |     50x4x4 - 800 |      1x1x10 - 10 |  [10] |        |        |            | [10 800] |
+;;; |             :softmax |      1x1x10 - 10 |      1x1x10 - 10 |       |        |        |            |          |
+;;; Parameter count: 36780
+;;; 
+;;; |         :type |             :value | :lambda | :node-id | :argument |
+;;; |---------------+--------------------+---------+----------+-----------|
+;;; | :softmax-loss | 1.0212568572951979 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   1: (current) 1.02125686 (best) null [new best]
+;;; 
+;;; |         :type |             :value | :lambda | :node-id | :argument |
+;;; |---------------+--------------------+---------+----------+-----------|
+;;; | :softmax-loss | 0.6285463010956688 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   2: (current) 0.62854630 (best) 1.02125686 [new best]
+;;; 
+;;; |         :type |             :value | :lambda | :node-id | :argument |
+;;; |---------------+--------------------+---------+----------+-----------|
+;;; | :softmax-loss | 0.6791527860946076 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   3: (current) 0.67915279 (best) 0.62854630
+;;; 
+;;; |         :type |             :value | :lambda | :node-id | :argument |
+;;; |---------------+--------------------+---------+----------+-----------|
+;;; | :softmax-loss | 0.7296907960569086 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   4: (current) 0.72969080 (best) 0.62854630
+;;; 
+;;; |         :type |             :value | :lambda | :node-id | :argument |
+;;; |---------------+--------------------+---------+----------+-----------|
+;;; | :softmax-loss | 0.6278436904587427 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   5: (current) 0.62784369 (best) 0.62854630 [new best]
+;;; 
+;;; |         :type |             :value | :lambda | :node-id | :argument |
+;;; |---------------+--------------------+---------+----------+-----------|
+;;; | :softmax-loss | 0.6195320491377093 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   6: (current) 0.61953205 (best) 0.62784369 [new best]
+;;; 
+;;; |         :type |             :value | :lambda | :node-id | :argument |
+;;; |---------------+--------------------+---------+----------+-----------|
+;;; | :softmax-loss | 0.6245703841565703 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   7: (current) 0.62457038 (best) 0.61953205
+;;; 
+;;; |         :type |             :value | :lambda | :node-id | :argument |
+;;; |---------------+--------------------+---------+----------+-----------|
+;;; | :softmax-loss | 0.6514927091807242 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   8: (current) 0.65149271 (best) 0.61953205
+;;; 
+;;; |         :type |             :value | :lambda | :node-id | :argument |
+;;; |---------------+--------------------+---------+----------+-----------|
+;;; | :softmax-loss | 0.6829504910011307 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   9: (current) 0.68295049 (best) 0.61953205
+;;; 
+;;; |         :type |          :value | :lambda | :node-id | :argument |
+;;; |---------------+-----------------+---------+----------+-----------|
+;;; | :softmax-loss | 0.6383957514162 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch  10: (current) 0.63839575 (best) 0.61953205
+;;; 
+;; <-
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;occupancy/trained-room-net</span>","value":"#'occupancy/trained-room-net"}
+;; <=
+
+;; **
+;;; We can see that the loss is Infinity, and unusually, it stays the same. It is expected that the loss should decrease as a network trains and improves
+;; **
+
+;; @@
+(-> trained-room-net :compute-graph :buffers keys)
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>(:convolutional-2-weights-1 :convolutional-2-bias-1 :convolutional-1-weights-1 :linear-1-bias-1 :batch-normalization-1-scale-1 :convolutional-1-bias-1 :batch-normalization-1-means-1 :batch-normalization-1-variances-1 :linear-1-weights-1 :batch-normalization-1-bias-1)</span>","value":"(:convolutional-2-weights-1 :convolutional-2-bias-1 :convolutional-1-weights-1 :linear-1-bias-1 :batch-normalization-1-scale-1 :convolutional-1-bias-1 :batch-normalization-1-means-1 :batch-normalization-1-variances-1 :linear-1-weights-1 :batch-normalization-1-bias-1)"}
+;; <=
+
+;; @@
+(-> trained-room-net :compute-graph :buffers :linear-1-weights-1 :buffer seq)
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>(#object[&quot;[D&quot; 0x10106774 &quot;[D@10106774&quot;] #object[&quot;[D&quot; 0x24912f24 &quot;[D@24912f24&quot;] #object[&quot;[D&quot; 0x66832c4f &quot;[D@66832c4f&quot;] #object[&quot;[D&quot; 0x1146c9a8 &quot;[D@1146c9a8&quot;] #object[&quot;[D&quot; 0x2fe3733 &quot;[D@2fe3733&quot;] #object[&quot;[D&quot; 0x2fbbd047 &quot;[D@2fbbd047&quot;] #object[&quot;[D&quot; 0x50a570ab &quot;[D@50a570ab&quot;] #object[&quot;[D&quot; 0x7709f89e &quot;[D@7709f89e&quot;] #object[&quot;[D&quot; 0x4bd0ee3 &quot;[D@4bd0ee3&quot;] #object[&quot;[D&quot; 0x75f5dfdb &quot;[D@75f5dfdb&quot;])</span>","value":"(#object[\"[D\" 0x10106774 \"[D@10106774\"] #object[\"[D\" 0x24912f24 \"[D@24912f24\"] #object[\"[D\" 0x66832c4f \"[D@66832c4f\"] #object[\"[D\" 0x1146c9a8 \"[D@1146c9a8\"] #object[\"[D\" 0x2fe3733 \"[D@2fe3733\"] #object[\"[D\" 0x2fbbd047 \"[D@2fbbd047\"] #object[\"[D\" 0x50a570ab \"[D@50a570ab\"] #object[\"[D\" 0x7709f89e \"[D@7709f89e\"] #object[\"[D\" 0x4bd0ee3 \"[D@4bd0ee3\"] #object[\"[D\" 0x75f5dfdb \"[D@75f5dfdb\"])"}
+;; <=
+
+;; @@
+(-> trained-room-net :compute-graph :edges)
+;; @@
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-lazy-seq'>(</span>","close":"<span class='clj-lazy-seq'>)</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:data</span>","value":":data"},{"type":"html","content":"<span class='clj-keyword'>:batch-normalization-1</span>","value":":batch-normalization-1"}],"value":"[:data :batch-normalization-1]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:batch-normalization-1</span>","value":":batch-normalization-1"},{"type":"html","content":"<span class='clj-keyword'>:linear-1</span>","value":":linear-1"}],"value":"[:batch-normalization-1 :linear-1]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:linear-1</span>","value":":linear-1"},{"type":"html","content":"<span class='clj-keyword'>:labels</span>","value":":labels"}],"value":"[:linear-1 :labels]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:labels</span>","value":":labels"},{"type":"html","content":"<span class='clj-keyword'>:softmax-loss-1</span>","value":":softmax-loss-1"}],"value":"[:labels :softmax-loss-1]"}],"value":"([:data :batch-normalization-1] [:batch-normalization-1 :linear-1] [:linear-1 :labels] [:labels :softmax-loss-1])"}
+;; <=
+
+;; @@
+(let [input-data (take 2 (second train-test))]
+  (execute/run trained-room-net input-data ))
+;; @@
+;; ->
+;;; CUDA backend creation failed, reverting to CPU
+;;; 
+;; <-
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:labels</span>","value":":labels"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>1.0</span>","value":"1.0"}],"value":"[1.0]"}],"value":"[:labels [1.0]]"}],"value":"{:labels [1.0]}"},{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:labels</span>","value":":labels"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>1.0</span>","value":"1.0"}],"value":"[1.0]"}],"value":"[:labels [1.0]]"}],"value":"{:labels [1.0]}"}],"value":"[{:labels [1.0]} {:labels [1.0]}]"}
+;; <=
+
+;; @@
+(let [input-data (take 2 (second train-test))]
+  (execute/run (network/dissoc-layers-from-network trained-room-net :labels) input-data ))
+;; @@
+;; ->
+;;; CUDA backend creation failed, reverting to CPU
+;;; 
+;; <-
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:linear-1</span>","value":":linear-1"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>14.216922760009766</span>","value":"14.216922760009766"}],"value":"[14.216922760009766]"}],"value":"[:linear-1 [14.216922760009766]]"}],"value":"{:linear-1 [14.216922760009766]}"},{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:linear-1</span>","value":":linear-1"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-6.922255992889404</span>","value":"-6.922255992889404"}],"value":"[-6.922255992889404]"}],"value":"[:linear-1 [-6.922255992889404]]"}],"value":"{:linear-1 [-6.922255992889404]}"}],"value":"[{:linear-1 [14.216922760009766]} {:linear-1 [-6.922255992889404]}]"}
+;; <=
+
+;; @@
+(let [input-data (take 2 (second train-test))]
+  (execute/run (network/dissoc-layers-from-network trained-room-net :linear-1) input-data ))
+;; @@
+;; ->
+;;; CUDA backend creation failed, reverting to CPU
+;;; 
+;; <-
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:batch-normalization-1</span>","value":":batch-normalization-1"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>1.8271057605743408</span>","value":"1.8271057605743408"},{"type":"html","content":"<span class='clj-double'>3.20485258102417</span>","value":"3.20485258102417"},{"type":"html","content":"<span class='clj-double'>1.4946041107177734</span>","value":"1.4946041107177734"},{"type":"html","content":"<span class='clj-double'>7.376587867736816</span>","value":"7.376587867736816"},{"type":"html","content":"<span class='clj-double'>0.9715582728385925</span>","value":"0.9715582728385925"}],"value":"[1.8271057605743408 3.20485258102417 1.4946041107177734 7.376587867736816 0.9715582728385925]"}],"value":"[:batch-normalization-1 [1.8271057605743408 3.20485258102417 1.4946041107177734 7.376587867736816 0.9715582728385925]]"}],"value":"{:batch-normalization-1 [1.8271057605743408 3.20485258102417 1.4946041107177734 7.376587867736816 0.9715582728385925]}"},{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:batch-normalization-1</span>","value":":batch-normalization-1"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>3.241380214691162</span>","value":"3.241380214691162"},{"type":"html","content":"<span class='clj-double'>-3.4231953620910645</span>","value":"-3.4231953620910645"},{"type":"html","content":"<span class='clj-double'>-0.5758152604103088</span>","value":"-0.5758152604103088"},{"type":"html","content":"<span class='clj-double'>-2.0254364013671875</span>","value":"-2.0254364013671875"},{"type":"html","content":"<span class='clj-double'>0.9080545902252197</span>","value":"0.9080545902252197"}],"value":"[3.241380214691162 -3.4231953620910645 -0.5758152604103088 -2.0254364013671875 0.9080545902252197]"}],"value":"[:batch-normalization-1 [3.241380214691162 -3.4231953620910645 -0.5758152604103088 -2.0254364013671875 0.9080545902252197]]"}],"value":"{:batch-normalization-1 [3.241380214691162 -3.4231953620910645 -0.5758152604103088 -2.0254364013671875 0.9080545902252197]}"}],"value":"[{:batch-normalization-1 [1.8271057605743408 3.20485258102417 1.4946041107177734 7.376587867736816 0.9715582728385925]} {:batch-normalization-1 [3.241380214691162 -3.4231953620910645 -0.5758152604103088 -2.0254364013671875 0.9080545902252197]}]"}
+;; <=
+
+;; @@
+(def train-test (oc/train-test-ds))
+(def trained-room-net
+  (let [[train-ds test-ds] train-test]
+    (train-n description train-ds test-ds                            
+             ;;run for 10 training epochs
+             :batch-size 50 :epoch-count 1 )))
+;; @@
+;; ->
+;;;  save gradients?  false
+;;; CUDA backend creation failed, reverting to CPU
+;;; Training network:
+;;; 
+;;; |                 type |     input |    output | :bias | :means | :scale | :variances | :weights |
+;;; |----------------------+-----------+-----------+-------+--------+--------+------------+----------|
+;;; | :batch-normalization | 1x1x5 - 5 | 1x1x5 - 5 |   [5] |    [5] |    [5] |        [5] |          |
+;;; |              :linear | 1x1x5 - 5 | 1x1x1 - 1 |   [1] |        |        |            |    [1 5] |
+;;; |             :softmax | 1x1x1 - 1 | 1x1x1 - 1 |       |        |        |            |          |
+;;; Parameter count: 26
+;;; 
+;;; |         :type |   :value | :lambda | :node-id | :argument |
+;;; |---------------+----------+---------+----------+-----------|
+;;; | :softmax-loss | Infinity |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   1: (current) Infinity (best) null [new best]
+;;; 
+;; <-
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;occupancy/trained-room-net</span>","value":"#'occupancy/trained-room-net"}
+;; <=
+
+;; @@
+(let [input-data (take 2 (second train-test))]
+  (execute/run (network/dissoc-layers-from-network trained-room-net :labels) input-data ))
+;; @@
+;; ->
+;;; CUDA backend creation failed, reverting to CPU
+;;; 
+;; <-
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:linear-1</span>","value":":linear-1"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-1.088219165802002</span>","value":"-1.088219165802002"}],"value":"[-1.088219165802002]"}],"value":"[:linear-1 [-1.088219165802002]]"}],"value":"{:linear-1 [-1.088219165802002]}"},{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:linear-1</span>","value":":linear-1"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-0.7213512063026428</span>","value":"-0.7213512063026428"}],"value":"[-0.7213512063026428]"}],"value":"[:linear-1 [-0.7213512063026428]]"}],"value":"{:linear-1 [-0.7213512063026428]}"}],"value":"[{:linear-1 [-1.088219165802002]} {:linear-1 [-0.7213512063026428]}]"}
+;; <=
+
+;; @@
+(-> trained-room-net :compute-graph :buffers :linear-1-weights-1 :buffer seq)
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>(0.14405320584774017 0.3425440192222595 -0.09971616417169571 0.9549898505210876 -0.7865992784500122)</span>","value":"(0.14405320584774017 0.3425440192222595 -0.09971616417169571 0.9549898505210876 -0.7865992784500122)"}
+;; <=
+
+;; @@
+(let [labels (etrain/get-labels trained-room-net 50  (second train-test))
+      {:keys [raw-loss loss-sum] :as m1} (etrain/network-loss trained-room-net labels (second train-test))]
+  m1
+    )
+;; @@
+;; ->
+;;; CUDA backend creation failed, reverting to CPU
+;;; 
+;; <-
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:raw-loss</span>","value":":raw-loss"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:softmax-loss</span>","value":":softmax-loss"}],"value":"[:type :softmax-loss]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:labels</span>","value":":labels"},{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:stream</span>","value":":stream"}],"value":"[:type :stream]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stream</span>","value":":stream"},{"type":"html","content":"<span class='clj-keyword'>:labels</span>","value":":labels"}],"value":"[:stream :labels]"}],"value":"{:type :stream, :stream :labels}"}],"value":"[:labels {:type :stream, :stream :labels}]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:output</span>","value":":output"},{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:type</span>","value":":type"},{"type":"html","content":"<span class='clj-keyword'>:node-output</span>","value":":node-output"}],"value":"[:type :node-output]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:node-id</span>","value":":node-id"},{"type":"html","content":"<span class='clj-keyword'>:labels</span>","value":":labels"}],"value":"[:node-id :labels]"}],"value":"{:type :node-output, :node-id :labels}"}],"value":"[:output {:type :node-output, :node-id :labels}]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:id</span>","value":":id"},{"type":"html","content":"<span class='clj-keyword'>:softmax-loss-1</span>","value":":softmax-loss-1"}],"value":"[:id :softmax-loss-1]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:value</span>","value":":value"},{"type":"html","content":"<span class='clj-double'>Infinity</span>","value":"Infinity"}],"value":"[:value Infinity]"}],"value":"{:type :softmax-loss, :labels {:type :stream, :stream :labels}, :output {:type :node-output, :node-id :labels}, :id :softmax-loss-1, :value Infinity}"}],"value":"[{:type :softmax-loss, :labels {:type :stream, :stream :labels}, :output {:type :node-output, :node-id :labels}, :id :softmax-loss-1, :value Infinity}]"}],"value":"[:raw-loss [{:type :softmax-loss, :labels {:type :stream, :stream :labels}, :output {:type :node-output, :node-id :labels}, :id :softmax-loss-1, :value Infinity}]]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:loss-sum</span>","value":":loss-sum"},{"type":"html","content":"<span class='clj-double'>Infinity</span>","value":"Infinity"}],"value":"[:loss-sum Infinity]"}],"value":"{:raw-loss [{:type :softmax-loss, :labels {:type :stream, :stream :labels}, :output {:type :node-output, :node-id :labels}, :id :softmax-loss-1, :value Infinity}], :loss-sum Infinity}"}
+;; <=
+
+;; @@
+
+;; @@

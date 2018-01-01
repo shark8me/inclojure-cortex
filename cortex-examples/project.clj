@@ -6,6 +6,7 @@
   :plugins  [[lein-gorilla "0.4.0"]]
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [thinktopic/experiment "0.9.23-SNAPSHOT"]
+                 [mnist-classification "0.9.23-SNAPSHOT"]
                  [org.clojure/tools.cli "0.3.5"]
                  ;;If you need cuda 8...
                  [org.bytedeco.javacpp-presets/cuda "8.0-1.2"]

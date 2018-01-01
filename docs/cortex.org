@@ -57,7 +57,7 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 ** Applications of Supervised Learning 
 
 #+REVEAL: split
-- One of the early successes for supervised machine learning was reading [[http://yann.lecun.com/exdb/publis/pdf/matan-92.pdf][the zip code]] in postal mail.
+- One of the early successes(1992) for supervised machine learning was reading [[http://yann.lecun.com/exdb/publis/pdf/matan-92.pdf][the zip code]] in postal mail.
 - Dataset called MNIST is a benchmark dataset in machine learning
 - Its also the "Hello World" program equivalent in machine learning.
 
@@ -143,8 +143,8 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 The [[http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+][room occupancy]] dataset 
 
 - Contains measurements of light, temperature, humidity and CO2 of an office room. 
-- Goal is to predict where the room is occupied.
-- Or: Predict the class (occupied or not) given the observations. 
+- Goal is to predict when the room is occupied.
+- Alternative statement: Predict the class (occupied or not) given the observations. 
  
 #+REVEAL: split
 
@@ -190,7 +190,9 @@ The [[http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+][room occupanc
 
 #+END_SRC
 
-- Each instance is a map with keys for data and labels
+----- 
+
+Each instance is a map with keys for data and labels
 
 #+BEGIN_SRC sh 
 ({:data [22.15 27.245 0.0 586.5 0.0044959713579516], :labels [0.0]} 
@@ -230,11 +232,12 @@ The [[http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+][room occupanc
 #+END_SRC
 
 
-#+BEGIN_SRC sh 
+#+BEGIN_SRC clojure
+;;data instance
 {:data [22.15 27.245 0.0 586.5 0.0044959713579516], :labels [0.0]}
 #+END_SRC
 
-*** Entire network for room occupancy
+*** Network definition 
 
 #+BEGIN_SRC clojure
 
@@ -246,18 +249,18 @@ The [[http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+][room occupanc
 
 #+END_SRC
 
-*** Train the network and evaluate the results
+*** Train the network 
 
 - Train it for 10 *epochs*
 - One epoch is an iteration where the neural network gets to see each instance in the dataset *once*
 
-#+BEGIN_SRC sh 
+#+BEGIN_SRC clojure
 
-(def res 
+(def trained-occupancy-net 
   (let [[train-ds test-ds] train-test-ds]
     (train-n description train-ds test-ds                            
              ;;run for 10 training epochs
-             :batch-size 50 :epoch-count 10 )))
+             :epoch-count 10 )))
 
 #+END_SRC
 
@@ -267,7 +270,22 @@ The [[http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+][room occupanc
 
 Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 
+*** Evaluate results 
 
+- Evaluate the accuracy (and other metrics) on the test set
+- Use the trained network to get predictions
+- Given that the last layer is a logistic layer, it generates probabilities
+- If the probability is > 0.5, assume that the room is occupied, and vice versa
+- Similarly, extract the labels from the actual test data.
+
+
+#+BEGIN_SRC sh 
+[(accuracy actual predicted) (f1-score actual predicted 1.0)]
+#+END_SRC
+
+#+BEGIN_SRC sh 
+[0.9447852760736196 0.8888888888888891]
+#+END_SRC
 
 * Look under the hood
 
@@ -341,7 +359,9 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 * while-training checks
 
 - find causes for issues like
-- no learning or learning too slow.
+- no learning or learning too slow. (when no batchnorm layer is used)
+- tanh gradients going to 0
+- dying relu
 - test what individual layers are doing. (e.g. show images from mnist/ cat and dog )
 
 * Net surgery

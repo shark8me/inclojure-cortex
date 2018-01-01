@@ -1,0 +1,138 @@
+;; gorilla-repl.fileformat = 1
+
+;; **
+;;; # Exploring the vanishing sigmoid problem
+;;; 
+;;; In this notebook, we'll explore the vanishing gradient on sigmoid/tanh [issue](https://medium.com/@karpathy/yes-you-should-understand-backprop-e2f06eab496b).
+;; **
+
+;; @@
+(ns vanishing-sigmoid
+  (:require [gorilla-plot.core :as plot]                       
+            [cortex.nn.execute :as execute]
+            [cortex.nn.compute-binding :as compute-binding]
+            [cortex.nn.network :as network]
+            [clojure.java.io :refer [file]]
+            [cortex.experiment.train :refer [train-n]]
+            [cortex.experiment.classification :refer [perform-experiment]]
+            
+            [cortex.nn.traverse :as traverse]
+            [cortex.graph :as graph]
+            [cortex.nn.layers :as layers]
+            [cortex.util :as util]
+            [cortex.loss.core :as loss]
+            [clojure.core.matrix :as m]
+            [clojure.core.matrix.dataset :as cd]
+            [core-matrix-gorilla.render :refer [mview]]
+            [confuse.binary-class-metrics :refer [accuracy f1-score]]
+            [cortex-examples.occupancy :as oc]
+            ))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
+;; <=
+
+;; @@
+(defn make-net
+  []
+  (-> [(layers/input 1 1 1 :id :data)
+       (layers/tanh)
+       (layers/logistic :id :labels)
+       ]
+      network/linear-network))
+
+(def inp (range -1.0 1.0 0.05))
+(defn trainx
+  []
+  (let [inet (make-net)
+         inp (mapv #(assoc {} :data [%] :labels [(if (> % 0) 1.0 0.0)]) inp)
+        ;first-layer (-> inet :compute-graph :edges first second)
+        ]
+    (train-n inet inp inp :epoch-count 2 :batch-size 10
+             :save-gradients? true)))
+                 
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;vanishing-sigmoid/trainx</span>","value":"#'vanishing-sigmoid/trainx"}
+;; <=
+
+;; @@
+()
+;; @@
+
+;; @@
+(def res (trainx))
+;; @@
+;; ->
+;;;  save gradients?  true
+;;; CUDA backend creation failed, reverting to CPU
+;;; Training network:
+;;; 
+;;; |      type |     input |    output |
+;;; |-----------+-----------+-----------|
+;;; |     :tanh | 1x1x1 - 1 | 1x1x1 - 1 |
+;;; | :logistic | 1x1x1 - 1 | 1x1x1 - 1 |
+;;; Parameter count: 0
+;;; 
+;;; |     :type |              :value | :lambda | :node-id | :argument |
+;;; |-----------+---------------------+---------+----------+-----------|
+;;; | :mse-loss | 0.15847744357004878 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   1: (current) 0.15847744 (best) null [new best]
+;;; 
+;;; |     :type |              :value | :lambda | :node-id | :argument |
+;;; |-----------+---------------------+---------+----------+-----------|
+;;; | :mse-loss | 0.15847744357004878 |     1.0 |  :labels |           |
+;;; 
+;;; Loss for epoch   2: (current) 0.15847744 (best) 0.15847744
+;;; 
+;; <-
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;vanishing-sigmoid/res</span>","value":"#'vanishing-sigmoid/res"}
+;; <=
+
+;; @@
+(-> res :traversal :buffers second)
+;; @@
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stream</span>","value":":stream"},{"type":"html","content":"<span class='clj-keyword'>:data</span>","value":":data"}],"value":"[:stream :data]"}],"value":"{:stream :data}"},{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:buffer</span>","value":":buffer"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x7e6d0a6 &quot;[D@7e6d0a6&quot;]</span>","value":"#object[\"[D\" 0x7e6d0a6 \"[D@7e6d0a6\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x2e671c0c &quot;[D@2e671c0c&quot;]</span>","value":"#object[\"[D\" 0x2e671c0c \"[D@2e671c0c\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x667c715d &quot;[D@667c715d&quot;]</span>","value":"#object[\"[D\" 0x667c715d \"[D@667c715d\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x4aab3a20 &quot;[D@4aab3a20&quot;]</span>","value":"#object[\"[D\" 0x4aab3a20 \"[D@4aab3a20\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x7b79b033 &quot;[D@7b79b033&quot;]</span>","value":"#object[\"[D\" 0x7b79b033 \"[D@7b79b033\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x6de8542c &quot;[D@6de8542c&quot;]</span>","value":"#object[\"[D\" 0x6de8542c \"[D@6de8542c\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x689b2655 &quot;[D@689b2655&quot;]</span>","value":"#object[\"[D\" 0x689b2655 \"[D@689b2655\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x7bf26b5c &quot;[D@7bf26b5c&quot;]</span>","value":"#object[\"[D\" 0x7bf26b5c \"[D@7bf26b5c\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x4d3cb439 &quot;[D@4d3cb439&quot;]</span>","value":"#object[\"[D\" 0x4d3cb439 \"[D@4d3cb439\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x62dac086 &quot;[D@62dac086&quot;]</span>","value":"#object[\"[D\" 0x62dac086 \"[D@62dac086\"]"}],"value":"[#object[\"[D\" 0x7e6d0a6 \"[D@7e6d0a6\"] #object[\"[D\" 0x2e671c0c \"[D@2e671c0c\"] #object[\"[D\" 0x667c715d \"[D@667c715d\"] #object[\"[D\" 0x4aab3a20 \"[D@4aab3a20\"] #object[\"[D\" 0x7b79b033 \"[D@7b79b033\"] #object[\"[D\" 0x6de8542c \"[D@6de8542c\"] #object[\"[D\" 0x689b2655 \"[D@689b2655\"] #object[\"[D\" 0x7bf26b5c \"[D@7bf26b5c\"] #object[\"[D\" 0x4d3cb439 \"[D@4d3cb439\"] #object[\"[D\" 0x62dac086 \"[D@62dac086\"]]"}],"value":"[:buffer [#object[\"[D\" 0x7e6d0a6 \"[D@7e6d0a6\"] #object[\"[D\" 0x2e671c0c \"[D@2e671c0c\"] #object[\"[D\" 0x667c715d \"[D@667c715d\"] #object[\"[D\" 0x4aab3a20 \"[D@4aab3a20\"] #object[\"[D\" 0x7b79b033 \"[D@7b79b033\"] #object[\"[D\" 0x6de8542c \"[D@6de8542c\"] #object[\"[D\" 0x689b2655 \"[D@689b2655\"] #object[\"[D\" 0x7bf26b5c \"[D@7bf26b5c\"] #object[\"[D\" 0x4d3cb439 \"[D@4d3cb439\"] #object[\"[D\" 0x62dac086 \"[D@62dac086\"]]]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:gradient</span>","value":":gradient"},{"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}],"value":"[:gradient nil]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:numeric-gradient</span>","value":":numeric-gradient"},{"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}],"value":"[:numeric-gradient nil]"}],"value":"{:buffer [#object[\"[D\" 0x7e6d0a6 \"[D@7e6d0a6\"] #object[\"[D\" 0x2e671c0c \"[D@2e671c0c\"] #object[\"[D\" 0x667c715d \"[D@667c715d\"] #object[\"[D\" 0x4aab3a20 \"[D@4aab3a20\"] #object[\"[D\" 0x7b79b033 \"[D@7b79b033\"] #object[\"[D\" 0x6de8542c \"[D@6de8542c\"] #object[\"[D\" 0x689b2655 \"[D@689b2655\"] #object[\"[D\" 0x7bf26b5c \"[D@7bf26b5c\"] #object[\"[D\" 0x4d3cb439 \"[D@4d3cb439\"] #object[\"[D\" 0x62dac086 \"[D@62dac086\"]], :gradient nil, :numeric-gradient nil}"}],"value":"[{:stream :data} {:buffer [#object[\"[D\" 0x7e6d0a6 \"[D@7e6d0a6\"] #object[\"[D\" 0x2e671c0c \"[D@2e671c0c\"] #object[\"[D\" 0x667c715d \"[D@667c715d\"] #object[\"[D\" 0x4aab3a20 \"[D@4aab3a20\"] #object[\"[D\" 0x7b79b033 \"[D@7b79b033\"] #object[\"[D\" 0x6de8542c \"[D@6de8542c\"] #object[\"[D\" 0x689b2655 \"[D@689b2655\"] #object[\"[D\" 0x7bf26b5c \"[D@7bf26b5c\"] #object[\"[D\" 0x4d3cb439 \"[D@4d3cb439\"] #object[\"[D\" 0x62dac086 \"[D@62dac086\"]], :gradient nil, :numeric-gradient nil}]"}
+;; <=
+
+;; @@
+(defn get-resp
+  [inet]
+  (let [inp (mapv #(assoc {} :data [%] :labels [0.0]) inp)
+        first-layer (-> inet :compute-graph :edges first second)]
+    (->> inp 
+         (execute/run (network/dissoc-layers-from-network inet :labels))
+         (mapv (comp first first-layer))
+         )))
+
+
+;; @@
+
+;; @@
+(def nets (mapv make-net [
+                          #(layers/relu)
+                          #(layers/selu)
+                          #(layers/prelu)
+                          #(layers/tanh)
+                          #(layers/logistic)                           
+                          #(layers/swish)
+                          ]))
+
+(def resp (mapv get-resp nets))
+
+(apply plot/compose
+       (let [plt-resp (mapv #(mapv vector inp %) (take 3 resp))
+             colors ["red" "blue" "green"  ]]
+         (mapv #(plot/list-plot % 
+                                :plot-range 
+                                [[-1.2 1.2] [-1.2 1.2]] 
+                                :color %2
+                                :symbol-size 10) plt-resp colors )))
+;; @@
+
+;; @@
+
+;; @@

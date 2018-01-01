@@ -29,18 +29,18 @@
 <body>
 <div class="reveal">
 <div class="slides">
-<section id="sec-title-slide"><h1 class="title">Introduction to Cortex</h1><h2 class="author">Kiran Karkera</h2><p class="date">Created: 2017-12-31 Sun 14:14</p>
+<section id="sec-title-slide"><h1 class="title">Introduction to Cortex</h1><h2 class="author">Kiran Karkera</h2><p class="date">Created: 2017-12-31 Sun 16:44</p>
 </section>
 
 <section>
-<section id="slide-orgc5bfd16">
-<h2 id="orgc5bfd16">Deep learning in Clojure with Cortex</h2>
+<section id="slide-orgeaf1699">
+<h2 id="orgeaf1699">Deep learning in Clojure with Cortex</h2>
 
 </section>
 </section>
 <section>
-<section id="slide-orgf46bf97">
-<h2 id="orgf46bf97">Outline of the talk</h2>
+<section id="slide-org5d023b6">
+<h2 id="org5d023b6">Outline of the talk</h2>
 <ul>
 <li>Context: Clojure, Cortex, Machine Learning</li>
 <li>Overview of Cortex</li>
@@ -53,8 +53,8 @@
 </section>
 </section>
 <section>
-<section id="slide-orgaaf4323">
-<h2 id="orgaaf4323">Context</h2>
+<section id="slide-orgc849da4">
+<h2 id="orgc849da4">Context</h2>
 <ul>
 <li>machine learning/data science is an overloaded term</li>
 
@@ -74,13 +74,13 @@
 </section>
 </section>
 <section>
-<section id="slide-org847fb43">
-<h2 id="org847fb43">Machine Learning Digression</h2>
-<div class="outline-text-2" id="text-org847fb43">
+<section id="slide-orgf1391b4">
+<h2 id="orgf1391b4">Machine Learning Digression</h2>
+<div class="outline-text-2" id="text-orgf1391b4">
 </div>
 </section>
-<section id="slide-orgef8ae43">
-<h4 id="orgef8ae43">Supervised Machine Learning:</h4>
+<section id="slide-orgd4da6bf">
+<h4 id="orgd4da6bf">Supervised Machine Learning:</h4>
 <blockquote nil>
 <p>
 When you are a kid and you see different types of animals, your father tells you that this particular animal is a dog. After doing this a few times, 
@@ -99,8 +99,8 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 </p>
 
 </section>
-<section id="slide-org4ced7fe">
-<h3 id="org4ced7fe">Applications of Supervised Learning</h3>
+<section id="slide-org62b1538">
+<h3 id="org62b1538">Applications of Supervised Learning</h3>
 </section>
 <section >
 <ul>
@@ -127,7 +127,7 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 <li>the leading teams got to 98.9% <a href="https://www.kaggle.com/c/dogs-vs-cats/leaderboard">accuracy</a>.</li>
 
 </ul></li>
-<li><a href="#/slide-org8ac62f3">Here's</a> the classifier implemented in Cortex.</li>
+<li><a href="#/slide-orgb7d371b">Here's</a> the classifier implemented in Cortex.</li>
 
 </ul>
 
@@ -140,8 +140,8 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 </div>
 
 </section>
-<section id="slide-org8ac62f3">
-<h4 id="org8ac62f3"></h4>
+<section id="slide-orgb7d371b">
+<h4 id="orgb7d371b"></h4>
 <ul>
 <li>Classifying aspects of human faces such as gender, age, type of expression and skin colour</li>
 
@@ -154,8 +154,8 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 </div>
 
 </section>
-<section id="slide-org9c624ee">
-<h3 id="org9c624ee"></h3>
+<section id="slide-orgc312ef4">
+<h3 id="orgc312ef4"></h3>
 <ul>
 <li>Two axes on which we can examine use cases or scenarios</li>
 <li>use case using example of spam filtering. (Classification)</li>
@@ -163,8 +163,8 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 </ul>
 
 </section>
-<section id="slide-orgc61bdd1">
-<h3 id="orgc61bdd1">Inference vs prediction</h3>
+<section id="slide-orgc12c365">
+<h3 id="orgc12c365">Inference vs prediction</h3>
 <p>
 &#x2013; (e.g Understand the causes of being labeled as spam. Too many links? misspellings? )
 &#x2013; Much more useful in where a human intervention is required to make decisions (e.g. healthcare: predicting re-admission rates)
@@ -172,8 +172,8 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 </p>
 
 </section>
-<section id="slide-org68ca268">
-<h3 id="org68ca268">Research vs production use</h3>
+<section id="slide-org86add26">
+<h3 id="org86add26">Research vs production use</h3>
 <p>
 &#x2013; exploration (given a dataset, train a classifier, produce a report) 
 &#x2013; production (putting a trained model into a production environment)
@@ -182,8 +182,8 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 </section>
 </section>
 <section>
-<section id="slide-org6938ca4">
-<h2 id="org6938ca4">Why use Clojure for Machine Learning?</h2>
+<section id="slide-org0612537">
+<h2 id="org0612537">Why use Clojure for Machine Learning?</h2>
 <ul>
 <li>Perception that languages like R/Python are ideal for machine learning.</li>
 
@@ -224,8 +224,8 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 </section>
 </section>
 <section>
-<section id="slide-orgfb00bf8">
-<h2 id="orgfb00bf8">Features of Cortex</h2>
+<section id="slide-org1e0cabf">
+<h2 id="org1e0cabf">Features of Cortex</h2>
 <ul>
 <li>Deep learning library written in Clojure</li>
 <li>support training on CPU and GPUs</li>
@@ -239,13 +239,13 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 </section>
 </section>
 <section>
-<section id="slide-orgabf98a3">
-<h2 id="orgabf98a3">How to train a simple network</h2>
-<div class="outline-text-2" id="text-orgabf98a3">
+<section id="slide-org7e6767f">
+<h2 id="org7e6767f">How to train a simple network</h2>
+<div class="outline-text-2" id="text-org7e6767f">
 </div>
 </section>
-<section id="slide-org85eee47">
-<h3 id="org85eee47">Data</h3>
+<section id="slide-org42440aa">
+<h3 id="org42440aa">Data</h3>
 <p>
 The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room occupancy</a> dataset 
 </p>
@@ -267,8 +267,8 @@ The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room o
 </div>
 
 </section>
-<section id="slide-org0da984c">
-<h4 id="org0da984c">Data ingestion</h4>
+<section id="slide-org847d04a">
+<h4 id="org847d04a">Data ingestion</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">data-vectors</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> <span style="color: #2d9574;">"resources/occupancy/datatraining.csv"</span>
@@ -295,8 +295,8 @@ The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room o
 
 
 </section>
-<section id="slide-org2183e20">
-<h4 id="org2183e20">Create training data format</h4>
+<section id="slide-orgc0c74fc">
+<h4 id="orgc0c74fc">Create training data format</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">defn</span> <span style="color: #bc6ec5; font-weight: bold;">make-feature-vec</span>
@@ -311,10 +311,11 @@ The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room o
 </pre>
 </div>
 
-<ul>
-<li>Each instance is a map with keys for data and labels</li>
+<hr />
 
-</ul>
+<p>
+Each instance is a map with keys for data and labels
+</p>
 
 <div class="org-src-container">
 
@@ -325,8 +326,8 @@ The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room o
 </div>
 
 </section>
-<section id="slide-orga81af9c">
-<h4 id="orga81af9c">Split the data into train and test</h4>
+<section id="slide-orgd462b3c">
+<h4 id="orgd462b3c">Split the data into train and test</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">train-test-ds</span> 
@@ -342,12 +343,13 @@ The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room o
 </div>
 
 </section>
-<section id="slide-org6b70c82">
-<h3 id="org6b70c82">Define the layers</h3>
+<section id="slide-orgf8b1e61">
+<h3 id="orgf8b1e61">Define the layers</h3>
 <ul>
 <li>Network is defined as a vector of layers</li>
 <li>Each layer may have specific arguments</li>
 <li>input layer take 3 arguments, the <b>x y z</b> dimensions of the input cube</li>
+<li>The :id key specifies the key in the input instance map</li>
 
 </ul>
 
@@ -362,10 +364,6 @@ The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room o
 </pre>
 </div>
 
-<ul>
-<li>The :id key specifies the key in the input instance map</li>
-
-</ul>
 
 <div class="org-src-container">
 
@@ -374,8 +372,8 @@ The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room o
 </div>
 
 </section>
-<section id="slide-orgdccf864">
-<h4 id="orgdccf864">Layer description for room occupancy</h4>
+<section id="slide-org3575e24">
+<h4 id="org3575e24">Entire network for room occupancy</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">description</span>
@@ -388,100 +386,24 @@ The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room o
 </div>
 
 </section>
-<section id="slide-org76679ee">
-<h4 id="org76679ee">Train the network and evaluate the results</h4>
+<section id="slide-orgede599a">
+<h4 id="orgede599a">Train the network</h4>
 <ul>
 <li>Train it for 10 <b>epochs</b></li>
-<li>One epoch is an interation where the neural network gets to see each instance in the dataset <b>once</b></li>
+<li>One epoch is an iteration where the neural network gets to see each instance in the dataset <b>once</b></li>
 
 </ul>
 
 <div class="org-src-container">
 
-<pre  class="src src-sh"><span style="color: #4f97d7;">(</span>def res 
+<pre  class="src src-sh"><span style="color: #4f97d7;">(</span>def trained-occupancy-net 
   <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7;">let</span> <span style="color: #2d9574;">[</span><span style="color: #67b11d;">[</span>train-ds test-ds<span style="color: #67b11d;">]</span> train-test-ds<span style="color: #2d9574;">]</span>
     <span style="color: #2d9574;">(</span>train-n description train-ds test-ds                            
              ;;run for <span style="color: #a45bad;">10</span> training epochs
-             :batch-size <span style="color: #a45bad;">50</span> :epoch-count <span style="color: #a45bad;">10</span> <span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+             :epoch-count <span style="color: #a45bad;">10</span> <span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
 
 </pre>
 </div>
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-right" />
-
-<col  class="org-right" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-left">:type</th>
-<th scope="col" class="org-right">:value</th>
-<th scope="col" class="org-right">:lambda</th>
-<th scope="col" class="org-left">:node-id</th>
-<th scope="col" class="org-left">:argument</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left">:mse-loss</td>
-<td class="org-right">0.03620482071311607</td>
-<td class="org-right">1.0</td>
-<td class="org-left">:labels</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-</tbody>
-</table>
-
-<p>
-Loss for epoch   8: (current) 0.03620482 (best) 0.03999246 [new best]
-</p>
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-right" />
-
-<col  class="org-right" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-left">:type</th>
-<th scope="col" class="org-right">:value</th>
-<th scope="col" class="org-right">:lambda</th>
-<th scope="col" class="org-left">:node-id</th>
-<th scope="col" class="org-left">:argument</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left">:mse-loss</td>
-<td class="org-right">0.0330850071487428</td>
-<td class="org-right">1.0</td>
-<td class="org-left">:labels</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-</tbody>
-</table>
-
-<p>
-Loss for epoch   9: (current) 0.03308501 (best) 0.03620482 [new best]
-</p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -521,12 +443,35 @@ Loss for epoch   9: (current) 0.03308501 (best) 0.03620482 [new best]
 Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </p>
 
+</section>
+<section id="slide-org544fe74">
+<h4 id="org544fe74">Evaluate results</h4>
+<ul>
+<li>Finally, print out the accuracy on the test set</li>
+<li>Use the trained network to get predictions</li>
+<li>Given that the last layer is a logistic layer, it generated probabilities</li>
+<li>If the probability is &gt; 0.5, assume that the room is occupied, and vice versa</li>
+<li>Similarly, extract the labels from the actual test data.</li>
 
+</ul>
+
+
+<div class="org-src-container">
+
+<pre  class="src src-sh"><span style="color: #4f97d7;">[</span><span style="color: #bc6ec5;">(</span>accuracy actual predicted<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">(</span>f1-score actual predicted <span style="color: #a45bad;">1.0</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">]</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-sh"><span style="color: #4f97d7;">[</span><span style="color: #a45bad;">0.9447852760736196</span> <span style="color: #a45bad;">0.8888888888888891</span><span style="color: #4f97d7;">]</span>
+</pre>
+</div>
 </section>
 </section>
 <section>
-<section id="slide-org010a4da">
-<h2 id="org010a4da">Look under the hood</h2>
+<section id="slide-org17ad24f">
+<h2 id="org17ad24f">Look under the hood</h2>
 
 <div class="figure">
 <p><img src="./images/underthehood.jpg" alt="underthehood.jpg" />
@@ -536,8 +481,8 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </section>
 </section>
 <section>
-<section id="slide-org658ce06">
-<h2 id="org658ce06">Data oriented design</h2>
+<section id="slide-org4ed6d1d">
+<h2 id="org4ed6d1d">Data oriented design</h2>
 <ul>
 <li>Neural networks are graphs &lt;insert graph pic&gt;</li>
 
@@ -595,16 +540,16 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </section>
 </section>
 <section>
-<section id="slide-org2d63f81">
-<h2 id="org2d63f81">traversing a network:</h2>
+<section id="slide-orgf8c0904">
+<h2 id="orgf8c0904">traversing a network:</h2>
 <ul>
 <li>this is a 'moded' operation:</li>
 
 </ul>
 
 </section>
-<section id="slide-org92ea14e">
-<h3 id="org92ea14e">while training:</h3>
+<section id="slide-orgf8ef868">
+<h3 id="orgf8ef868">while training:</h3>
 <ul>
 <li>backpropogation: forward pass: calculate the output given an input</li>
 <li>backward pass: calculate the gradients  (or the correction)</li>
@@ -612,8 +557,8 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </ul>
 
 </section>
-<section id="slide-org762c7b3">
-<h3 id="org762c7b3">While inference/prediction</h3>
+<section id="slide-org07d43cf">
+<h3 id="org07d43cf">While inference/prediction</h3>
 <ul>
 <li>forward pass</li>
 
@@ -622,8 +567,8 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </section>
 </section>
 <section>
-<section id="slide-org725dbf3">
-<h2 id="org725dbf3">Pre-training checks</h2>
+<section id="slide-org4da55b3">
+<h2 id="org4da55b3">Pre-training checks</h2>
 <ul>
 <li>check network structure</li>
 <li>number of weights/biases/connections between layers</li>
@@ -635,8 +580,8 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </section>
 </section>
 <section>
-<section id="slide-orgaf262e1">
-<h2 id="orgaf262e1">while-training checks</h2>
+<section id="slide-orgbc6626e">
+<h2 id="orgbc6626e">while-training checks</h2>
 <ul>
 <li>find causes for issues like</li>
 <li>no learning or learning too slow.</li>
@@ -647,8 +592,8 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </section>
 </section>
 <section>
-<section id="slide-org1f33622">
-<h2 id="org1f33622">Net surgery</h2>
+<section id="slide-orge7fd055">
+<h2 id="orge7fd055">Net surgery</h2>
 <ul>
 <li>see example in mnist example core.clj</li>
 
@@ -657,8 +602,8 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </section>
 </section>
 <section>
-<section id="slide-org702a0f4">
-<h2 id="org702a0f4">Post-training checks</h2>
+<section id="slide-orge53277d">
+<h2 id="orge53277d">Post-training checks</h2>
 <ul>
 <li>compare performance on multiple metrics</li>
 
@@ -668,13 +613,13 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </section>
 </section>
 <section>
-<section id="slide-orgd7a44b7">
-<h2 id="orgd7a44b7">Summary</h2>
+<section id="slide-org3738075">
+<h2 id="org3738075">Summary</h2>
 </section>
 </section>
 <section>
-<section id="slide-org60eba0f">
-<h2 id="org60eba0f">When Cortex is a good fit</h2>
+<section id="slide-orgfe05169">
+<h2 id="orgfe05169">When Cortex is a good fit</h2>
 <ul>
 <li>Training feedforward networks for classification and regression</li>
 <li>Observing training progress</li>
@@ -685,8 +630,8 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </section>
 </section>
 <section>
-<section id="slide-orgde6da8b">
-<h2 id="orgde6da8b">When Cortex may not be a good fit</h2>
+<section id="slide-org4efa349">
+<h2 id="org4efa349">When Cortex may not be a good fit</h2>
 <ul>
 <li>training sequences (which requires a type of network called RNN)</li>
 <li>a Java based alternative is Deeplearning4j</li>
@@ -701,8 +646,8 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </section>
 </section>
 <section>
-<section id="slide-orgba09e37">
-<h2 id="orgba09e37">References</h2>
+<section id="slide-orgd31fed1">
+<h2 id="orgd31fed1">References</h2>
 <ul>
 <li>(labeled for noncommercial use with modification) <a href="https://c1.staticflickr.com/3/2898/13944682478_772a50ce5c_b.jpg">blind men and elephant image</a></li>
 <li><a href="https://www.kdnuggets.com/2017/01/most-popular-language-machine-learning-data-science.html">data science languages by popularity</a></li>
