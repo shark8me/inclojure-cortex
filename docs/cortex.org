@@ -1,5 +1,5 @@
 #+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
-#+TITLE:  Introduction to Cortex
+#+TITLE:  Deep learning in Clojure with Cortex
 #+AUTHOR: Kiran Karkera 
 #+EMAIL: kiran.karkera@gmail.com
 #+GITHUB: shark8me
@@ -11,37 +11,97 @@
 #+STARTUP: showeverything
 #+OPTIONS: num:nil
 #+OPTIONS: toc:0
-#+OPTIONS: org-reveal-title-slide:%t %a %e
+# #+OPTIONS: org-reveal-title-slide: %t 
 #+REVEAL_EXTRA_CSS: ./presentation.css
 #+REVEAL_EXTRA_CSS: ./night.css
+#+REVEAL_SLIDE_FOOTER: 
 # #+REVEAL_MARGIN: 0.2
 #+REVEAL_MAX_SCALE: 5 
 # * An introduction to Cortex
 
-* Deep learning in Clojure with Cortex 
-
-* Outline of the talk
+* Outline 
 
 - Context: Clojure, Cortex, Machine Learning
 - Overview of Cortex
-- TLDR versions of using Cortex
-- Peeking under the hood.
-
+- How to build a network in Cortex
+- Cortex Design
+- Recipes for working with Cortex
 
 * Context 
 
-- machine learning/data science is an overloaded term
+- Machine learning/data science is an overloaded term
 
 #+REVEAL: split
+
+
 #+CAPTION: Blind men and the elephant 
+  [[./images/blind_men.jpg]]
 
-[[./images/blind_men.jpg]]
 
 #+REVEAL: split
+
+*“Data Scientist (n.): Person who is better at statistics than any software engineer and better at software engineering than any statistician.”*
+
+Josh Wills, Director of Engineering at Slack
+
+#+REVEAL: split
+
+*Easy things should be easy, and hard things should be possible"
+Larry Wall
+
+** Estimation vs Prediction 
+
+#+ATTR_REVEAL: :frag appear
+ Estimation: coming up with values of unknown parameters (in a model)  
+
+
+#+ATTR_REVEAL: :frag appear
+ Prediction: focused on accuracy (and other metrics) of model.
+
+#+BEGIN_NOTES
+ - Examine causes of hospital re-admission rates
+ - Example: image classification 
+#+END_NOTES
+
+** Research vs production use 
+
+#+ATTR_REVEAL: :frag appear
+ Exploration (given a dataset, train a classifier, produce a report) 
+
+#+ATTR_REVEAL: :frag appear
+ Production (putting a trained model into a production environment)
+
+#+REVEAL: split
+
+  [[./images/datascienceaxes.png]]
+
+* Why use Clojure for Machine Learning?
+
+- Perception that languages like R/Python are ideal for machine learning. 
+
+#+REVEAL: split
+#+CAPTION: Popularity of languages used in ML
+  [[./images/mlstats.png]]
+
+#+ATTR_REVEAL: :frag appear
+Data extraction and cleaning takes upto 80% of the time 
+#+ATTR_REVEAL: :frag appear
+Clojure is great at data manipulation thanks to its sequence abstractions
+#+ATTR_REVEAL: :frag appear
+Low impedance transition to production
+
+#+REVEAL: split
+| Library | Niche |
+|Gorilla-repl| Notebooks/visualization |
+|Storm | Stream processing |
+|Onyx | Stream Processing |
+|Sparkling/Flambo | Distributed jobs on Spark |
+|Datomic | Supports "time travel" over database history |
+
 
 * Machine Learning Digression
 
-*** Supervised Machine Learning:
+*** Supervised Classification:
 
 #+BEGIN_QUOTE
 When you are a kid and you see different types of animals, your father tells you that this particular animal is a dog. After doing this a few times, 
@@ -50,9 +110,10 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 
 #+CAPTION: Dogs vs cats
 
-[[./images/woof_meow.jpg]]
+  [[./images/woof_meow.jpg]]
 
-[[https://www.quora.com/What-is-the-difference-between-supervised-and-unsupervised-learning-algorithms/answer/Shehroz-Khan-2?srid=o0Wh][Quora post reference]]
+
+[fn:2] [[https://www.quora.com/What-is-the-difference-between-supervised-and-unsupervised-learning-algorithms/answer/Shehroz-Khan-2?srid=o0Wh][Quora post reference]]
 
 ** Applications of Supervised Learning 
 
@@ -62,7 +123,7 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 - Its also the "Hello World" program equivalent in machine learning.
 
 #+CAPTION: Handwritten digits  
-    [[./images/MNIST.png]] 
+  [[./images/MNIST.png]] 
 
 #+REVEAL: split
 
@@ -75,7 +136,7 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 #+CAPTION: Differentiating between dogs and cats
 
 #+ATTR_HTML: :height 50%, :width 50%
-[[./images/cat_or_dog.jpg]]
+  [[./images/cat_or_dog.jpg]]
 
 *** 
 
@@ -83,58 +144,10 @@ you see a new type of dog that you never saw before - you identify it as a dog a
 
 #+CAPTION: Classifying gender, age and skin colour
 
-[[./images/face_gender.png]]
+  [[./images/face_gender.png]]
 
 ** 
 
-- Two axes on which we can examine use cases or scenarios
-- use case using example of spam filtering. (Classification) 
-
-**  Inference vs prediction
--- (e.g Understand the causes of being labeled as spam. Too many links? misspellings? )
--- Much more useful in where a human intervention is required to make decisions (e.g. healthcare: predicting re-admission rates)
--- prediction where we ignore causes)
-
-** Research vs production use 
-
--- exploration (given a dataset, train a classifier, produce a report) 
--- production (putting a trained model into a production environment)
-
-* Why use Clojure for Machine Learning?
-
-- Perception that languages like R/Python are ideal for machine learning. 
-
-#+REVEAL: split
-#+CAPTION: Popularity of languages used in ML
-
-[[./images/mltrends.png]]
-
-[[https://trends.google.com/trends/explore?date=2012-11-23%202017-12-23&q=java%20machine%20learning,python%20machine%20learning,clojure%20machine%20learning,scala%20machine%20learning,R%20machine%20learning][Google searches for ML]]
-
-- Upto 80% of the time, the tasks in machine learning is data extraction and cleaning.
-- Not just in time, but code volume is disproportional. Given a dataset, training and prediction a simple classifier is
-
-#+BEGIN_SRC clojure
-
-(defn train-and-evaluate
-  "train and evaluate classification "
-  [spam-dataset]
-  (let [ email (-> (weka-dataset spam-dataset "email")
-                   (cmd/dataset-set-class "spam"))
-        classifier (-> (cls/make-classifier :decision-tree :random-forest)
-                       (cls/classifier-train email))]
-    (:summary (cls/classifier-evaluate classifier :cross-validation email 10))))
-   
-#+END_SRC
-
-* Features of Cortex
-
-- Deep learning library written in Clojure
-- support training on CPU and GPUs
-- supports feedforward and Convolutional nets
-- supports activations types such as logistic/tanh/relu/selu
-- has out of box UI / can leverage other UI such as Tensorboard (from Tensorflow)
-- data centric interface
 
 * How to train a simple network 
 
@@ -218,7 +231,6 @@ Each instance is a map with keys for data and labels
 ** Define the layers 
 
 - Network is defined as a vector of layers
-- Each layer may have specific arguments
 - input layer take 3 arguments, the *x y z* dimensions of the input cube
 - The :id key specifies the key in the input instance map
 
@@ -276,7 +288,6 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 - Use the trained network to get predictions
 - Given that the last layer is a logistic layer, it generates probabilities
 - If the probability is > 0.5, assume that the room is occupied, and vice versa
-- Similarly, extract the labels from the actual test data.
 
 
 #+BEGIN_SRC sh 
@@ -287,13 +298,77 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 [0.9447852760736196 0.8888888888888891]
 #+END_SRC
 
-* Look under the hood
+* Backpropagation
 
-[[./images/underthehood.jpg]]
+#+CAPTION: Model Town analogy
 
-* Data oriented design
+[[./images/modeltown.jpg]]
 
-- Neural networks are graphs <insert graph pic>
+
+[fn:1] Xkcd [[https://xkcd.com/1838/][link
+]] 
+*** Artifacts 
+
+#+ATTR_REVEAL: :frag appear
+Layers
+#+ATTR_REVEAL: :frag appear
+Parameters
+#+ATTR_REVEAL: :frag appear
+Forward pass
+#+ATTR_REVEAL: :frag appear
+Backward pass
+#+ATTR_REVEAL: :frag appear
+Loss function
+#+ATTR_REVEAL: :frag appear
+Gradient
+#+ATTR_REVEAL: :frag appear
+
+** How to train neural networks (theory)
+
+#+ATTR_REVEAL: :frag appear
+Write a toy implementation of back propagation 
+
+#+ATTR_REVEAL: :frag appear
+Stack up layers
+
+#+ATTR_REVEAL: :frag appear
+Sip your coffee and watch the loss function decrease
+
+#+REVEAL: split
+
+[[./images/ideallossfunction1.png]]
+
+** Reality
+
+#+CAPTION: A heart rate or a loss function? :)
+
+[[./images/lossfunction_heartrate.png]]
+
+This one of a custom implementation of an RNN, graciously contributed by Ray Zhang
+#+REVEAL: split
+
+#+CAPTION: Evades diagnosis. Graciously contributed by @bleyddyn.
+
+[[./images/lossfunction2.png]]
+
+Check out [[https://lossfunctions.tumblr.com/][this page]] for nicer loss functions
+
+* Features of Cortex
+
+Deep learning library written in Clojure
+#+ATTR_REVEAL: :frag appear
+Data centric interface
+#+ATTR_REVEAL: :frag appear
+Performant, Memory efficient training on GPUs
+TODO 
+
+* Cortex Design
+
+** Data centric interfaces
+
+- Neural networks are graphs 
+
+- TODO insert graph 
 
 - A graph is a vector of layers. 
 - Each layer is a map 
@@ -310,7 +385,6 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 (def description
   [(layers/input 2 1 1 :id :data)
    (layers/batch-normalization)
-   ;;Fix the weights to make the unit test work.
    (layers/linear 1 :weights [[-0.2 0.2]])
    (layers/logistic :id :labels)])
 
@@ -371,6 +445,10 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 * Post-training checks
 
 - compare performance on multiple metrics
+
+* Look under the hood
+
+[[./images/underthehood.jpg]]
 
 
 * Summary 

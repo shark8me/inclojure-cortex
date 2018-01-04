@@ -36,15 +36,16 @@
 (defn make-net
   []
   (-> [(layers/input 1 1 1 :id :data)
-       (layers/tanh)
+       (layers/linear->tanh 1)
        (layers/logistic :id :labels)
        ]
       network/linear-network))
 
 (def inp (range -1.0 1.0 0.05))
+(def inet (make-net))
 (defn trainx
   []
-  (let [inet (make-net)
+  (let [
          inp (mapv #(assoc {} :data [%] :labels [(if (> % 0) 1.0 0.0)]) inp)
         ;first-layer (-> inet :compute-graph :edges first second)
         ]
@@ -57,8 +58,21 @@
 ;; <=
 
 ;; @@
-()
+(network/print-layer-summary inet (traverse/training-traversal inet))
 ;; @@
+;; ->
+;;; 
+;;; |      type |     input |    output | :bias | :weights |
+;;; |-----------+-----------+-----------+-------+----------|
+;;; |   :linear | 1x1x1 - 1 | 1x1x1 - 1 |   [1] |    [1 1] |
+;;; |     :tanh | 1x1x1 - 1 | 1x1x1 - 1 |       |          |
+;;; | :logistic | 1x1x1 - 1 | 1x1x1 - 1 |       |          |
+;;; Parameter count: 2
+;;; 
+;; <-
+;; =>
+;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
+;; <=
 
 ;; @@
 (def res (trainx))
@@ -68,23 +82,24 @@
 ;;; CUDA backend creation failed, reverting to CPU
 ;;; Training network:
 ;;; 
-;;; |      type |     input |    output |
-;;; |-----------+-----------+-----------|
-;;; |     :tanh | 1x1x1 - 1 | 1x1x1 - 1 |
-;;; | :logistic | 1x1x1 - 1 | 1x1x1 - 1 |
-;;; Parameter count: 0
+;;; |      type |     input |    output | :bias | :weights |
+;;; |-----------+-----------+-----------+-------+----------|
+;;; |   :linear | 1x1x1 - 1 | 1x1x1 - 1 |   [1] |    [1 1] |
+;;; |     :tanh | 1x1x1 - 1 | 1x1x1 - 1 |       |          |
+;;; | :logistic | 1x1x1 - 1 | 1x1x1 - 1 |       |          |
+;;; Parameter count: 2
 ;;; 
 ;;; |     :type |              :value | :lambda | :node-id | :argument |
 ;;; |-----------+---------------------+---------+----------+-----------|
-;;; | :mse-loss | 0.15847744357004878 |     1.0 |  :labels |           |
+;;; | :mse-loss | 0.24937491944932172 |     1.0 |  :labels |           |
 ;;; 
-;;; Loss for epoch   1: (current) 0.15847744 (best) null [new best]
+;;; Loss for epoch   1: (current) 0.24937492 (best) null [new best]
 ;;; 
 ;;; |     :type |              :value | :lambda | :node-id | :argument |
 ;;; |-----------+---------------------+---------+----------+-----------|
-;;; | :mse-loss | 0.15847744357004878 |     1.0 |  :labels |           |
+;;; | :mse-loss | 0.24851795691831433 |     1.0 |  :labels |           |
 ;;; 
-;;; Loss for epoch   2: (current) 0.15847744 (best) 0.15847744
+;;; Loss for epoch   2: (current) 0.24851796 (best) 0.24937492 [new best]
 ;;; 
 ;; <-
 ;; =>
@@ -92,10 +107,38 @@
 ;; <=
 
 ;; @@
-(-> res :traversal :buffers second)
+(-> res :traversal :buffers keys)  
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:stream</span>","value":":stream"},{"type":"html","content":"<span class='clj-keyword'>:data</span>","value":":data"}],"value":"[:stream :data]"}],"value":"{:stream :data}"},{"type":"list-like","open":"<span class='clj-map'>{</span>","close":"<span class='clj-map'>}</span>","separator":", ","items":[{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:buffer</span>","value":":buffer"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x7e6d0a6 &quot;[D@7e6d0a6&quot;]</span>","value":"#object[\"[D\" 0x7e6d0a6 \"[D@7e6d0a6\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x2e671c0c &quot;[D@2e671c0c&quot;]</span>","value":"#object[\"[D\" 0x2e671c0c \"[D@2e671c0c\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x667c715d &quot;[D@667c715d&quot;]</span>","value":"#object[\"[D\" 0x667c715d \"[D@667c715d\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x4aab3a20 &quot;[D@4aab3a20&quot;]</span>","value":"#object[\"[D\" 0x4aab3a20 \"[D@4aab3a20\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x7b79b033 &quot;[D@7b79b033&quot;]</span>","value":"#object[\"[D\" 0x7b79b033 \"[D@7b79b033\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x6de8542c &quot;[D@6de8542c&quot;]</span>","value":"#object[\"[D\" 0x6de8542c \"[D@6de8542c\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x689b2655 &quot;[D@689b2655&quot;]</span>","value":"#object[\"[D\" 0x689b2655 \"[D@689b2655\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x7bf26b5c &quot;[D@7bf26b5c&quot;]</span>","value":"#object[\"[D\" 0x7bf26b5c \"[D@7bf26b5c\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x4d3cb439 &quot;[D@4d3cb439&quot;]</span>","value":"#object[\"[D\" 0x4d3cb439 \"[D@4d3cb439\"]"},{"type":"html","content":"<span class='clj-unkown'>#object[&quot;[D&quot; 0x62dac086 &quot;[D@62dac086&quot;]</span>","value":"#object[\"[D\" 0x62dac086 \"[D@62dac086\"]"}],"value":"[#object[\"[D\" 0x7e6d0a6 \"[D@7e6d0a6\"] #object[\"[D\" 0x2e671c0c \"[D@2e671c0c\"] #object[\"[D\" 0x667c715d \"[D@667c715d\"] #object[\"[D\" 0x4aab3a20 \"[D@4aab3a20\"] #object[\"[D\" 0x7b79b033 \"[D@7b79b033\"] #object[\"[D\" 0x6de8542c \"[D@6de8542c\"] #object[\"[D\" 0x689b2655 \"[D@689b2655\"] #object[\"[D\" 0x7bf26b5c \"[D@7bf26b5c\"] #object[\"[D\" 0x4d3cb439 \"[D@4d3cb439\"] #object[\"[D\" 0x62dac086 \"[D@62dac086\"]]"}],"value":"[:buffer [#object[\"[D\" 0x7e6d0a6 \"[D@7e6d0a6\"] #object[\"[D\" 0x2e671c0c \"[D@2e671c0c\"] #object[\"[D\" 0x667c715d \"[D@667c715d\"] #object[\"[D\" 0x4aab3a20 \"[D@4aab3a20\"] #object[\"[D\" 0x7b79b033 \"[D@7b79b033\"] #object[\"[D\" 0x6de8542c \"[D@6de8542c\"] #object[\"[D\" 0x689b2655 \"[D@689b2655\"] #object[\"[D\" 0x7bf26b5c \"[D@7bf26b5c\"] #object[\"[D\" 0x4d3cb439 \"[D@4d3cb439\"] #object[\"[D\" 0x62dac086 \"[D@62dac086\"]]]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:gradient</span>","value":":gradient"},{"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}],"value":"[:gradient nil]"},{"type":"list-like","open":"","close":"","separator":" ","items":[{"type":"html","content":"<span class='clj-keyword'>:numeric-gradient</span>","value":":numeric-gradient"},{"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}],"value":"[:numeric-gradient nil]"}],"value":"{:buffer [#object[\"[D\" 0x7e6d0a6 \"[D@7e6d0a6\"] #object[\"[D\" 0x2e671c0c \"[D@2e671c0c\"] #object[\"[D\" 0x667c715d \"[D@667c715d\"] #object[\"[D\" 0x4aab3a20 \"[D@4aab3a20\"] #object[\"[D\" 0x7b79b033 \"[D@7b79b033\"] #object[\"[D\" 0x6de8542c \"[D@6de8542c\"] #object[\"[D\" 0x689b2655 \"[D@689b2655\"] #object[\"[D\" 0x7bf26b5c \"[D@7bf26b5c\"] #object[\"[D\" 0x4d3cb439 \"[D@4d3cb439\"] #object[\"[D\" 0x62dac086 \"[D@62dac086\"]], :gradient nil, :numeric-gradient nil}"}],"value":"[{:stream :data} {:buffer [#object[\"[D\" 0x7e6d0a6 \"[D@7e6d0a6\"] #object[\"[D\" 0x2e671c0c \"[D@2e671c0c\"] #object[\"[D\" 0x667c715d \"[D@667c715d\"] #object[\"[D\" 0x4aab3a20 \"[D@4aab3a20\"] #object[\"[D\" 0x7b79b033 \"[D@7b79b033\"] #object[\"[D\" 0x6de8542c \"[D@6de8542c\"] #object[\"[D\" 0x689b2655 \"[D@689b2655\"] #object[\"[D\" 0x7bf26b5c \"[D@7bf26b5c\"] #object[\"[D\" 0x4d3cb439 \"[D@4d3cb439\"] #object[\"[D\" 0x62dac086 \"[D@62dac086\"]], :gradient nil, :numeric-gradient nil}]"}
+;;; {"type":"html","content":"<span class='clj-unkown'>({:stream :data} {:id :linear-1} {:id :tanh-1} {:id :labels} {:stream :labels})</span>","value":"({:stream :data} {:id :linear-1} {:id :tanh-1} {:id :labels} {:stream :labels})"}
+;; <=
+
+;; @@
+(->> ((-> res :traversal :buffers ) {:id :linear-1}) :gradient (mapv seq) )
+;; @@
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>(-0.24983052909374237)</span>","value":"(-0.24983052909374237)"},{"type":"html","content":"<span class='clj-unkown'>(-0.2497669756412506)</span>","value":"(-0.2497669756412506)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24970325827598572)</span>","value":"(-0.24970325827598572)"},{"type":"html","content":"<span class='clj-unkown'>(-0.2496393769979477)</span>","value":"(-0.2496393769979477)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24957531690597534)</span>","value":"(-0.24957531690597534)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24951112270355225)</span>","value":"(-0.24951112270355225)"},{"type":"html","content":"<span class='clj-unkown'>(-0.2494467943906784)</span>","value":"(-0.2494467943906784)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24938227236270905)</span>","value":"(-0.24938227236270905)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24931760132312775)</span>","value":"(-0.24931760132312775)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24925276637077332)</span>","value":"(-0.24925276637077332)"}],"value":"[(-0.24983052909374237) (-0.2497669756412506) (-0.24970325827598572) (-0.2496393769979477) (-0.24957531690597534) (-0.24951112270355225) (-0.2494467943906784) (-0.24938227236270905) (-0.24931760132312775) (-0.24925276637077332)]"}
+;; <=
+
+;; @@
+(->> ((-> res :traversal :buffers ) {:id :tanh-1}) :gradient (mapv seq) )
+;; @@
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>(-0.24983099102973938)</span>","value":"(-0.24983099102973938)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24976783990859985)</span>","value":"(-0.24976783990859985)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24970464408397675)</span>","value":"(-0.24970464408397675)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24964141845703125)</span>","value":"(-0.24964141845703125)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24957814812660217)</span>","value":"(-0.24957814812660217)"},{"type":"html","content":"<span class='clj-unkown'>(-0.2495148628950119)</span>","value":"(-0.2495148628950119)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24945157766342163)</span>","value":"(-0.24945157766342163)"},{"type":"html","content":"<span class='clj-unkown'>(-0.2493882179260254)</span>","value":"(-0.2493882179260254)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24932484328746796)</span>","value":"(-0.24932484328746796)"},{"type":"html","content":"<span class='clj-unkown'>(-0.24926142394542694)</span>","value":"(-0.24926142394542694)"}],"value":"[(-0.24983099102973938) (-0.24976783990859985) (-0.24970464408397675) (-0.24964141845703125) (-0.24957814812660217) (-0.2495148628950119) (-0.24945157766342163) (-0.2493882179260254) (-0.24932484328746796) (-0.24926142394542694)]"}
+;; <=
+
+;; @@
+(->> ((-> res :traversal :buffers ) {:stream :data}) :gradient (mapv seq) )
+;; @@
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>(-0.002520710928365588)</span>","value":"(-0.002520710928365588)"},{"type":"html","content":"<span class='clj-unkown'>(-0.0025200697127729654)</span>","value":"(-0.0025200697127729654)"},{"type":"html","content":"<span class='clj-unkown'>(-0.002519426867365837)</span>","value":"(-0.002519426867365837)"},{"type":"html","content":"<span class='clj-unkown'>(-0.0025187821593135595)</span>","value":"(-0.0025187821593135595)"},{"type":"html","content":"<span class='clj-unkown'>(-0.0025181358214467764)</span>","value":"(-0.0025181358214467764)"},{"type":"html","content":"<span class='clj-unkown'>(-0.002517488319426775)</span>","value":"(-0.002517488319426775)"},{"type":"html","content":"<span class='clj-unkown'>(-0.002516839187592268)</span>","value":"(-0.002516839187592268)"},{"type":"html","content":"<span class='clj-unkown'>(-0.0025161881931126118)</span>","value":"(-0.0025161881931126118)"},{"type":"html","content":"<span class='clj-unkown'>(-0.00251553556881845)</span>","value":"(-0.00251553556881845)"},{"type":"html","content":"<span class='clj-unkown'>(-0.0025148815475404263)</span>","value":"(-0.0025148815475404263)"}],"value":"[(-0.002520710928365588) (-0.0025200697127729654) (-0.002519426867365837) (-0.0025187821593135595) (-0.0025181358214467764) (-0.002517488319426775) (-0.002516839187592268) (-0.0025161881931126118) (-0.00251553556881845) (-0.0025148815475404263)]"}
+;; <=
+
+;; @@
+(-> res :traversal :buffers keys) 
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>({:stream :data} {:id :linear-1} {:id :tanh-1} {:id :labels} {:stream :labels})</span>","value":"({:stream :data} {:id :linear-1} {:id :tanh-1} {:id :labels} {:stream :labels})"}
 ;; <=
 
 ;; @@
@@ -107,9 +150,10 @@
          (execute/run (network/dissoc-layers-from-network inet :labels))
          (mapv (comp first first-layer))
          )))
-
-
 ;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;vanishing-sigmoid/get-resp</span>","value":"#'vanishing-sigmoid/get-resp"}
+;; <=
 
 ;; @@
 (def nets (mapv make-net [
