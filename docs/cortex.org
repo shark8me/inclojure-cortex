@@ -13,8 +13,6 @@
 #+OPTIONS: slideNumber:true
 #+OPTIONS: reveal_title_slide:"<h1>%t</h1><h2>%a</h2><h3>%e</h3>"
 #+OPTIONS: toc:0
-# #+REVEAL-TITLE-SLIDE-TEMPLATE: <h1>%t</h1><h2>%a</h2> 
-#+REVEAL_EXTRA_CSS: ./presentation.css
 #+REVEAL_EXTRA_CSS: ./night.css
 #+REVEAL_SLIDE_FOOTER: 
 # #+REVEAL_MARGIN: 0.2
