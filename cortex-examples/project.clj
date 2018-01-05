@@ -4,6 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :plugins  [[lein-gorilla "0.4.0"]]
+  :jvm-opts  ["-Xmx12g"]
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [thinktopic/experiment "0.9.23-SNAPSHOT"]
                  [mnist-classification "0.9.23-SNAPSHOT"]

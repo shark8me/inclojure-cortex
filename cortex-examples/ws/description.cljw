@@ -7,11 +7,7 @@
 
 ;; @@
 (ns icy-hood
-  (:require [gorilla-plot.core :as plot]
-            ;[loom.io :refer [dot-str]]
-            ;[cortex-examples.draw-graph :as dg]
-            ;[loom.graph :as lg]
-            ;[think.parallel.core :as parallel]
+  (:require [gorilla-plot.core :as plot]            
             [cortex.optimize :as opt]
             [cortex.optimize.adam :as adam]
             [cortex.nn.execute :as execute]

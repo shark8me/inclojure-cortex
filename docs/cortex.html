@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Deep learning in Clojure with Cortex</title>
+<title>Deep learning with Cortex</title>
 <meta name="author" content="(Kiran Karkera)"/>
 <style type="text/css">
 .underline { text-decoration: underline; }
 </style>
 <link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/reveal.css"/>
 
-<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/theme/night.css" id="theme"/>
+<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/theme/moon.css" id="theme"/>
 
 <link rel="stylesheet" href="./presentation.css"/>
 
@@ -29,67 +29,52 @@
 <body>
 <div class="reveal">
 <div class="slides">
-<section id="sec-title-slide"><h1 class="title">Deep learning in Clojure with Cortex</h1><h2 class="author">Kiran Karkera</h2><p class="date">Created: 2018-01-04 Thu 11:24</p>
+<section id="sec-title-slide"><h1>Deep learning with Cortex</h1><h2>Kiran Karkera</h2><h3><a href="mailto:Datacraft Sciences">Datacraft Sciences</a></h3>
 </section>
 
 <section>
-<section id="slide-org5410132">
-<h2 id="org5410132">Outline</h2>
-<ul>
-<li>Context: Clojure, Cortex, Machine Learning</li>
-<li>Overview of Cortex</li>
-<li>How to build a network in Cortex</li>
-<li>Cortex Design</li>
-<li>Recipes for working with Cortex</li>
-
-</ul>
+<section id="slide-org4cb5c49">
+<h2 id="org4cb5c49">Outline</h2>
+<p>
+Context: Clojure, Cortex, Machine Learning
+</p>
+<p class="fragment appear">
+Overview of Cortex
+</p>
+<p class="fragment appear">
+How to build a network in Cortex
+</p>
+<p class="fragment appear">
+Recipes for working with Cortex
+</p>
 
 <div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-org6aa3804">
-<h2 id="org6aa3804">Context</h2>
-<ul>
-<li>Machine learning/data science is an overloaded term</li>
-
-</ul>
+<section id="slide-org33798e8">
+<h2 id="org33798e8">Context</h2>
+<p>
+Machine learning/data science is an overloaded term
+</p>
 
 </section>
 <section >
 
 
-
 <div class="figure">
-<p><img src="./images/blind_men.jpg" alt="blind_men.jpg" />
+<p><img src="./images/blind_men.jpg" alt="blind_men.jpg" style="margin: 0 auto; display:block;" />
 </p>
-<p><span class="figure-number">Figure 1: </span>Blind men and the elephant</p>
 </div>
 
 
 </section>
 <section >
 
-<p>
-<b>“Data Scientist (n.): Person who is better at statistics than any software engineer and better at software engineering than any statistician.”</b>
-</p>
-
-<p>
-Josh Wills, Director of Engineering at Slack
-</p>
-
-</section>
-<section >
-
-<p>
-*Easy things should be easy, and hard things should be possible"
-Larry Wall
-</p>
-
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org5292e6f">
-<h3 id="org5292e6f">Estimation vs Prediction</h3>
+<section id="slide-orge7605fa">
+<h3 id="orge7605fa">Estimation vs Prediction</h3>
 <p class="fragment appear">
 Estimation: coming up with values of unknown parameters (in a model)  
 </p>
@@ -110,8 +95,8 @@ Prediction: focused on accuracy (and other metrics) of model.
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org14bb17f">
-<h3 id="org14bb17f">Research vs production use</h3>
+<section id="slide-orgf667610">
+<h3 id="orgf667610">Research vs production use</h3>
 <p class="fragment appear">
 Exploration (given a dataset, train a classifier, produce a report) 
 </p>
@@ -133,12 +118,11 @@ Production (putting a trained model into a production environment)
 </section>
 </section>
 <section>
-<section id="slide-orge5adaf1">
-<h2 id="orge5adaf1">Why use Clojure for Machine Learning?</h2>
-<ul>
-<li>Perception that languages like R/Python are ideal for machine learning.</li>
-
-</ul>
+<section id="slide-orgc117547">
+<h2 id="orgc117547">Why use Clojure for Machine Learning?</h2>
+<p>
+Perception that languages like R/Python are ideal for machine learning. 
+</p>
 
 </section>
 <section >
@@ -146,13 +130,16 @@ Production (putting a trained model into a production environment)
 <div class="figure">
 <p><img src="./images/mlstats.png" alt="mlstats.png" />
 </p>
+<p><span class="figure-number">Figure 3: </span>Popularity of languages used in ML</p>
 </div>
 
-<p class="fragment appear">
+</section>
+<section >
+<p>
 Data extraction and cleaning takes upto 80% of the time 
 </p>
 <p class="fragment appear">
-Clojure is great at data manipulation thanks to its sequence abstractions
+Clojure is great at data manipulation 
 </p>
 <p class="fragment appear">
 Low impedance transition to production
@@ -160,6 +147,7 @@ Low impedance transition to production
 
 </section>
 <section >
+
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -170,8 +158,8 @@ Low impedance transition to production
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">Library</td>
-<td class="org-left">Niche</td>
+<td class="org-left"><b>Library</b></td>
+<td class="org-left"><b>Niche</b></td>
 </tr>
 
 <tr>
@@ -206,152 +194,198 @@ Low impedance transition to production
 </section>
 </section>
 <section>
-<section id="slide-orgcb99f81">
-<h2 id="orgcb99f81">Machine Learning Digression</h2>
-<div class="outline-text-2" id="text-orgcb99f81">
+<section id="slide-org1b00de6">
+<h2 id="org1b00de6">Machine Learning Digression</h2>
+<div class="outline-text-2" id="text-org1b00de6">
 </div>
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org97f96f6">
-<h4 id="org97f96f6">Supervised Classification:</h4>
-<blockquote nil>
+<section id="slide-orgb48f182">
+<h4 id="orgb48f182">Supervised Classification:</h4>
+
+<div class="figure">
+<p><img src="./images/woof_meow.jpg" alt="woof_meow.jpg" style="margin: 0 auto; display:block;" />
+</p>
+</div>
+
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org4d12f81">
+<h3 id="org4d12f81">Why are Neural Networks popular for classification?</h3>
+<div class="outline-text-3" id="text-org4d12f81">
+</div>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orge92c83a">
+<h4 id="orge92c83a">State of the art performance</h4>
+</section>
+<section >
 <p>
-When you are a kid and you see different types of animals, your father tells you that this particular animal is a dog. After doing this a few times, 
-you see a new type of dog that you never saw before - you identify it as a dog and not as a cat or a monkey or a potato.
+One of the early successes(1992) for neural nets was reading <a href="http://yann.lecun.com/exdb/publis/pdf/matan-92.pdf">the zip code</a> in postal mail.
 </p>
-</blockquote>
 
 
 <div class="figure">
-<p><img src="./images/woof_meow.jpg" alt="woof_meow.jpg" />
+<p><img src="./images/MNIST.png" alt="MNIST.png" style="margin: 0 auto; display:block;" /> 
 </p>
 </div>
+
+<p class="fragment appear">
+99.81% accuracy on MNIST, close to or better than human performance
+</p>
+<p class="fragment appear">
+Dataset called MNIST is a benchmark dataset in machine learning
+</p>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org264c751">
+<h4 id="org264c751">Flexibility</h4>
+<p>
+NNs can accommodate several outputs:
+</p>
+<p class="fragment appear">
+Single target classification (e.g. Spam classification)
+</p>
+<p class="fragment appear">
+Multi target classification (e.g multiple objects in an image)
+</p>
+
+<p class="fragment appear">
+Classifying aspects of human faces such as gender, age, type of expression and skin colour
+</p>
+
+
+<div class="figure">
+<p><img src="./images/face_gender.png" alt="face_gender.png" class="fragment appear" style="margin: 0 auto; display:block;" />
+</p>
+</div>
+
+</section>
+<section >
 
 <p>
-<a href="https://www.quora.com/What-is-the-difference-between-supervised-and-unsupervised-learning-algorithms/answer/Shehroz-Khan-2?srid=o0Wh">Quora post reference</a>
+Composable abstractions 
 </p>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-orgb520b38">
-<h3 id="orgb520b38">Applications of Supervised Learning</h3>
-</section>
-<section >
-<ul>
-<li>One of the early successes(1992) for supervised machine learning was reading <a href="http://yann.lecun.com/exdb/publis/pdf/matan-92.pdf">the zip code</a> in postal mail.</li>
-<li>Dataset called MNIST is a benchmark dataset in machine learning</li>
-<li>Its also the "Hello World" program equivalent in machine learning.</li>
-
-</ul>
-
-
-<div class="figure">
-<p><img src="./images/MNIST.png" alt="MNIST.png" /> 
+<p class="fragment appear">
+Different layers can be combined in a <a href="http://colah.github.io/posts/2014-07-Conv-Nets-Modular/" class="fragment appear">modular fashion</a> and computations are straightforward
 </p>
-<p><span class="figure-number">Figure 5: </span>Handwritten digits</p>
-</div>
-
-</section>
-<section >
-
-<ul>
-<li>A Kaggle competition to distinguish between cats and dogs was conducted in 2014.</li>
-<li>Training on 25,000 images of dogs and cats, 
-<ul>
-<li>the leading teams got to 98.9% <a href="https://www.kaggle.com/c/dogs-vs-cats/leaderboard">accuracy</a>.</li>
-
-</ul></li>
-<li><a href="#/slide-orgf012cad">Here's</a> the classifier implemented in Cortex.</li>
-
-</ul>
 
 </section>
 <section >
 
 <div class="figure">
-<p><img src="./images/cat_or_dog.jpg" alt="cat_or_dog.jpg" height="50%," width="50%" />
+<p><img src="./images/example_captions.jpg" alt="example_captions.jpg" style="margin: 0 auto; display:block;" height="70%," width="70%" />
 </p>
+<p><span class="figure-number">Figure 7: </span>im2txt network provides descriptions of images</p>
 </div>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-orgf012cad">
-<h4 id="orgf012cad"></h4>
-<ul>
-<li>Classifying aspects of human faces such as gender, age, type of expression and skin colour</li>
-
-</ul>
-
-
-<div class="figure">
-<p><img src="./images/face_gender.png" alt="face_gender.png" />
-</p>
-</div>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-org239ebe9">
-<h3 id="org239ebe9"></h3>
 
 <div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-orgc4088dc">
-<h2 id="orgc4088dc">Features of Cortex</h2>
-<ul>
-<li>Deep learning library written in Clojure</li>
-<li>Data centric interface</li>
+<section id="slide-orgdd043fe">
+<h2 id="orgdd043fe">Features of Cortex</h2>
+<p>
+Deep learning library written in Clojure
+</p>
+<p class="fragment appear">
+Data centric interface
+</p>
+<p class="fragment appear">
+Performant, Memory efficient training on GPUs
+</p>
+<p class="fragment appear">
+Low LOC count
+</p>
+<p class="fragment appear">
+Supports Convolutional NNs (image processing)
+</p>
+<p class="fragment appear">
+Partial support for ingesting pre-trained networks
+</p>
 
-</ul>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org53dac8b">
+<h3 id="org53dac8b">Compute Abstraction</h3>
 
+<div class="figure">
+<p><img src="./images/compute_abstraction.png" alt="compute_abstraction.png" />
+</p>
+</div>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgdf984eb">
+<h3 id="orgdf984eb">Design goal</h3>
+<p>
+Enables some level of shared implementation between a Cpu, Cuda, OpenCL
+</p>
+<p class="fragment appear">
+Targets environments where there is a distinct transfer step from host to device
+</p>
+
+</section>
+<section >
+
+<p>
+Primitives include operations such as:
+</p>
+<p class="fragment appear">
+Initializing buffers
+</p>
+<p class="fragment appear">
+Transfer of data between the host and device
+</p>
+<p class="fragment appear">
+Overlapping transfer with device compute using multiple 'streams' of execution.
+</p>
 
 <div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-org32f4e55">
-<h2 id="org32f4e55">How to train a simple network</h2>
-<div class="outline-text-2" id="text-org32f4e55">
+<section id="slide-orgbdf613e">
+<h2 id="orgbdf613e">Training with Cortex</h2>
+<div class="outline-text-2" id="text-orgbdf613e">
 </div>
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org89875ed">
-<h3 id="org89875ed">Data</h3>
-<p>
-The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room occupancy</a> dataset 
+<section id="slide-org7af212c">
+<h4 id="org7af212c">Predicting office room occupancy</h4>
+<p class="fragment appear">
+Train with 8k instances from <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+" class="fragment appear">room occupancy</a> dataset 
 </p>
 
-<ul>
-<li>Contains measurements of light, temperature, humidity and CO2 of an office room.</li>
-<li>Goal is to predict when the room is occupied.</li>
-<li>Alternative statement: Predict the class (occupied or not) given the observations.</li>
+<p class="fragment appear">
+Contains measurements of light, temperature, humidity and CO2 of an office room. 
+</p>
 
-</ul>
+<p class="fragment appear">
+Goal is to predict when the room is occupied.
+</p>
 
 </section>
 <section >
 
 
 <div class="figure">
-<p><img src="./images/occupancy_dataset.png" alt="occupancy_dataset.png" />
+<p><img src="./images/occupancy_dataset.png" alt="occupancy_dataset.png" style="margin: 0 auto; display:block;" />
 </p>
 </div>
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org91929bf">
-<h4 id="org91929bf">Data ingestion</h4>
+<section id="slide-org3c3baa3">
+<h4 id="org3c3baa3">Data ingestion</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">data-vectors</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> <span style="color: #2d9574;">"resources/occupancy/datatraining.csv"</span>
                        <span style="color: #2d9574;">(</span>slurp<span style="color: #2d9574;">)</span>
-                       <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">clojure.string</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>split-lines<span style="color: #2d9574;">)</span>
-                       <span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">ignore the header row</span>
-                       <span style="color: #2d9574;">(</span>rest<span style="color: #2d9574;">)</span>                                     
-                       <span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">id, date </span>
-                       <span style="color: #2d9574;">(</span>map <span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">fn</span> <span style="color: #b1951d;">[</span>l<span style="color: #b1951d;">]</span> <span style="color: #b1951d;">(</span>drop <span style="color: #a45bad;">2</span> <span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">clojure.string</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>split l #<span style="color: #2d9574;">","</span> <span style="color: #4f97d7;">)</span><span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span>  
-                       <span style="color: #2d9574;">(</span>mapv <span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">fn</span> <span style="color: #b1951d;">[</span>m<span style="color: #b1951d;">]</span> <span style="color: #b1951d;">(</span>mapv #<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">Double.</span> <span style="color: #7590db;">%</span><span style="color: #4f97d7;">)</span> m<span style="color: #b1951d;">)</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+                       <span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">parse lines   </span>
+                       <span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
 <span style="color: #4f97d7;">(</span>take <span style="color: #a45bad;">2</span> data-vectors<span style="color: #4f97d7;">)</span>
 
 </pre>
@@ -361,7 +395,7 @@ The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room o
 
 <div class="org-src-container">
 
-<pre  class="src src-sh"><span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">[</span><span style="color: #a45bad;">23.18</span> <span style="color: #a45bad;">27.272</span> <span style="color: #a45bad;">426.0</span> <span style="color: #a45bad;">721.25</span> <span style="color: #a45bad;">0.00479298817650529</span> <span style="color: #a45bad;">1.0</span><span style="color: #bc6ec5;">]</span> 
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">[</span><span style="color: #a45bad;">23.18</span> <span style="color: #a45bad;">27.272</span> <span style="color: #a45bad;">426.0</span> <span style="color: #a45bad;">721.25</span> <span style="color: #a45bad;">0.00479298817650529</span> <span style="color: #a45bad;">1.0</span><span style="color: #bc6ec5;">]</span> 
  <span style="color: #bc6ec5;">[</span><span style="color: #a45bad;">23.15</span> <span style="color: #a45bad;">27.2675</span> <span style="color: #a45bad;">429.5</span> <span style="color: #a45bad;">714.0</span> <span style="color: #a45bad;">0.00478344094931065</span> <span style="color: #a45bad;">1.0</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
 </pre>
 </div>
@@ -369,8 +403,8 @@ The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room o
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org3ffd935">
-<h4 id="org3ffd935">Create training data format</h4>
+<section id="slide-orga481450">
+<h4 id="orga481450">Create training data format</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">defn</span> <span style="color: #bc6ec5; font-weight: bold;">make-feature-vec</span>
@@ -387,13 +421,10 @@ The <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room o
 
 <hr />
 
-<p>
-Each instance is a map with keys for data and labels
-</p>
 
 <div class="org-src-container">
 
-<pre  class="src src-sh"><span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">{</span>:data <span style="color: #2d9574;">[</span><span style="color: #a45bad;">22.15</span> <span style="color: #a45bad;">27.245</span> <span style="color: #a45bad;">0.0</span> <span style="color: #a45bad;">586.5</span> <span style="color: #a45bad;">0.0044959713579516</span><span style="color: #2d9574;">]</span>, :labels <span style="color: #2d9574;">[</span><span style="color: #a45bad;">0.0</span><span style="color: #2d9574;">]</span><span style="color: #bc6ec5;">}</span> 
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">{</span>:data <span style="color: #2d9574;">[</span><span style="color: #a45bad;">22.15</span> <span style="color: #a45bad;">27.245</span> <span style="color: #a45bad;">0.0</span> <span style="color: #a45bad;">586.5</span> <span style="color: #a45bad;">0.0044959713579516</span><span style="color: #2d9574;">]</span>, :labels <span style="color: #2d9574;">[</span><span style="color: #a45bad;">0.0</span><span style="color: #2d9574;">]</span><span style="color: #bc6ec5;">}</span> 
  <span style="color: #bc6ec5;">{</span>:data <span style="color: #2d9574;">[</span><span style="color: #a45bad;">20.89</span> <span style="color: #a45bad;">23.445</span> <span style="color: #a45bad;">0.0</span> <span style="color: #a45bad;">450.5</span> <span style="color: #a45bad;">0.00357640828064061</span><span style="color: #2d9574;">]</span>, :labels <span style="color: #2d9574;">[</span><span style="color: #a45bad;">1.0</span><span style="color: #2d9574;">]</span><span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">)</span>
 
 </pre>
@@ -401,8 +432,8 @@ Each instance is a map with keys for data and labels
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgfa785ff">
-<h4 id="orgfa785ff">Split the data into train and test</h4>
+<section id="slide-org93de7d9">
+<h4 id="org93de7d9">Split the data into train and test</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">train-test-ds</span> 
@@ -419,18 +450,21 @@ Each instance is a map with keys for data and labels
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org95bc064">
-<h3 id="org95bc064">Define the layers</h3>
-<ul>
-<li>Network is defined as a vector of layers</li>
-<li>input layer take 3 arguments, the <b>x y z</b> dimensions of the input cube</li>
-<li>The :id key specifies the key in the input instance map</li>
-
-</ul>
+<section id="slide-org9bf1ebb">
+<h3 id="org9bf1ebb">Define the layers</h3>
+<p>
+Network is defined as a vector of layers
+</p>
+<p class="fragment appear">
+Input layer take 3 arguments, the <b>x y z</b> dimensions of the input cube
+</p>
+<p class="fragment appear">
+Specify the input against the :id key 
+</p>
 
 <div class="org-src-container">
 
-<pre  class="src src-clojure"><span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">input layer for an image of size 28 (length) x 28 (breadth) x 3 (depth)</span>
+<pre  class="fragment appear"><span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">input layer for an image of size 28 (length) x 28 (breadth) x 3 (depth)</span>
 <span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">28</span> <span style="color: #a45bad;">28</span> <span style="color: #a45bad;">3</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #4f97d7;">)</span>
 
 <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">input layer for room occupancy is 5(inputs) x 1 x 1 </span>
@@ -442,15 +476,15 @@ Each instance is a map with keys for data and labels
 
 <div class="org-src-container">
 
-<pre  class="src src-clojure"><span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">data instance</span>
+<pre  class="fragment appear"><span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">data instance</span>
 <span style="color: #4f97d7;">{</span><span style="color: #a45bad;">:data</span> <span style="color: #bc6ec5;">[</span><span style="color: #a45bad;">22.15</span> <span style="color: #a45bad;">27.245</span> <span style="color: #a45bad;">0.0</span> <span style="color: #a45bad;">586.5</span> <span style="color: #a45bad;">0.0044959713579516</span><span style="color: #bc6ec5;">]</span>, <span style="color: #a45bad;">:labels</span> <span style="color: #bc6ec5;">[</span><span style="color: #a45bad;">0.0</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">}</span>
 </pre>
 </div>
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org83bcad5">
-<h4 id="org83bcad5">Network definition</h4>
+<section id="slide-orgda3b776">
+<h4 id="orgda3b776">Network definition</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">description</span>
@@ -464,17 +498,18 @@ Each instance is a map with keys for data and labels
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgcfc879d">
-<h4 id="orgcfc879d">Train the network</h4>
-<ul>
-<li>Train it for 10 <b>epochs</b></li>
-<li>One epoch is an iteration where the neural network gets to see each instance in the dataset <b>once</b></li>
-
-</ul>
+<section id="slide-org8845e2c">
+<h4 id="org8845e2c">Training</h4>
+<p>
+Train it for 10 <b>epochs</b>
+</p>
+<p class="fragment appear">
+One epoch == One pass on the dataset 
+</p>
 
 <div class="org-src-container">
 
-<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">trained-occupancy-net</span> 
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">trained-occupancy-net</span> 
   <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">let</span> <span style="color: #2d9574;">[</span><span style="color: #67b11d;">[</span>train-ds test-ds<span style="color: #67b11d;">]</span> train-test-ds<span style="color: #2d9574;">]</span>
     <span style="color: #2d9574;">(</span>train-n description train-ds test-ds                            
              <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">run for 10 training epochs</span>
@@ -483,66 +518,34 @@ Each instance is a map with keys for data and labels
 </pre>
 </div>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<div class="org-src-container">
 
+<pre  class="fragment appear">|     :type |              :value | :lambda | :node-id | :argument |
+|-----------+---------------------+---------+----------+-----------|
+| :mse-loss | <span style="color: #a45bad;">0.03046061750823965</span> |     <span style="color: #a45bad;">1.0</span> |  :labels |           |
 
-<colgroup>
-<col  class="org-left" />
+Loss for epoch  <span style="color: #a45bad;">10:</span> <span style="color: #4f97d7;">(</span>current<span style="color: #4f97d7;">)</span> <span style="color: #a45bad;">0.03046062</span> <span style="color: #4f97d7;">(</span>best<span style="color: #4f97d7;">)</span> <span style="color: #a45bad;">0.03308501</span> <span style="color: #4f97d7;">[</span>new best<span style="color: #4f97d7;">]</span>
 
-<col  class="org-right" />
-
-<col  class="org-right" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-left">:type</th>
-<th scope="col" class="org-right">:value</th>
-<th scope="col" class="org-right">:lambda</th>
-<th scope="col" class="org-left">:node-id</th>
-<th scope="col" class="org-left">:argument</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left">:mse-loss</td>
-<td class="org-right">0.03046061750823965</td>
-<td class="org-right">1.0</td>
-<td class="org-left">:labels</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-</tbody>
-</table>
-
-<p>
-Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
-</p>
+</pre>
+</div>
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org12fac71">
-<h4 id="org12fac71">Evaluate results</h4>
-<ul>
-<li>Evaluate the accuracy (and other metrics) on the test set</li>
-<li>Use the trained network to get predictions</li>
-<li>Given that the last layer is a logistic layer, it generates probabilities</li>
-<li>If the probability is &gt; 0.5, assume that the room is occupied, and vice versa</li>
-
-</ul>
-
+<section id="slide-orgc1a47c2">
+<h4 id="orgc1a47c2">Evaluate results</h4>
+<p>
+Evaluate the accuracy (and other metrics) on the test set
+</p>
 
 <div class="org-src-container">
 
-<pre  class="src src-sh"><span style="color: #4f97d7;">[</span><span style="color: #bc6ec5;">(</span>accuracy actual predicted<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">(</span>f1-score actual predicted <span style="color: #a45bad;">1.0</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">]</span>
+<pre  class="fragment appear"><span style="color: #4f97d7;">[</span><span style="color: #bc6ec5;">(</span>accuracy actual predicted<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">(</span>f1-score actual predicted <span style="color: #a45bad;">1.0</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">]</span>
 </pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="src src-sh"><span style="color: #4f97d7;">[</span><span style="color: #a45bad;">0.9447852760736196</span> <span style="color: #a45bad;">0.8888888888888891</span><span style="color: #4f97d7;">]</span>
+<pre  class="fragment appear"><span style="color: #4f97d7;">[</span><span style="color: #a45bad;">0.9447852760736196</span> <span style="color: #a45bad;">0.8888888888888891</span><span style="color: #4f97d7;">]</span>
 </pre>
 </div>
 
@@ -550,8 +553,8 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </section>
 </section>
 <section>
-<section id="slide-orgb7f2152">
-<h2 id="orgb7f2152">Backpropagation</h2>
+<section id="slide-orgf258d5c">
+<h2 id="orgf258d5c">Backpropagation</h2>
 
 <div class="figure">
 <p><img src="./images/modeltown.jpg" alt="modeltown.jpg" />
@@ -559,8 +562,8 @@ Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
 </div>
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org08742b6">
-<h4 id="org08742b6">Artifacts</h4>
+<section id="slide-org8c6252b">
+<h4 id="org8c6252b">Artifacts</h4>
 <p class="fragment appear">
 Layers
 </p>
@@ -574,7 +577,7 @@ Forward pass
 Backward pass
 </p>
 <p class="fragment appear">
-Loss function
+Accuracy / Loss function
 </p>
 <p class="fragment appear">
 Gradient
@@ -582,10 +585,10 @@ Gradient
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org2f8e018">
-<h3 id="org2f8e018">How to train neural networks (theory)</h3>
+<section id="slide-org9dd3c1c">
+<h3 id="org9dd3c1c">How to train neural networks (theory)</h3>
 <p class="fragment appear">
-Write a toy implementation of back propagation 
+(Learn by) writing a toy implementation of back propagation 
 </p>
 
 <p class="fragment appear">
@@ -601,244 +604,640 @@ Sip your coffee and watch the loss function decrease
 
 
 <div class="figure">
-<p><img src="./images/ideallossfunction1.png" alt="ideallossfunction1.png" />
+<p><img src="./images/ideallossfunction1.png" alt="ideallossfunction1.png" style="margin: 0 auto; display:block;" />
 </p>
 </div>
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org701b0f8">
-<h3 id="org701b0f8">Reality</h3>
+<section id="slide-orgd6940e5">
+<h3 id="orgd6940e5">Reality</h3>
 
 <div class="figure">
-<p><img src="./images/lossfunction_heartrate.png" alt="lossfunction_heartrate.png" />
+<p><img src="./images/lossfunction_heartrate.png" alt="lossfunction_heartrate.png" style="margin: 0 auto; display:block;" />
 </p>
+<p><span class="figure-number">Figure 12: </span>A heart rate or a loss function? :)</p>
 </div>
 
-<p>
-This one of a custom implementation of an RNN, graciously contributed by Ray Zhang
-</p>
 </section>
 <section >
 
 
 <div class="figure">
-<p><img src="./images/lossfunction2.png" alt="lossfunction2.png" />
+<p><img src="./images/lossfunction2.png" alt="lossfunction2.png" style="margin: 0 auto; display:block;" />
 </p>
+<p><span class="figure-number">Figure 13: </span>Evades diagnosis</p>
 </div>
 
 <p>
-Check out <a href="https://lossfunctions.tumblr.com/">this page</a> for nicer loss functions
+Check out <a href="https://lossfunctions.tumblr.com/">this page</a> for artistic loss functions
 </p>
 
-<div class="slide-footer"></div>
 </section>
-</section>
-<section>
-<section id="slide-orgee1079f">
-<h2 id="orgee1079f">Cortex Design</h2>
-<div class="outline-text-2" id="text-orgee1079f">
-</div>
-<div class="slide-footer"></div>
-</section>
-<section id="slide-orgcd519b1">
-<h3 id="orgcd519b1">Data centric interfaces</h3>
-<ul>
-<li>Neural networks are graphs</li>
-
-<li>TODO insert graph</li>
-
-<li>A graph is a vector of layers.</li>
-<li>Each layer is a map</li>
-
-</ul>
-
-<div class="org-src-container">
-
-<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">2</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #4f97d7;">)</span>
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">when eval'd returns</span>
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">[{</span><span style="color: #2aa1ae; background-color: #292e34;">:type</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:input</span><span style="color: #2aa1ae; background-color: #292e34;">, </span><span style="color: #2aa1ae; background-color: #292e34;">:output-size</span><span style="color: #2aa1ae; background-color: #292e34;"> 2, </span><span style="color: #2aa1ae; background-color: #292e34;">:output-width</span><span style="color: #2aa1ae; background-color: #292e34;"> 2, </span><span style="color: #2aa1ae; background-color: #292e34;">:output-height</span><span style="color: #2aa1ae; background-color: #292e34;"> 1, </span><span style="color: #2aa1ae; background-color: #292e34;">:output-channels</span><span style="color: #2aa1ae; background-color: #292e34;"> 1, </span><span style="color: #2aa1ae; background-color: #292e34;">:id</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:data</span><span style="color: #2aa1ae; background-color: #292e34;">}]</span>
-
-</pre>
-</div>
-
-<div class="org-src-container">
-
-<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">description</span>
-  <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">2</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #2d9574;">)</span>
-   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>batch-normalization<span style="color: #2d9574;">)</span>
-   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:weights</span> <span style="color: #67b11d;">[</span><span style="color: #b1951d;">[</span><span style="color: #a45bad;">-0.2</span> <span style="color: #a45bad;">0.2</span><span style="color: #b1951d;">]</span><span style="color: #67b11d;">]</span><span style="color: #2d9574;">)</span>
-   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>logistic <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:labels</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
-
-<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">g</span> <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear-network description<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
-<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> g <span style="color: #a45bad;">:compute-graph</span> keys<span style="color: #4f97d7;">)</span>
-
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">returns </span>
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">(</span><span style="color: #2aa1ae; background-color: #292e34;">:nodes</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:edges</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:buffers</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:streams</span><span style="color: #2aa1ae; background-color: #292e34;">)</span>
-
-</pre>
-</div>
-
-<ul>
-<li>how does this help?</li>
-<li>Create visual representations of the network (nodes/edges)</li>
-<li></li>
-
-</ul>
-<div class="org-src-container">
-
-<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> g <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:nodes</span> <span style="color: #bc6ec5;">(</span>mapv <span style="color: #2d9574;">(</span>comp <span style="color: #a45bad;">:input-dimensions</span> second<span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">output</span>
-<span style="color: #4f97d7;">[</span><span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">{</span><span style="color: #a45bad;">:channels</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:height</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:width</span> <span style="color: #a45bad;">2</span>, <span style="color: #a45bad;">:stream</span> <span style="color: #a45bad;">:data</span><span style="color: #2d9574;">}</span><span style="color: #bc6ec5;">]</span> 
- <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">{</span><span style="color: #a45bad;">:channels</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:height</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:width</span> <span style="color: #a45bad;">2</span>, <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #2d9574;">}</span><span style="color: #bc6ec5;">]</span> 
- <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">{</span><span style="color: #a45bad;">:channels</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:height</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:width</span> <span style="color: #a45bad;">2</span>, <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:batch-normalization-1</span><span style="color: #2d9574;">}</span><span style="color: #bc6ec5;">]</span> 
- <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">{</span><span style="color: #a45bad;">:channels</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:height</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:width</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:linear-1</span><span style="color: #2d9574;">}</span><span style="color: #bc6ec5;">]</span> 
- <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">{</span><span style="color: #a45bad;">:channels</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:height</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:width</span> <span style="color: #a45bad;">1</span>, <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:labels</span><span style="color: #2d9574;">}</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">]</span>
-
-</pre>
-</div>
-
-<div class="slide-footer"></div>
-</section>
-</section>
-<section>
-<section id="slide-org1db757d">
-<h2 id="org1db757d">traversing a network:</h2>
-<ul>
-<li>this is a 'moded' operation:</li>
-
-</ul>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-orgeda8a63">
-<h3 id="orgeda8a63">while training:</h3>
-<ul>
-<li>backpropogation: forward pass: calculate the output given an input</li>
-<li>backward pass: calculate the gradients  (or the correction)</li>
-
-</ul>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-orgea73584">
-<h3 id="orgea73584">While inference/prediction</h3>
-<ul>
-<li>forward pass</li>
-
-</ul>
-
-<div class="slide-footer"></div>
-</section>
-</section>
-<section>
-<section id="slide-org7065982">
-<h2 id="org7065982">Pre-training checks</h2>
-<ul>
-<li>check network structure</li>
-<li>number of weights/biases/connections between layers</li>
-<li>number of loss functions and how they are connected</li>
-<li>memory allocation</li>
-
-</ul>
-
-<div class="slide-footer"></div>
-</section>
-</section>
-<section>
-<section id="slide-org5cf8a10">
-<h2 id="org5cf8a10">while-training checks</h2>
-<ul>
-<li>find causes for issues like</li>
-<li>no learning or learning too slow. (when no batchnorm layer is used)</li>
-<li>tanh gradients going to 0</li>
-<li>dying relu</li>
-<li>test what individual layers are doing. (e.g. show images from mnist/ cat and dog )</li>
-
-</ul>
-
-<div class="slide-footer"></div>
-</section>
-</section>
-<section>
-<section id="slide-org47ec543">
-<h2 id="org47ec543">Net surgery</h2>
-<ul>
-<li>see example in mnist example core.clj</li>
-
-</ul>
-
-<div class="slide-footer"></div>
-</section>
-</section>
-<section>
-<section id="slide-orged9886b">
-<h2 id="orged9886b">Post-training checks</h2>
-<ul>
-<li>compare performance on multiple metrics</li>
-
-</ul>
-
-<div class="slide-footer"></div>
-</section>
-</section>
-<section>
-<section id="slide-orga618623">
-<h2 id="orga618623">Look under the hood</h2>
+<section >
 
 <div class="figure">
-<p><img src="./images/underthehood.jpg" alt="underthehood.jpg" />
+<p><img src="./images/xkcd.png" alt="xkcd.png" style="margin: 0 auto; display:block;" />
+</p>
+</div>
+
+</section>
+<section >
+<p>
+<b>" The problem with Backpropagation is that it is a leaky abstraction."</b>
+-Andrej Karpathy
+</p>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-orgd3c9f7e">
+<h2 id="orgd3c9f7e">Cortex Recipes</h2>
+<p>
+<b>"Easy things should be easy, and hard things should be possible"</b>
+Larry Wall
+</p>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org0a6cf25">
+<h4 id="org0a6cf25">Pre-training exploration</h4>
+<p>
+Network structure for occupancy network
+</p>
+
+<div class="org-src-container">
+
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">description</span>
+  <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">5</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>batch-normalization<span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear <span style="color: #a45bad;">1</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>logistic <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:labels</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">create the network</span>
+<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">occupancy-net</span> <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear-network description<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">print a layer summary</span>
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>print-layer-summary occupancy-net <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">traverse</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>training-traversal occupancy-net<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+
+</pre>
+</div>
+
+</section>
+<section >
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">type</th>
+<th scope="col" class="org-left">input</th>
+<th scope="col" class="org-left">output</th>
+<th scope="col" class="org-left">:bias</th>
+<th scope="col" class="org-left">:means</th>
+<th scope="col" class="org-left">:scale</th>
+<th scope="col" class="org-left">:variances</th>
+<th scope="col" class="org-left">:weights</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">:batch-normalization</td>
+<td class="org-left">1x1x5 - 5</td>
+<td class="org-left">1x1x5 - 5</td>
+<td class="org-left">[5]</td>
+<td class="org-left">[5]</td>
+<td class="org-left">[5]</td>
+<td class="org-left">[5]</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">:linear</td>
+<td class="org-left">1x1x5 - 5</td>
+<td class="org-left">1x1x1 - 1</td>
+<td class="org-left">[1]</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">[1 5]</td>
+</tr>
+
+<tr>
+<td class="org-left">:logistic</td>
+<td class="org-left">1x1x1 - 1</td>
+<td class="org-left">1x1x1 - 1</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+<p>
+Parameter count: 26
+</p>
+
+</section>
+<section >
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">defn</span> <span style="color: #bc6ec5; font-weight: bold;">mnist-initial-description</span>
+  <span style="color: #bc6ec5;">[</span>input-w input-h num-classes<span style="color: #bc6ec5;">]</span>
+  <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input input-w input-h <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>convolutional <span style="color: #a45bad;">5</span> <span style="color: #a45bad;">0</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">20</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>max-pooling <span style="color: #a45bad;">2</span> <span style="color: #a45bad;">0</span> <span style="color: #a45bad;">2</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>relu<span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>convolutional <span style="color: #a45bad;">5</span> <span style="color: #a45bad;">0</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">50</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>max-pooling <span style="color: #a45bad;">2</span> <span style="color: #a45bad;">0</span> <span style="color: #a45bad;">2</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>batch-normalization<span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear <span style="color: #a45bad;">1000</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>relu <span style="color: #a45bad;">:center-loss</span> <span style="color: #67b11d;">{</span><span style="color: #a45bad;">:label-indexes</span> <span style="color: #b1951d;">{</span><span style="color: #a45bad;">:stream</span> <span style="color: #a45bad;">:labels</span><span style="color: #b1951d;">}</span>
+                              <span style="color: #a45bad;">:label-inverse-counts</span> <span style="color: #b1951d;">{</span><span style="color: #a45bad;">:stream</span> <span style="color: #a45bad;">:labels</span><span style="color: #b1951d;">}</span>
+                              <span style="color: #a45bad;">:labels</span> <span style="color: #b1951d;">{</span><span style="color: #a45bad;">:stream</span> <span style="color: #a45bad;">:labels</span><span style="color: #b1951d;">}</span>
+                              <span style="color: #a45bad;">:alpha</span> <span style="color: #a45bad;">0.9</span>
+                              <span style="color: #a45bad;">:lambda</span> <span style="color: #a45bad;">1e-4</span><span style="color: #67b11d;">}</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>dropout <span style="color: #a45bad;">0.5</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear num-classes<span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>softmax <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:labels</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">create the network to accept 28 x 28 pixel inputs, </span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">10 targets/labels (one each for digits 0-9)</span>
+<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">mnist</span> <span style="color: #bc6ec5;">(</span>mnist-initial-description <span style="color: #a45bad;">28</span> <span style="color: #a45bad;">28</span> <span style="color: #a45bad;">10</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>print-layer-summary mnist-net <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">traverse</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>training-traversal mnist-net<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+
+</pre>
+</div>
+
+
+</section>
+<section >
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">type</th>
+<th scope="col" class="org-left">input</th>
+<th scope="col" class="org-left">output</th>
+<th scope="col" class="org-left">:bias</th>
+<th scope="col" class="org-left">:weights</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">:convolutional</td>
+<td class="org-left">1x28x28 - 784</td>
+<td class="org-left">20x24x24 - 11520</td>
+<td class="org-left">[20]</td>
+<td class="org-left">[20 25]</td>
+</tr>
+
+<tr>
+<td class="org-left">:max-pooling</td>
+<td class="org-left">20x24x24 - 11520</td>
+<td class="org-left">20x12x12 - 2880</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">:relu</td>
+<td class="org-left">20x12x12 - 2880</td>
+<td class="org-left">20x12x12 - 2880</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">:convolutional</td>
+<td class="org-left">20x12x12 - 2880</td>
+<td class="org-left">50x8x8 - 3200</td>
+<td class="org-left">[50]</td>
+<td class="org-left">[50 500]</td>
+</tr>
+
+<tr>
+<td class="org-left">:max-pooling</td>
+<td class="org-left">50x8x8 - 3200</td>
+<td class="org-left">50x4x4 - 800</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">:batch-normalization</td>
+<td class="org-left">50x4x4 - 800</td>
+<td class="org-left">50x4x4 - 800</td>
+<td class="org-left">[800]</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org4489c5b">
+<h4 id="org4489c5b">Part 2</h4>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">type</th>
+<th scope="col" class="org-left">input</th>
+<th scope="col" class="org-left">output</th>
+<th scope="col" class="org-left">:bias</th>
+<th scope="col" class="org-left">:weights</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">:linear</td>
+<td class="org-left">50x4x4 - 800</td>
+<td class="org-left">1x1x1000 - 1000</td>
+<td class="org-left">[1000]</td>
+<td class="org-left">[1000 800]</td>
+</tr>
+
+<tr>
+<td class="org-left">:relu</td>
+<td class="org-left">1x1x1000 - 1000</td>
+<td class="org-left">1x1x1000 - 1000</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">:dropout</td>
+<td class="org-left">1x1x1000 - 1000</td>
+<td class="org-left">1x1x1000 - 1000</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">:linear</td>
+<td class="org-left">1x1x1000 - 1000</td>
+<td class="org-left">1x1x10 - 10</td>
+<td class="org-left">[10]</td>
+<td class="org-left">[10 1000]</td>
+</tr>
+
+<tr>
+<td class="org-left">:softmax</td>
+<td class="org-left">1x1x10 - 10</td>
+<td class="org-left">1x1x10 - 10</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Parameter count: 849780
+</p>
+
+</section>
+<section >
+
+<div class="figure">
+<p><img src="./images/weights_barchart.png" alt="weights_barchart.png" />
 </p>
 </div>
 
 
 <div class="slide-footer"></div>
 </section>
+<section id="slide-org3b94bf1">
+<h4 id="org3b94bf1">Data-&gt; Data transformations for building a networks</h4>
+<p>
+Networks are built by successively adding maps of maps.
+</p>
+
+<p>
+In the first stage <b>network/linear-network</b> creates a computation graph which specifies
+</p>
+
+<p class="fragment appear">
+Nodes (a map of layers keyed by name)
+</p>
+<p class="fragment appear">
+Edges (connections between layers)
+</p>
+<p class="fragment appear">
+Buffers (weights and other parameters)
+</p>
+<p class="fragment appear">
+Streams (input and output data)
+</p>
+
 </section>
-<section>
-<section id="slide-orgb43caf2">
-<h2 id="orgb43caf2">Summary</h2>
+<section >
+<p>
+Query the layers:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> occupancy-net <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:nodes</span> keys<span style="color: #4f97d7;">)</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">(</span><span style="color: #2aa1ae; background-color: #292e34;">:data</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:linear-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:mse-loss-1</span><span style="color: #2aa1ae; background-color: #292e34;">)</span>
+</pre>
+</div>
+
+</section>
+<section >
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> occupancy-net <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:edges</span><span style="color: #4f97d7;">)</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">([</span><span style="color: #2aa1ae; background-color: #292e34;">:data</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;">] [</span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:linear-1</span><span style="color: #2aa1ae; background-color: #292e34;">] </span>
+<span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">[</span><span style="color: #2aa1ae; background-color: #292e34;">:linear-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;">] [</span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:mse-loss-1</span><span style="color: #2aa1ae; background-color: #292e34;">])</span>
+</pre>
+</div>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgd1c8651">
+<h3 id="orgd1c8651">Explore what each layer does</h3>
+<p>
+Exploring the Swish activation function
+</p>
+
+<div class="org-src-container">
+
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">desc</span>
+  <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>swish <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:weights</span> <span style="color: #67b11d;">[</span><span style="color: #b1951d;">[</span><span style="color: #a45bad;">1.0</span><span style="color: #b1951d;">]</span><span style="color: #67b11d;">]</span><span style="color: #2d9574;">)</span>
+   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>logistic <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:labels</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">inet</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> desc <span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear-network <span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org7712363">
+<h4 id="org7712363">Net Surgery</h4>
+<p>
+Remove the last layer (logistic) and pass a range of inputs (-1 to 1)
+</p>
+<div class="org-src-container">
+
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">execute</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>run <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>dissoc-layers-from-network inet <span style="color: #a45bad;">:labels</span><span style="color: #bc6ec5;">)</span> input-data<span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+</section>
+<section >
+
+<p>
+Compare Swish with Tanh and Logistic layers
+</p>
+
+
+<div class="figure">
+<p><img src="./images/swish_tanh_log.png" alt="swish_tanh_log.png" />
+</p>
+</div>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org2687484">
+<h3 id="org2687484">While-training checks</h3>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org4876424">
+<h3 id="org4876424">Training is reducing over sequences</h3>
+<p>
+Train and test datasets are infinite sequences
+</p>
+
+<div class="org-src-container">
+
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">trained-net</span>
+ <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">let</span> <span style="color: #2d9574;">[</span><span style="color: #67b11d;">[</span>train-ds test-ds<span style="color: #67b11d;">]</span> <span style="color: #67b11d;">(</span>get-ds<span style="color: #67b11d;">)</span>
+         train-fn #<span style="color: #67b11d;">(</span><span style="color: #ce537a; font-weight: bold;">etrain</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>train-n <span style="color: #7590db;">%</span> train-ds test-ds<span style="color: #67b11d;">)</span><span style="color: #2d9574;">]</span>
+     <span style="color: #2d9574;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> network
+          <span style="color: #67b11d;">(</span>iterate train-fn<span style="color: #67b11d;">)</span>
+          <span style="color: #67b11d;">(</span>take <span style="color: #a45bad;">10</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+</section>
+<section >
+<p>
+Returns a sequence with 10 iterations of trained network
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> trained-net <span style="color: #bc6ec5;">(</span>mapv <span style="color: #a45bad;">:cv-loss</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">[nil 2.2406814049004633 </span>
+<span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">2.1851172560486454 2.1851172560486454 </span>
+<span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">2.1851172560486454 2.1822464148167136 </span>
+<span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">2.1734111466403503 2.1614423794394315 </span>
+<span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">2.1614423794394315 2.1614423794394315]</span>
+
+</pre>
+</div>
+
+</section>
+<section >
+
+<p>
+Check how weights change over epochs
+</p>
+
+<div class="figure">
+<p><img src="./images/conv_layer_weights.png" alt="conv_layer_weights.png" />
+</p>
+<p><span class="figure-number">Figure 17: </span>Convolution layer weights</p>
+</div>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org22550d5">
+<h3 id="org22550d5">Listeners</h3>
+<p class="fragment appear">
+To watch progress of the loss function
+</p>
+<p class="fragment appear">
+Save the best model/kill training
+</p>
+<p class="fragment appear">
+Observe images being classified
+</p>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orge5005bb">
+<h4 id="orge5005bb">Default listener</h4>
+<p class="fragment appear">
+Live updates on a local webserver
+</p>
+<p class="fragment appear">
+Creates images from training instances to observe training progress
+</p>
+
+</section>
+<section >
+
+<div class="figure">
+<p><img src="./images/confmat.png" alt="confmat.png" />
+</p>
+<p><span class="figure-number">Figure 18: </span>Confusion matrix</p>
+</div>
+
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org00fae27">
+<h4 id="org00fae27">Digression: Tensorboard</h4>
+<p class="fragment appear">
+<a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard" class="fragment appear">Tensorboard</a> is a suite of visualization tools to understand, debug and optimize Tensorflow
+</p>
+<p class="fragment appear">
+Users can view plots of   
+</p>
+<ul class="fragment appear">
+<li>Scalar metrics such as Accuracy/ error / F1 score</li>
+<li>Tensor metrics such as weights, biases</li>
+<li>Histograms of metric's progressions over time.</li>
+
+</ul>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org6126624">
+<h4 id="org6126624">Tensorboard listener</h4>
+<p class="fragment appear">
+Listen for Cortex events and convert it to Tensorboard compatible events 
+</p>
+<p class="fragment appear">
+Out of the box support for 
+</p>
+<ul class="fragment appear">
+<li>train loss and cross validation loss</li>
+<li>weight and bias histograms</li>
+
+</ul>
+
+</section>
+<section >
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #a45bad;">:require</span> <span style="color: #bc6ec5;">[</span><span style="color: #ce537a; font-weight: bold;">cortex.experiment.classification</span> <span style="color: #a45bad;">:as</span> cls<span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
+   <span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">cls</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>create-tensorboard-listener
+                   <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">file name should include "tfevents"</span>
+                   <span style="color: #bc6ec5;">{</span><span style="color: #a45bad;">:file-path</span> <span style="color: #2d9574;">"/tmp/tflogs/linear/tfevents.linear.out"</span><span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">)</span>
+
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">launch tensorboard with log path</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">tensorboard --logdir=/tmp/tflogs</span>
+</pre>
+</div>
+
+
+</section>
+<section >
+
+
+<div class="figure">
+<p><img src="./images/tb-stats.png" alt="tb-stats.png" style="margin: 0 auto; display:block;" /> 
+</p>
+<p><span class="figure-number">Figure 19: </span>Tensorboard scalar metrics</p>
+</div>
+
 <div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-orgddf479e">
-<h2 id="orgddf479e">When Cortex is a good fit</h2>
-<ul>
-<li>Training feedforward networks for classification and regression</li>
-<li>Observing training progress</li>
-
-</ul>
-
+<section id="slide-orgb2ef0cf">
+<h2 id="orgb2ef0cf">Summary</h2>
+<div class="outline-text-2" id="text-orgb2ef0cf">
+</div>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org45e675d">
+<h3 id="org45e675d">What Cortex needs contributions on</h3>
+<p class="fragment appear">
+Support for Recurrent networks (e.g. text) 
+</p>
+<p class="fragment appear">
+Java based alternative is Deeplearning4j
+</p>
+<p class="fragment appear">
+Recent network structures (e.g. Inception / Capsule networks). 
+</p>
+<p class="fragment appear">
+Ingesting pre-trained networks
+</p>
+<p class="fragment appear">
+Automatic differentiation
+</p>
 
 <div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-org26e9c4a">
-<h2 id="org26e9c4a">When Cortex may not be a good fit</h2>
-<ul>
-<li>training sequences (which requires a type of network called RNN)</li>
-<li>a Java based alternative is Deeplearning4j</li>
-<li>training networks with newer network structures (e.g. Inception / Capsule networks).</li>
-<li>networks with new types of units (e.g. ? LST/GRU)</li>
-<li>distributed training (usually needed only after a stable network is determined, and you have a lot of data)</li>
-<li>ingesting certain types of pre-trained networks</li>
-<li>there is support for ingesting certain kinds of networks (e.g. Keras/Caffe), but may not work out of the box.</li>
-
-</ul>
-
-<div class="slide-footer"></div>
-</section>
-</section>
-<section>
-<section id="slide-orgdadfcb4">
-<h2 id="orgdadfcb4">References</h2>
-<ul>
-<li>(labeled for noncommercial use with modification) <a href="https://c1.staticflickr.com/3/2898/13944682478_772a50ce5c_b.jpg">blind men and elephant image</a></li>
-<li><a href="https://www.kdnuggets.com/2017/01/most-popular-language-machine-learning-data-science.html">data science languages by popularity</a></li>
-
-</ul>
+<section id="slide-orgbcf1f8e">
+<h2 id="orgbcf1f8e">Thanks</h2>
+<p>
+Chris Nuernberger and the Thinktopic team
+</p>
+<p class="fragment appear">
+Mike Anderson 
+</p>
 <div class="slide-footer"></div>
 </section>
 </section>
