@@ -113,11 +113,11 @@
    (layers/linear num-classes)
    (layers/softmax :id :labels)])
 
-(defn mnist-tanh-woconv
+(defn mnist-tanh
   [input-w input-h num-classes]
   [(layers/input input-w input-h 1 :id :data)
    (layers/linear->logistic 100 :weights (m/reshape (mapv #(- 400 %)
-                                                          (rm/sample-rand-int (* 100 (* 28 28)) 400))
+                                                          (rm/sample-rand-int (* 100 (* 28 28)) 800))
                                                     [100 (* 28 28)]))
    (layers/linear->logistic 50)
    (layers/dropout 0.5)
