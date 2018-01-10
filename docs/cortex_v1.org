@@ -40,6 +40,7 @@ Machine learning/data science is an overloaded term
 #+ATTR_HTML: :style margin: 0 auto; display:block;
   [[./images/blind_men.jpg]]
 
+
 #+REVEAL: split
 
 ** Estimation vs Prediction 
@@ -47,11 +48,12 @@ Machine learning/data science is an overloaded term
 #+ATTR_REVEAL: :frag appear
  Estimation: coming up with values of unknown parameters (in a model)  
 
+
 #+ATTR_REVEAL: :frag appear
  Prediction: focused on accuracy (and other metrics) of model.
 
 #+BEGIN_NOTES
- - Examine causes of diseases 
+ - Examine causes of hospital re-admission rates
  - Example: image classification 
 #+END_NOTES
 
@@ -63,20 +65,24 @@ Machine learning/data science is an overloaded term
 #+ATTR_REVEAL: :frag appear
  Production (putting a trained model into a production environment)
 
+#+REVEAL: split
+
+  [[./images/datascienceaxes.png]]
 
 * Why use Clojure for Machine Learning?
 
-#+ATTR_REVEAL: :frag appear
-Data-oriented functional programming with a focus on composable sequence processing 
-#+ATTR_REVEAL: :frag appear
-Excellent tooling for REPL-driven development
-#+ATTR_REVEAL: :frag appear
-Interop with Java, Scala and Javascript 
-#+ATTR_REVEAL: :frag appear
-Smooth transition from research to production
+ Perception that languages like R/Python are ideal for machine learning. 
 
 #+REVEAL: split
-  [[./images/datascienceaxes.png]]
+#+CAPTION: Popularity of languages used in ML
+  [[./images/mlstats.png]]
+
+#+REVEAL: split
+Data extraction and cleaning takes upto 80% of the time 
+#+ATTR_REVEAL: :frag appear
+Clojure is great at data manipulation 
+#+ATTR_REVEAL: :frag appear
+Low impedance transition to production
 
 #+REVEAL: split
 
@@ -88,7 +94,7 @@ Smooth transition from research to production
 |Datomic | Supports "time travel" over database history |
 
 
-* What is Machine Learning 
+* Machine Learning Digression
 
 *** Supervised Classification:
 
@@ -111,10 +117,12 @@ One of the early successes(1992) for neural nets was reading [[http://yann.lecun
 
 #+ATTR_REVEAL: :frag appear
 99.81% accuracy on MNIST, close to or better than human performance
+#+ATTR_REVEAL: :frag appear
+Dataset called MNIST is a benchmark dataset in machine learning
 
 *** Flexibility
 
-Neural Nets can accommodate several outputs:
+NNs can accommodate several outputs:
 #+ATTR_REVEAL: :frag appear
 Single target classification (e.g. Spam classification)
 #+ATTR_REVEAL: :frag appear
@@ -131,8 +139,7 @@ Classifying aspects of human faces such as gender, age, type of expression and s
 
 #+REVEAL: split
 
-*** Composable abstractions 
-
+Composable abstractions 
 #+ATTR_REVEAL: :frag appear
 Different layers can be combined in a [[http://colah.github.io/posts/2014-07-Conv-Nets-Modular/][modular fashion]] and computations are straightforward
 
@@ -149,22 +156,35 @@ Data centric interface
 #+ATTR_REVEAL: :frag appear
 Performant, Memory efficient training on GPUs
 #+ATTR_REVEAL: :frag appear
+Low LOC count
+#+ATTR_REVEAL: :frag appear
 Supports Convolutional NNs (image processing)
 #+ATTR_REVEAL: :frag appear
 Partial support for ingesting pre-trained networks
+
+** Compute Abstraction
+
+[[./images/compute_abstraction.png]]
+
+** Design goal
+
+Enables some level of shared implementation between a Cpu, Cuda, OpenCL
 #+ATTR_REVEAL: :frag appear
-Abstraction layers for CUDA 
-#+ATTR_REVEAL: :frag appear
-- Enables some level of shared implementation between a Cpu, Cuda, OpenCL
+Targets environments where there is a distinct transfer step from host to device
 
-* Cortex Examples
-
-** Predicting office room occupancy 
-
-#+ATTR_HTML: :style margin: 0 auto; display:block; :height 70% 
-[[./images/office_occupancy.jpg]]
- 
 #+REVEAL: split
+
+Primitives include operations such as:
+#+ATTR_REVEAL: :frag appear
+Initializing buffers
+#+ATTR_REVEAL: :frag appear
+Transfer of data between the host and device
+#+ATTR_REVEAL: :frag appear
+Overlapping transfer with device compute using multiple 'streams' of execution.
+
+* Training with Cortex
+
+*** Predicting office room occupancy 
 
 #+ATTR_REVEAL: :frag appear
 Train with 8k instances from [[http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+][room occupancy]] dataset 
@@ -229,6 +249,19 @@ Goal is to predict when the room is occupied.
 
 *** Split the data into train and test
 
+#+BEGIN_SRC clojure
+
+(def train-test-ds 
+  (let [ds (make-feature-vec data-vectors)
+        ds-count (count ds)
+        ;;do a 90-10 split into train/test
+        cutoff (int (* 0.9 ds-count))
+        train-ds (take cutoff ds)
+        test-ds (drop cutoff ds)]
+    [train-ds test-ds]))
+
+#+END_SRC
+
 ** Define the layers 
 
 Network is defined as a vector of layers
@@ -239,6 +272,8 @@ Specify the input against the :id key
 
 #+ATTR_REVEAL: :frag appear
 #+BEGIN_SRC clojure
+  ;;input layer for an image of size 28 (length) x 28 (breadth) x 3 (depth)
+  (layers/input 28 28 3 :id :data)
 
   ;;input layer for room occupancy is 5(inputs) x 1 x 1 
   (layers/input 5 1 1 :id :data)
@@ -263,9 +298,6 @@ Specify the input against the :id key
    (layers/logistic :id :labels)])
 
 #+END_SRC
-
-#+REVEAL: split
-[[./images/occupancy_network.png]]
 
 *** Training
 
@@ -307,65 +339,6 @@ Evaluate the accuracy (and other metrics) on the test set
 #+BEGIN_SRC sh 
 [0.9447852760736196 0.8888888888888891]
 #+END_SRC
-
-** Recognizing hand-written digits
-
-#+ATTR_HTML: :style margin: 0 auto; display:block; :height 70% 
-[[./images/mnist-sample.png]]
-
-#+ATTR_REVEAL: :frag appear
-Image of size 28 (length) x 28 (breadth) x 3 (depth)
-
-*** Network definition
-
-#+BEGIN_SRC clojure
-  ;;input layer for an image of size 28 (length) x 28 (breadth) x 3 (depth)
-  (layers/input 28 28 3 :id :data)
-
-#+END_SRC
-
-
-#+REVEAL: split
-#+BEGIN_SRC clojure
-
-(defn mnist-initial-description
-  [input-w input-h num-classes]
-  [(layers/input input-w input-h 1 :id :data)
-   (layers/convolutional 5 0 1 20)
-   (layers/max-pooling 2 0 2)
-   (layers/relu)
-   (layers/convolutional 5 0 1 50)
-   (layers/max-pooling 2 0 2)
-   (layers/batch-normalization)
-   (layers/linear 1000)
-   (layers/relu :center-loss {:label-indexes {:stream :labels}
-                              :label-inverse-counts {:stream :labels}
-                              :labels {:stream :labels}
-                              :alpha 0.9
-                              :lambda 1e-4})
-   (layers/dropout 0.5)
-   (layers/linear num-classes)
-   (layers/softmax :id :labels)])
-
-#+END_SRC
-
-*** Training progress 
-
-#+ATTR_HTML: :style margin: 0 auto; display:block; :height 100% :width 120%
-[[./images/mnist_webserver.png]]
-
-#+REVEAL: split
-#+REVEAL_HTML: <p><video data-autoplay width="180%" src="./images/5_3.mkv" loop ></video></p>
-
-
-#+REVEAL: split
-[[./images/mnist_test_loss.png]]
-
-#+REVEAL: split
-[[./images/tensorboard_mnist_weights.png]]
-
-#+REVEAL: split
-[[./images/tboard_mnist_convbias.png]]
 
 * Backpropagation
 
@@ -435,8 +408,38 @@ Check out [[https://lossfunctions.tumblr.com/][this page]] for artistic loss fun
 *"Easy things should be easy, and hard things should be possible"*
 Larry Wall
 
-*** Examine weights per layer
+*** Pre-training exploration
 
+Network structure for occupancy network
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+
+(def description
+  [(layers/input 5 1 1 :id :data)
+   (layers/batch-normalization)
+   (layers/linear 1)
+   (layers/logistic :id :labels)])
+
+;;create the network
+(def occupancy-net (network/linear-network description))
+
+;;print a layer summary
+(network/print-layer-summary occupancy-net (traverse/training-traversal occupancy-net))
+
+#+END_SRC
+
+#+REVEAL: split
+
+
+|                 type |     input |    output | :bias | :means | :scale | :variances | :weights |
+|----------------------+-----------+-----------+-------+--------+--------+------------+----------|
+| :batch-normalization | 1x1x5 - 5 | 1x1x5 - 5 |   [5] |    [5] |    [5] |        [5] |          |
+|              :linear | 1x1x5 - 5 | 1x1x1 - 1 |   [1] |        |        |            |    [1 5] |
+|            :logistic | 1x1x1 - 1 | 1x1x1 - 1 |       |        |        |            |          |
+Parameter count: 26
+
+#+REVEAL: split
 #+BEGIN_SRC clojure
 
 (defn mnist-initial-description
@@ -469,6 +472,16 @@ Larry Wall
 
 #+REVEAL: split
 
+|                 type |            input |           output |  :bias |  :weights |
+|----------------------+------------------+------------------+--------+-----------|
+|       :convolutional |    1x28x28 - 784 | 20x24x24 - 11520 |   [20] |  [20 25] |
+|         :max-pooling | 20x24x24 - 11520 |  20x12x12 - 2880 |        |              |
+|                :relu |  20x12x12 - 2880 |  20x12x12 - 2880 |        |              |
+|       :convolutional |  20x12x12 - 2880 |    50x8x8 - 3200 |   [50] |    [50 500] |
+|         :max-pooling |    50x8x8 - 3200 |     50x4x4 - 800 |        |              |
+| :batch-normalization |     50x4x4 - 800 |     50x4x4 - 800 |  [800] |              |
+
+
 *** Part 2 
 |                 type |            input |           output |  :bias |  :weights |
 |----------------------+------------------+------------------+--------+-----------|
@@ -500,7 +513,7 @@ Buffers (weights and other parameters)
 Streams (input and output data)
 
 #+REVEAL: split
-**** What are the nodes in the network
+Query the layers:
 
 #+BEGIN_SRC clojure
 (-> occupancy-net :compute-graph :nodes keys)
@@ -509,20 +522,29 @@ Streams (input and output data)
 #+END_SRC
 
 #+REVEAL: split
-**** How are nodes connected in the network:
 #+BEGIN_SRC clojure
 
 (-> occupancy-net :compute-graph :edges)
 ;;
-;;([:data :batch-normalization-1] 
-;; [:batch-normalization-1 :linear-1] 
-;; [:linear-1 :labels] 
-;; [:labels :mse-loss-1])
+;;([:data :batch-normalization-1] [:batch-normalization-1 :linear-1] 
+;; [:linear-1 :labels] [:labels :mse-loss-1])
 #+END_SRC
 
-** Visualize the output of a hidden layer 
+** Explore what each layer does
 
 Exploring the Swish activation function
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+
+(def desc
+  [(layers/input 1 1 1 :id :data)
+   (layers/swish 1 :weights [[1.0]])
+   (layers/logistic :id :labels)])
+
+(def inet (-> desc network/linear-network ))
+#+END_SRC
+
 
 *** Net Surgery
 
@@ -655,13 +677,3 @@ Automatic differentiation
 Chris Nuernberger and the Thinktopic team
 #+ATTR_REVEAL: :frag appear
 Mike Anderson 
-
-#+REVEAL: split
-#+REVEAL: split
-#+REVEAL: split
-#+REVEAL: split
-
-*** References
-
-- [[http://clojuredatascience.com][Clojure Data Science.com]]
-- Office occupancy picture (https://c1.staticflickr.com/1/31/65165707_a9ee8be5e0_b.jpg)
