@@ -31,8 +31,8 @@
 </section>
 
 <section>
-<section id="slide-orge8f54bc">
-<h2 id="orge8f54bc">Outline</h2>
+<section id="slide-org25483a8">
+<h2 id="org25483a8">Outline</h2>
 <p>
 Context: Clojure, Cortex, Machine Learning
 </p>
@@ -40,18 +40,18 @@ Context: Clojure, Cortex, Machine Learning
 Overview of Cortex
 </p>
 <p class="fragment appear">
-How to build a network in Cortex
+Example of building networks 
 </p>
 <p class="fragment appear">
-Recipes for working with Cortex
+Recipes 
 </p>
 
 <div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-orga3f0e44">
-<h2 id="orga3f0e44">Context</h2>
+<section id="slide-orgfaa7f41">
+<h2 id="orgfaa7f41">Context</h2>
 <p>
 Machine learning/data science is an overloaded term
 </p>
@@ -70,8 +70,8 @@ Machine learning/data science is an overloaded term
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgf8feccb">
-<h3 id="orgf8feccb">Estimation vs Prediction</h3>
+<section id="slide-orgae0e7a2">
+<h3 id="orgae0e7a2">Estimation vs Prediction</h3>
 <p class="fragment appear">
 Estimation: coming up with values of unknown parameters (in a model)  
 </p>
@@ -91,8 +91,8 @@ Prediction: focused on accuracy (and other metrics) of model.
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgc69f956">
-<h3 id="orgc69f956">Research vs production use</h3>
+<section id="slide-orge6b97cf">
+<h3 id="orge6b97cf">Research vs production use</h3>
 <p class="fragment appear">
 Exploration (given a dataset, train a classifier, produce a report) 
 </p>
@@ -106,8 +106,8 @@ Production (putting a trained model into a production environment)
 </section>
 </section>
 <section>
-<section id="slide-orgcba32f3">
-<h2 id="orgcba32f3">Why use Clojure for Machine Learning?</h2>
+<section id="slide-org37d4dc9">
+<h2 id="org37d4dc9">Why use Clojure for Machine Learning?</h2>
 <p class="fragment appear">
 Data-oriented functional programming with a focus on composable sequence processing 
 </p>
@@ -178,14 +178,14 @@ Smooth transition from research to production
 </section>
 </section>
 <section>
-<section id="slide-orga5f5854">
-<h2 id="orga5f5854">What is Machine Learning</h2>
-<div class="outline-text-2" id="text-orga5f5854">
+<section id="slide-org43cfc4a">
+<h2 id="org43cfc4a">What is Machine Learning</h2>
+<div class="outline-text-2" id="text-org43cfc4a">
 </div>
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org3918cdb">
-<h4 id="org3918cdb">Supervised Classification:</h4>
+<section id="slide-org095c1fe">
+<h4 id="org095c1fe">Supervised Classification:</h4>
 
 <div class="figure">
 <p><img src="./images/woof_meow.jpg" alt="woof_meow.jpg" style="margin: 0 auto; display:block;" />
@@ -195,14 +195,14 @@ Smooth transition from research to production
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org63025db">
-<h3 id="org63025db">Why are Neural Networks popular for classification?</h3>
-<div class="outline-text-3" id="text-org63025db">
+<section id="slide-orga257052">
+<h3 id="orga257052">Why are Neural Networks popular for classification?</h3>
+<div class="outline-text-3" id="text-orga257052">
 </div>
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org5d8a9e2">
-<h4 id="org5d8a9e2">State of the art performance</h4>
+<section id="slide-orgfb07bba">
+<h4 id="orgfb07bba">State of the art performance</h4>
 </section>
 <section >
 <p>
@@ -221,8 +221,8 @@ One of the early successes(1992) for neural nets was reading <a href="http://yan
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org6ad0418">
-<h4 id="org6ad0418">Flexibility</h4>
+<section id="slide-orgd1fd207">
+<h4 id="orgd1fd207">Flexibility</h4>
 <p>
 Neural Nets can accommodate several outputs:
 </p>
@@ -248,8 +248,8 @@ Classifying aspects of human faces such as gender, age, type of expression and s
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org591c25e">
-<h4 id="org591c25e">Composable abstractions</h4>
+<section id="slide-orge200ef8">
+<h4 id="orge200ef8">Composable abstractions</h4>
 <p class="fragment appear">
 Different layers can be combined in a <a href="http://colah.github.io/posts/2014-07-Conv-Nets-Modular/" class="fragment appear">modular fashion</a> and computations are straightforward
 </p>
@@ -267,8 +267,8 @@ Different layers can be combined in a <a href="http://colah.github.io/posts/2014
 </section>
 </section>
 <section>
-<section id="slide-org74ff5ae">
-<h2 id="org74ff5ae">Features of Cortex</h2>
+<section id="slide-org15d0d84">
+<h2 id="org15d0d84">Features of Cortex</h2>
 <p>
 Deep learning library written in Clojure
 </p>
@@ -285,7 +285,7 @@ Supports Convolutional NNs (image processing)
 Partial support for ingesting pre-trained networks
 </p>
 <p class="fragment appear">
-Abstraction layers for CUDA 
+Abstraction layers for CUDA / CPU
 </p>
 <ul class="fragment appear">
 <li>Enables some level of shared implementation between a Cpu, Cuda, OpenCL</li>
@@ -296,14 +296,14 @@ Abstraction layers for CUDA
 </section>
 </section>
 <section>
-<section id="slide-orga8224a2">
-<h2 id="orga8224a2">Cortex Examples</h2>
-<div class="outline-text-2" id="text-orga8224a2">
+<section id="slide-orgcb1fe0a">
+<h2 id="orgcb1fe0a">Cortex Examples</h2>
+<div class="outline-text-2" id="text-orgcb1fe0a">
 </div>
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgf962ce5">
-<h3 id="orgf962ce5">Predicting office room occupancy</h3>
+<section id="slide-org1427b0a">
+<h3 id="org1427b0a">Predicting office room occupancy</h3>
 
 <div class="figure">
 <p><img src="./images/office_occupancy.jpg" alt="office_occupancy.jpg" style="margin: 0 auto; display:block;" height="70%" />
@@ -336,8 +336,8 @@ Goal is to predict when the room is occupied.
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org77130f4">
-<h4 id="org77130f4">Data ingestion</h4>
+<section id="slide-org4c04704">
+<h4 id="org4c04704">Data ingestion</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">data-vectors</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> <span style="color: #2d9574;">"resources/occupancy/datatraining.csv"</span>
@@ -361,15 +361,14 @@ Goal is to predict when the room is occupied.
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org1a0293f">
-<h4 id="org1a0293f">Create training data format</h4>
+<section id="slide-org6afb4b2">
+<h4 id="org6afb4b2">Create training data format</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">defn</span> <span style="color: #bc6ec5; font-weight: bold;">make-feature-vec</span>
   <span style="color: #bc6ec5;">[</span>data-vectors<span style="color: #bc6ec5;">]</span>
   <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> data-vectors 
-       <span style="color: #2d9574;">(</span>mapv <span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">fn</span><span style="color: #b1951d;">[</span>m<span style="color: #b1951d;">]</span> <span style="color: #b1951d;">{</span><span style="color: #a45bad;">:data</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> m butlast vec<span style="color: #4f97d7;">)</span> <span style="color: #a45bad;">:labels</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> m last vector<span style="color: #4f97d7;">)</span><span style="color: #b1951d;">}</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span>
-       shuffle<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+       <span style="color: #2d9574;">(</span>mapv <span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">fn</span><span style="color: #b1951d;">[</span>m<span style="color: #b1951d;">]</span> <span style="color: #b1951d;">{</span><span style="color: #a45bad;">:data</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> m butlast vec<span style="color: #4f97d7;">)</span> <span style="color: #a45bad;">:labels</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> m last vector<span style="color: #4f97d7;">)</span><span style="color: #b1951d;">}</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
 
 <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> <span style="color: #bc6ec5;">(</span>make-feature-vec data-vectors<span style="color: #bc6ec5;">)</span>
      <span style="color: #bc6ec5;">(</span>take <span style="color: #a45bad;">2</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
@@ -390,13 +389,13 @@ Goal is to predict when the room is occupied.
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org2fb0a3f">
-<h4 id="org2fb0a3f">Split the data into train and test</h4>
+<section id="slide-orgcaee746">
+<h4 id="orgcaee746">Split the data into train and test</h4>
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org22f272a">
-<h3 id="org22f272a">Define the layers</h3>
+<section id="slide-org512f7fb">
+<h3 id="org512f7fb">Define the layers</h3>
 <p>
 Network is defined as a vector of layers
 </p>
@@ -425,8 +424,8 @@ Specify the input against the :id key
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org719efd2">
-<h4 id="org719efd2">Network definition</h4>
+<section id="slide-org9515b66">
+<h4 id="org9515b66">Network definition</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">description</span>
@@ -448,8 +447,8 @@ Specify the input against the :id key
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org2219574">
-<h4 id="org2219574">Training</h4>
+<section id="slide-orgc1672e0">
+<h4 id="orgc1672e0">Training</h4>
 <p>
 Train it for 10 <b>epochs</b>
 </p>
@@ -481,8 +480,8 @@ Loss for epoch  <span style="color: #a45bad;">10:</span> <span style="color: #4f
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org07544ae">
-<h4 id="org07544ae">Evaluate results</h4>
+<section id="slide-org80aa213">
+<h4 id="org80aa213">Evaluate results</h4>
 <p>
 Evaluate the accuracy (and other metrics) on the test set
 </p>
@@ -501,11 +500,11 @@ Evaluate the accuracy (and other metrics) on the test set
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org7b4e38c">
-<h3 id="org7b4e38c">Recognizing hand-written digits</h3>
+<section id="slide-org899408a">
+<h3 id="org899408a">Recognizing hand-written digits</h3>
 
 <div class="figure">
-<p><img src="./images/mnist-sample.png" alt="mnist-sample.png" />
+<p><img src="./images/mnist-sample.png" alt="mnist-sample.png" style="margin: 0 auto; display:block;" height="70%" />
 </p>
 </div>
 
@@ -515,8 +514,8 @@ Image of size 28 (length) x 28 (breadth) x 3 (depth)
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgbdbf3e2">
-<h4 id="orgbdbf3e2">Network definition</h4>
+<section id="slide-orgddfa08a">
+<h4 id="orgddfa08a">Network definition</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">input layer for an image of size 28 (length) x 28 (breadth) x 3 (depth)</span>
@@ -554,18 +553,17 @@ Image of size 28 (length) x 28 (breadth) x 3 (depth)
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgf52bee0">
-<h4 id="orgf52bee0">Training progress</h4>
+<section id="slide-org89268c7">
+<h4 id="org89268c7">Training progress</h4>
 
 <div class="figure">
-<p><img src="./images/mnist_webserver.png" alt="mnist_webserver.png" style="margin: 0 auto; display:block;" height="70%" />
+<p><img src="./images/mnist_webserver.png" alt="mnist_webserver.png" style="margin: 0 auto; display:block;" height="100%" width="120%" />
 </p>
 </div>
 
 </section>
 <section >
 <p><video data-autoplay width="180%" src="./images/5_3.mkv" loop ></video></p>
-
 
 </section>
 <section >
@@ -595,23 +593,17 @@ Image of size 28 (length) x 28 (breadth) x 3 (depth)
 </section>
 </section>
 <section>
-<section id="slide-orgce4310c">
-<h2 id="orgce4310c">Backpropagation</h2>
+<section id="slide-org651d3f1">
+<h2 id="org651d3f1">Backpropagation</h2>
 
 <div class="figure">
-<p><img src="./images/modeltown.jpg" alt="modeltown.jpg" />
+<p><img src="./images/dartboard.jpg" alt="dartboard.jpg" />
 </p>
 </div>
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org0d60fc1">
-<h4 id="org0d60fc1">Artifacts</h4>
-<p class="fragment appear">
-Layers
-</p>
-<p class="fragment appear">
-Parameters
-</p>
+<section id="slide-orgf8663c3">
+<h4 id="orgf8663c3">Artifacts</h4>
 <p class="fragment appear">
 Forward pass
 </p>
@@ -627,14 +619,14 @@ Gradient
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org79dc567">
-<h3 id="org79dc567">How to train neural networks (theory)</h3>
+<section id="slide-org2e3c2ce">
+<h3 id="org2e3c2ce">How to train neural networks (theory)</h3>
 <p class="fragment appear">
 (Learn by) writing a toy implementation of back propagation 
 </p>
 
 <p class="fragment appear">
-Stack up layers
+Stack up layers like Lego blocks
 </p>
 
 <p class="fragment appear">
@@ -652,8 +644,16 @@ Sip your coffee and watch the loss function decrease
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org02993c1">
-<h3 id="org02993c1">Reality</h3>
+<section id="slide-org68457a6">
+<h3 id="org68457a6">Reality</h3>
+<p>
+<b>" The problem with Backpropagation is that it is a leaky abstraction."</b>
+-Andrej Karpathy
+</p>
+
+</section>
+<section >
+
 
 <div class="figure">
 <p><img src="./images/lossfunction_heartrate.png" alt="lossfunction_heartrate.png" style="margin: 0 auto; display:block;" />
@@ -683,126 +683,109 @@ Check out <a href="https://lossfunctions.tumblr.com/">this page</a> for artistic
 </p>
 </div>
 
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org96745b5">
+<h3 id="org96745b5">Debug-ability is key</h3>
+<p class="fragment appear">
+Swanky UIs are common
+</p>
+
+<p class="fragment appear">
+Swanky REPL are surprisingly rare
+</p>
+
 </section>
 <section >
-<p>
-<b>" The problem with Backpropagation is that it is a leaky abstraction."</b>
--Andrej Karpathy
+<p class="fragment appear">
+<b>“Any Product That Needs a Manual to Work Is Broken” – Elon Musk</b>
 </p>
 
 <div class="slide-footer"></div>
 </section>
-</section>
-<section>
-<section id="slide-org3e9f1c3">
-<h2 id="org3e9f1c3">Cortex Recipes</h2>
-<p>
-<b>"Easy things should be easy, and hard things should be possible"</b>
-Larry Wall
+<section id="slide-orga881b77">
+<h3 id="orga881b77">Neural nets and functional programming</h3>
+<p class="fragment appear">
+Pure functions
 </p>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-org210cb51">
-<h4 id="org210cb51">Pre-training exploration</h4>
-<p>
-Network structure for occupancy network
-</p>
-
 <div class="org-src-container">
 
-<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">description</span>
-  <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">5</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #2d9574;">)</span>
-   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>batch-normalization<span style="color: #2d9574;">)</span>
-   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear <span style="color: #a45bad;">1</span><span style="color: #2d9574;">)</span>
-   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>logistic <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:labels</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
-
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">create the network</span>
-<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">occupancy-net</span> <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear-network description<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
-
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">print a layer summary</span>
-<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>print-layer-summary occupancy-net <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">traverse</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>training-traversal occupancy-net<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
-
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span>layer inputs<span style="color: #4f97d7;">)</span>
 </pre>
 </div>
 
 </section>
 <section >
-
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-left">type</th>
-<th scope="col" class="org-left">input</th>
-<th scope="col" class="org-left">output</th>
-<th scope="col" class="org-left">:bias</th>
-<th scope="col" class="org-left">:means</th>
-<th scope="col" class="org-left">:scale</th>
-<th scope="col" class="org-left">:variances</th>
-<th scope="col" class="org-left">:weights</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left">:batch-normalization</td>
-<td class="org-left">1x1x5 - 5</td>
-<td class="org-left">1x1x5 - 5</td>
-<td class="org-left">[5]</td>
-<td class="org-left">[5]</td>
-<td class="org-left">[5]</td>
-<td class="org-left">[5]</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">:linear</td>
-<td class="org-left">1x1x5 - 5</td>
-<td class="org-left">1x1x1 - 1</td>
-<td class="org-left">[1]</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">[1 5]</td>
-</tr>
-
-<tr>
-<td class="org-left">:logistic</td>
-<td class="org-left">1x1x1 - 1</td>
-<td class="org-left">1x1x1 - 1</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-</tbody>
-</table>
 <p>
-Parameter count: 26
+Reduce 
 </p>
+<div class="org-src-container">
+
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span>reduce <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">fn</span><span style="color: #2d9574;">[</span>last-output layer<span style="color: #2d9574;">]</span>  
+            <span style="color: #2d9574;">(</span>layer last-output<span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span> 
+
+            input
+            <span style="color: #bc6ec5;">[</span>layer1 layer2 layer3<span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
 
 </section>
 <section >
+<p class="fragment appear">
+Iterate 
+</p>
+<div class="org-src-container">
+
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span>iterate train-fn initial-network<span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+<div class="slide-footer"></div>
+</section>
+</section>
+<section>
+<section id="slide-org78f59a4">
+<h2 id="org78f59a4">REPL driven development</h2>
+<div class="outline-text-2" id="text-org78f59a4">
+</div>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org0364044">
+<h3 id="org0364044">Querying network properties (a.k.a -&gt;)</h3>
+<div class="outline-text-3" id="text-org0364044">
+</div>
+<div class="slide-footer"></div>
+</section>
+<section id="slide-org3545e99">
+<h4 id="org3545e99">What are the layers in the network</h4>
+<div class="org-src-container">
+
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> occupancy-net <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:nodes</span> keys<span style="color: #4f97d7;">)</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">(</span><span style="color: #2aa1ae; background-color: #292e34;">:data</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:linear-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:mse-loss-1</span><span style="color: #2aa1ae; background-color: #292e34;">)</span>
+</pre>
+</div>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgdb0d64f">
+<h4 id="orgdb0d64f">How are layers connected</h4>
+<div class="org-src-container">
+
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> occupancy-net <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:edges</span><span style="color: #4f97d7;">)</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">([</span><span style="color: #2aa1ae; background-color: #292e34;">:data</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;">] </span>
+<span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">[</span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:linear-1</span><span style="color: #2aa1ae; background-color: #292e34;">] </span>
+<span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">[</span><span style="color: #2aa1ae; background-color: #292e34;">:linear-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;">] </span>
+<span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">[</span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:mse-loss-1</span><span style="color: #2aa1ae; background-color: #292e34;">])</span>
+</pre>
+</div>
+
+<div class="slide-footer"></div>
+</section>
+<section id="slide-orgd2dbb01">
+<h4 id="orgd2dbb01">Examine weights per layer</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">defn</span> <span style="color: #bc6ec5; font-weight: bold;">mnist-initial-description</span>
@@ -833,89 +816,10 @@ Parameter count: 26
 </pre>
 </div>
 
-
-</section>
-<section >
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="org-left">type</th>
-<th scope="col" class="org-left">input</th>
-<th scope="col" class="org-left">output</th>
-<th scope="col" class="org-left">:bias</th>
-<th scope="col" class="org-left">:weights</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="org-left">:convolutional</td>
-<td class="org-left">1x28x28 - 784</td>
-<td class="org-left">20x24x24 - 11520</td>
-<td class="org-left">[20]</td>
-<td class="org-left">[20 25]</td>
-</tr>
-
-<tr>
-<td class="org-left">:max-pooling</td>
-<td class="org-left">20x24x24 - 11520</td>
-<td class="org-left">20x12x12 - 2880</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">:relu</td>
-<td class="org-left">20x12x12 - 2880</td>
-<td class="org-left">20x12x12 - 2880</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">:convolutional</td>
-<td class="org-left">20x12x12 - 2880</td>
-<td class="org-left">50x8x8 - 3200</td>
-<td class="org-left">[50]</td>
-<td class="org-left">[50 500]</td>
-</tr>
-
-<tr>
-<td class="org-left">:max-pooling</td>
-<td class="org-left">50x8x8 - 3200</td>
-<td class="org-left">50x4x4 - 800</td>
-<td class="org-left">&#xa0;</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-
-<tr>
-<td class="org-left">:batch-normalization</td>
-<td class="org-left">50x4x4 - 800</td>
-<td class="org-left">50x4x4 - 800</td>
-<td class="org-left">[800]</td>
-<td class="org-left">&#xa0;</td>
-</tr>
-</tbody>
-</table>
-
-
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org0f1d9e4">
-<h4 id="org0f1d9e4">Part 2</h4>
+<section id="slide-org24d099f">
+<h4 id="org24d099f">Part 2</h4>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -994,87 +898,27 @@ Parameter count: 849780
 </p>
 </div>
 
-
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org2319103">
-<h4 id="org2319103">Data-&gt; Data transformations for building a networks</h4>
-<p>
-Networks are built by successively adding maps of maps.
-</p>
-
-<p>
-In the first stage <b>network/linear-network</b> creates a computation graph which specifies
-</p>
-
-<p class="fragment appear">
-Nodes (a map of layers keyed by name)
-</p>
-<p class="fragment appear">
-Edges (connections between layers)
-</p>
-<p class="fragment appear">
-Buffers (weights and other parameters)
-</p>
-<p class="fragment appear">
-Streams (input and output data)
-</p>
-
-</section>
-<section >
-<p>
-Query the layers:
-</p>
-
-<div class="org-src-container">
-
-<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> occupancy-net <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:nodes</span> keys<span style="color: #4f97d7;">)</span>
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span>
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">(</span><span style="color: #2aa1ae; background-color: #292e34;">:data</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:linear-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:mse-loss-1</span><span style="color: #2aa1ae; background-color: #292e34;">)</span>
-</pre>
-</div>
-
-</section>
-<section >
-<div class="org-src-container">
-
-<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> occupancy-net <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:edges</span><span style="color: #4f97d7;">)</span>
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span>
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">([</span><span style="color: #2aa1ae; background-color: #292e34;">:data</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;">] [</span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:linear-1</span><span style="color: #2aa1ae; background-color: #292e34;">] </span>
-<span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">[</span><span style="color: #2aa1ae; background-color: #292e34;">:linear-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;">] [</span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:mse-loss-1</span><span style="color: #2aa1ae; background-color: #292e34;">])</span>
-</pre>
-</div>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-org393b919">
-<h3 id="org393b919">Explore what each layer does</h3>
+<section id="slide-org6b4595e">
+<h3 id="org6b4595e">Visualize the output of a hidden layer (a.k.a dissoc)</h3>
 <p>
 Exploring the Swish activation function
 </p>
 
-<div class="org-src-container">
-
-<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">desc</span>
-  <span style="color: #bc6ec5;">[</span><span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #2d9574;">)</span>
-   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>swish <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:weights</span> <span style="color: #67b11d;">[</span><span style="color: #b1951d;">[</span><span style="color: #a45bad;">1.0</span><span style="color: #b1951d;">]</span><span style="color: #67b11d;">]</span><span style="color: #2d9574;">)</span>
-   <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>logistic <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:labels</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
-
-<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">inet</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> desc <span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>linear-network <span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
-</pre>
-</div>
-
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-orgbf6b113">
-<h4 id="orgbf6b113">Net Surgery</h4>
-<p>
-Remove the last layer (logistic) and pass a range of inputs (-1 to 1)
+<p class="fragment appear">
+Remove the penultimate layer (labels) and pass a range of inputs 
 </p>
 <div class="org-src-container">
 
-<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">execute</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>run <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>dissoc-layers-from-network inet <span style="color: #a45bad;">:labels</span><span style="color: #bc6ec5;">)</span> input-data<span style="color: #4f97d7;">)</span>
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> network <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:nodes</span> keys<span style="color: #4f97d7;">)</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">(</span><span style="color: #2aa1ae; background-color: #292e34;">:data</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:linear-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:mse-loss-1</span><span style="color: #2aa1ae; background-color: #292e34;">)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">execute</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>run <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>dissoc-layers-from-network network <span style="color: #a45bad;">:labels</span><span style="color: #bc6ec5;">)</span> input-data<span style="color: #4f97d7;">)</span>
 </pre>
 </div>
 
@@ -1087,19 +931,14 @@ Compare Swish with Tanh and Logistic layers
 
 
 <div class="figure">
-<p><img src="./images/swish_tanh_log.png" alt="swish_tanh_log.png" />
+<p><img src="./images/swish4.png" alt="swish4.png" />
 </p>
 </div>
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org0c871e4">
-<h3 id="org0c871e4">While-training checks</h3>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-org825bb6b">
-<h3 id="org825bb6b">Training is reducing over sequences</h3>
+<section id="slide-orgd343417">
+<h3 id="orgd343417">Training (a.k.a iterate)</h3>
 <p>
 Train and test datasets are infinite sequences
 </p>
@@ -1141,6 +980,15 @@ Returns a sequence with 10 iterations of trained network
 Check how weights change over epochs
 </p>
 
+<div class="org-src-container">
+
+<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> network <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:buffers</span> <span style="color: #a45bad;">:convolutional-2-weights-1</span> <span style="color: #a45bad;">:buffer</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+</section>
+<section >
+
 <div class="figure">
 <p><img src="./images/conv_layer_weights.png" alt="conv_layer_weights.png" />
 </p>
@@ -1149,8 +997,8 @@ Check how weights change over epochs
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-orgcb7ef78">
-<h3 id="orgcb7ef78">Listeners</h3>
+<section id="slide-org8d77d40">
+<h3 id="org8d77d40">Listeners</h3>
 <p class="fragment appear">
 To watch progress of the loss function
 </p>
@@ -1158,100 +1006,21 @@ To watch progress of the loss function
 Save the best model/kill training
 </p>
 <p class="fragment appear">
-Observe images being classified
+Observe images/instances being classified
 </p>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-org4a0c2b1">
-<h4 id="org4a0c2b1">Default listener</h4>
-<p class="fragment appear">
-Live updates on a local webserver
-</p>
-<p class="fragment appear">
-Creates images from training instances to observe training progress
-</p>
-
-</section>
-<section >
-
-<div class="figure">
-<p><img src="./images/confmat.png" alt="confmat.png" />
-</p>
-<p><span class="figure-number">Figure 23: </span>Confusion matrix</p>
-</div>
-
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-org2953675">
-<h4 id="org2953675">Digression: Tensorboard</h4>
-<p class="fragment appear">
-<a href="https://www.tensorflow.org/get_started/summaries_and_tensorboard" class="fragment appear">Tensorboard</a> is a suite of visualization tools to understand, debug and optimize Tensorflow
-</p>
-<p class="fragment appear">
-Users can view plots of   
-</p>
-<ul class="fragment appear">
-<li>Scalar metrics such as Accuracy/ error / F1 score</li>
-<li>Tensor metrics such as weights, biases</li>
-<li>Histograms of metric's progressions over time.</li>
-
-</ul>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-orgf54dd47">
-<h4 id="orgf54dd47">Tensorboard listener</h4>
-<p class="fragment appear">
-Listen for Cortex events and convert it to Tensorboard compatible events 
-</p>
-<p class="fragment appear">
-Out of the box support for 
-</p>
-<ul class="fragment appear">
-<li>train loss and cross validation loss</li>
-<li>weight and bias histograms</li>
-
-</ul>
-
-</section>
-<section >
-<div class="org-src-container">
-
-<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #a45bad;">:require</span> <span style="color: #bc6ec5;">[</span><span style="color: #ce537a; font-weight: bold;">cortex.experiment.classification</span> <span style="color: #a45bad;">:as</span> cls<span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
-   <span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">cls</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>create-tensorboard-listener
-                   <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">file name should include "tfevents"</span>
-                   <span style="color: #bc6ec5;">{</span><span style="color: #a45bad;">:file-path</span> <span style="color: #2d9574;">"/tmp/tflogs/linear/tfevents.linear.out"</span><span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">)</span>
-
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">launch tensorboard with log path</span>
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">tensorboard --logdir=/tmp/tflogs</span>
-</pre>
-</div>
-
-
-</section>
-<section >
-
-
-<div class="figure">
-<p><img src="./images/tb-stats.png" alt="tb-stats.png" style="margin: 0 auto; display:block;" /> 
-</p>
-<p><span class="figure-number">Figure 24: </span>Tensorboard scalar metrics</p>
-</div>
 
 <div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-org20b9657">
-<h2 id="org20b9657">Summary</h2>
-<div class="outline-text-2" id="text-org20b9657">
-</div>
+<section id="slide-orgad6f9a1">
+<h2 id="orgad6f9a1">Summary</h2>
+
+
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org3cb11f0">
-<h3 id="org3cb11f0">What Cortex needs contributions on</h3>
+<section id="slide-org48bfb84">
+<h3 id="org48bfb84">What Cortex needs contributions on</h3>
 <p class="fragment appear">
 Support for Recurrent networks (e.g. text) 
 </p>
@@ -1272,8 +1041,8 @@ Automatic differentiation
 </section>
 </section>
 <section>
-<section id="slide-org509ca63">
-<h2 id="org509ca63">Thanks</h2>
+<section id="slide-orgb392ae4">
+<h2 id="orgb392ae4">Thanks</h2>
 <p>
 Chris Nuernberger and the Thinktopic team
 </p>
@@ -1292,8 +1061,8 @@ Mike Anderson
 
 <div class="slide-footer"></div>
 </section>
-<section id="slide-org3a12e26">
-<h4 id="org3a12e26">References</h4>
+<section id="slide-org47ecf2c">
+<h4 id="org47ecf2c">References</h4>
 <ul>
 <li><a href="http://clojuredatascience.com">Clojure Data Science.com</a></li>
 <li>Office occupancy picture (<img src="https://c1.staticflickr.com/1/31/65165707_a9ee8be5e0_b.jpg" alt="65165707_a9ee8be5e0_b.jpg" />)</li>
