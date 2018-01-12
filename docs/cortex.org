@@ -1,3 +1,4 @@
+# #+REVEAL_ROOT: file:///home/kiran/src/github/inclojure-cortex/docs/
 #+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
 #+TITLE:  Deep learning with Cortex
 #+AUTHOR: Kiran Karkera 
@@ -14,14 +15,14 @@
 #+OPTIONS: reveal_title_slide:"<h1>%t</h1><h2>%a</h2><h3>%e</h3>"
 #+OPTIONS: toc:0
 #+REVEAL_EXTRA_CSS: ./night.css
-#+REVEAL_SLIDE_FOOTER: 
 # #+REVEAL_MARGIN: 0.2
+#+REVEAL_PLUGINS: (zoom notes )
 #+REVEAL_MAX_SCALE: 5 
 # * An introduction to Cortex
 
 * Outline 
 
-Context: Clojure, Cortex, Machine Learning
+Context: Machine Learning
 #+ATTR_REVEAL: :frag appear
 Overview of Cortex
 #+ATTR_REVEAL: :frag appear
@@ -29,70 +30,18 @@ Example of building networks
 #+ATTR_REVEAL: :frag appear
 Recipes 
 
-* Context 
-
-Machine learning/data science is an overloaded term
-
-#+REVEAL: split
-
-#+CAPTION: Blind men and the elephant 
-
-#+ATTR_HTML: :style margin: 0 auto; display:block;
-  [[./images/blind_men.jpg]]
-
-** Estimation vs Prediction 
-
-#+ATTR_REVEAL: :frag appear
- Estimation: coming up with values of unknown parameters   
-
-#+ATTR_REVEAL: :frag appear
- Prediction: focused on accuracy
-
-#+BEGIN_NOTES
- - Examine causes of diseases 
- - Example: image classification 
-#+END_NOTES
-
-** Research vs production use 
-
-#+ATTR_REVEAL: :frag appear
- Exploration (given a dataset, train a classifier, produce a report) 
-
-#+ATTR_REVEAL: :frag appear
- Production (putting a trained model into a production environment)
-
-
-* Why use Clojure for Machine Learning?
-
-#+ATTR_REVEAL: :frag appear
-Data-oriented functional programming with a focus on composable sequence processing 
-#+ATTR_REVEAL: :frag appear
-Excellent tooling for REPL-driven development
-#+ATTR_REVEAL: :frag appear
-Interop with Java, Scala and Javascript 
-#+ATTR_REVEAL: :frag appear
-Smooth transition from research to production
-
-#+REVEAL: split
-  [[./images/datascienceaxes.png]]
-
-#+REVEAL: split
-
-| *Library* | *Niche* |
-|Gorilla-repl| Notebooks/visualization |
-|Storm | Stream processing |
-|Onyx | Stream Processing |
-|Sparkling/Flambo | Distributed jobs on Spark |
-|Datomic | Supports "time travel" over database history |
-
-
 * What is Machine Learning 
 
+#+BEGIN_NOTES
+Haha
+#+END_NOTES
+#+BEGIN_NOTES
+
+#+END_NOTES
 *** Supervised Classification:
 
 #+ATTR_HTML: :style margin: 0 auto; display:block;
   [[./images/woof_meow.jpg]]
-
 
 [fn:2] [[https://www.quora.com/What-is-the-difference-between-supervised-and-unsupervised-learning-algorithms/answer/Shehroz-Khan-2?srid=o0Wh][Quora post reference]]
 
@@ -136,6 +85,8 @@ Different layers can be combined in a [[http://colah.github.io/posts/2014-07-Con
 #+ATTR_HTML: :style margin: 0 auto; display:block; :height 70%, :width 70%
   [[./images/example_captions.jpg]]
 
+
+
 * Features of Cortex
 
 Deep learning library written in Clojure
@@ -156,13 +107,12 @@ Abstraction layers for CUDA / CPU
 
 ** Predicting office room occupancy 
 
-#+ATTR_HTML: :style margin: 0 auto; display:block; :height 50% 
+#+ATTR_HTML: :style margin: 0 auto; display:block; :height 70% :width 70%
 [[./images/office_occupancy.jpg]]
  
 #+REVEAL: split
 
-#+ATTR_REVEAL: :frag appear
-Train with 8k instances from room occupancy dataset 
+Train with 8k instances 
 
 #+ATTR_REVEAL: :frag appear
 Contains measurements of light, temperature, humidity and CO2 of an office room. 
@@ -175,44 +125,20 @@ Goal is to predict when the room is occupied.
 #+ATTR_HTML: :style margin: 0 auto; display:block; 
 [[./images/occupancy_dataset.png]]
 
-*** Data ingestion
+*** Data ingestion 
 
 #+BEGIN_SRC clojure
 
 (def data-vectors (->> "resources/occupancy/datatraining.csv"
                        (slurp)
-                       ;; parse lines   
+                       ;; parse lines and process
+                       (mapv make-feature-vectors)   
                        ))
 (take 2 data-vectors)
 
 #+END_SRC
 
 ----- 
-
-#+ATTR_REVEAL: :frag appear
-#+BEGIN_SRC sh 
-([23.18 27.272 426.0 721.25 0.00479298817650529 1.0] 
- [23.15 27.2675 429.5 714.0 0.00478344094931065 1.0])
-#+END_SRC
-
-
-*** Create training data format
-
-
-#+BEGIN_SRC clojure
-
-(defn make-feature-vec
-  [data-vectors]
-  (->> data-vectors 
-       (mapv (fn[m] {:data (-> m butlast vec) :labels (-> m last vector)}))))
-  
-(->> (make-feature-vec data-vectors)
-     (take 2))
-
-#+END_SRC
-
------ 
-
 
 #+ATTR_REVEAL: :frag appear
 #+BEGIN_SRC sh 
@@ -257,6 +183,7 @@ Specify the input against the :id key
 #+END_SRC
 
 #+REVEAL: split
+#+ATTR_HTML: :style margin: 0 auto; display:block; :height 70% :width 100%
 [[./images/occupancy_network.png]]
 
 *** Training
@@ -291,17 +218,17 @@ Evaluate the accuracy (and other metrics) on the test set
 
 #+ATTR_REVEAL: :frag appear
 #+BEGIN_SRC sh 
-[(accuracy actual predicted) (f1-score actual predicted 1.0)]
+(accuracy actual predicted)
 #+END_SRC
 
 #+ATTR_REVEAL: :frag appear
 #+BEGIN_SRC sh 
-[0.9447852760736196 0.8888888888888891]
+0.9447852760736196
 #+END_SRC
 
 ** Recognizing hand-written digits
 
-#+ATTR_HTML: :style margin: 0 auto; display:block; :height 70% 
+#+ATTR_HTML: :style margin: 0 auto; display:block; :height 70% :width 70%
 [[./images/mnist-sample.png]]
 
 #+ATTR_REVEAL: :frag appear
@@ -310,8 +237,8 @@ Image of size 28 (length) x 28 (breadth) x 3 (depth)
 *** Network definition
 
 #+BEGIN_SRC clojure
-  ;;input layer for an image of size 28 (length) x 28 (breadth) x 3 (depth)
-  (layers/input 28 28 3 :id :data)
+  ;;input layer for an image of size 28 (length) x 28 (breadth) x 1 (depth)
+  (layers/input 28 28 1 :id :data)
 
 #+END_SRC
 
@@ -343,7 +270,7 @@ Image of size 28 (length) x 28 (breadth) x 3 (depth)
 *** Training progress 
 
 #+REVEAL: split
-#+ATTR_HTML: :style margin: 0 auto; display:block; :height 100% :width 120%
+#+ATTR_HTML: :style margin: 0 auto; display:block; :height 80% :width 80%
 [[./images/mnist_webserver.png]]
 
 #+REVEAL: split
@@ -355,11 +282,9 @@ Image of size 28 (length) x 28 (breadth) x 3 (depth)
 #+REVEAL: split
 [[./images/tensorboard_mnist_weights.png]]
 
-#+REVEAL: split
-[[./images/tboard_mnist_convbias.png]]
-
 * Backpropagation
 
+#+ATTR_HTML: :style margin: 0 auto; display:block; :height 50% :width 70%
 [[./images/dartboard.jpg]]
 
 
@@ -416,19 +341,17 @@ Check out [[https://lossfunctions.tumblr.com/][this page]] for artistic loss fun
 #+ATTR_HTML: :style margin: 0 auto; display:block;
 [[./images/xkcd.png]]
 
-** Debug-ability is key
+** Debug-ability is crucial
 
 [[./images/underthehood.jpg]]
 
 #+REVEAL: split
-#+ATTR_REVEAL: :frag appear
 Swanky UIs are common
 
 #+ATTR_REVEAL: :frag appear
-Swanky REPL are surprisingly rare
+Swanky REPL are not
 
 #+REVEAL: split
-#+ATTR_REVEAL: :frag appear
 *“Any Product That Needs a Manual to Work Is Broken” – Elon Musk*
 
 ** Neural nets and functional programming 
@@ -452,7 +375,7 @@ Reduce
 #+END_SRC
 
 
-#+ATTR_REVEAL: :frag appear
+#+REVEAL: split
 Iterate 
 #+ATTR_REVEAL: :frag appear
 #+BEGIN_SRC clojure
@@ -461,7 +384,7 @@ Iterate
 
 * REPL driven development 
 
-** Querying network properties (a.k.a ->)
+** Querying network properties 
  
 *** What are the layers in the network
 
@@ -530,7 +453,7 @@ Parameter count: 849780
 #+REVEAL: split
 [[./images/weights_barchart.png]]
 
-** Visualize the output of a hidden layer (a.k.a dissoc)
+** Visualize the output of a hidden layer 
 
 Exploring the Swish activation function
 
@@ -554,9 +477,8 @@ Compare Swish with Tanh and Logistic layers
 
 [[./images/swish4.png]]
 
-** Training (a.k.a iterate)
+** Training 
 
-Train and test datasets are infinite sequences
 
 #+ATTR_REVEAL: :frag appear
 #+BEGIN_SRC clojure
@@ -597,11 +519,9 @@ Check how weights change over epochs
 ** Listeners
 
 #+ATTR_REVEAL: :frag appear
-To watch progress of the loss function
-#+ATTR_REVEAL: :frag appear
 Save the best model/kill training
 #+ATTR_REVEAL: :frag appear
-Observe images/instances being classified
+Broadcast events at key milestones
 
 * Summary 
 
@@ -626,11 +546,9 @@ Mike Anderson
 
 #+REVEAL: split
 #+REVEAL: split
-#+REVEAL: split
-#+REVEAL: split
 
 *** References
 
 - [[http://clojuredatascience.com][Clojure Data Science.com]]
-- Office occupancy picture (https://c1.staticflickr.com/1/31/65165707_a9ee8be5e0_b.jpg)
+- Office occupancy picture  https://c1.staticflickr.com/1/31/65165707_a9ee8be5e0_b.jpg
 - [[http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+][room occupancy]] dataset

@@ -31,10 +31,10 @@
 </section>
 
 <section>
-<section id="slide-org25483a8">
-<h2 id="org25483a8">Outline</h2>
+<section id="slide-orgc4e2ec1">
+<h2 id="orgc4e2ec1">Outline</h2>
 <p>
-Context: Clojure, Cortex, Machine Learning
+Context: Machine Learning
 </p>
 <p class="fragment appear">
 Overview of Cortex
@@ -46,146 +46,26 @@ Example of building networks
 Recipes 
 </p>
 
-<div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-orgfaa7f41">
-<h2 id="orgfaa7f41">Context</h2>
-<p>
-Machine learning/data science is an overloaded term
-</p>
-
-</section>
-<section >
-
-
-<div class="figure">
-<p><img src="./images/blind_men.jpg" alt="blind_men.jpg" style="margin: 0 auto; display:block;" />
-</p>
-</div>
-
-</section>
-<section >
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-orgae0e7a2">
-<h3 id="orgae0e7a2">Estimation vs Prediction</h3>
-<p class="fragment appear">
-Estimation: coming up with values of unknown parameters (in a model)  
-</p>
-
-<p class="fragment appear">
-Prediction: focused on accuracy (and other metrics) of model.
-</p>
-
+<section id="slide-org5157285">
+<h2 id="org5157285">What is Machine Learning</h2>
 <aside class="notes">
-<ul>
-<li>Examine causes of diseases</li>
-<li>Example: image classification</li>
-
-</ul>
+<p>
+Haha
+</p>
 
 </aside>
+<aside class="notes">
+<p>
 
-<div class="slide-footer"></div>
-</section>
-<section id="slide-orge6b97cf">
-<h3 id="orge6b97cf">Research vs production use</h3>
-<p class="fragment appear">
-Exploration (given a dataset, train a classifier, produce a report) 
 </p>
 
-<p class="fragment appear">
-Production (putting a trained model into a production environment)
-</p>
-
-
-<div class="slide-footer"></div>
+</aside>
 </section>
-</section>
-<section>
-<section id="slide-org37d4dc9">
-<h2 id="org37d4dc9">Why use Clojure for Machine Learning?</h2>
-<p class="fragment appear">
-Data-oriented functional programming with a focus on composable sequence processing 
-</p>
-<p class="fragment appear">
-Excellent tooling for REPL-driven development
-</p>
-<p class="fragment appear">
-Interop with Java, Scala and Javascript 
-</p>
-<p class="fragment appear">
-Smooth transition from research to production
-</p>
-
-</section>
-<section >
-
-<div class="figure">
-<p><img src="./images/datascienceaxes.png" alt="datascienceaxes.png" />
-</p>
-</div>
-
-</section>
-<section >
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="org-left" />
-
-<col  class="org-left" />
-</colgroup>
-<tbody>
-<tr>
-<td class="org-left"><b>Library</b></td>
-<td class="org-left"><b>Niche</b></td>
-</tr>
-
-<tr>
-<td class="org-left">Gorilla-repl</td>
-<td class="org-left">Notebooks/visualization</td>
-</tr>
-
-<tr>
-<td class="org-left">Storm</td>
-<td class="org-left">Stream processing</td>
-</tr>
-
-<tr>
-<td class="org-left">Onyx</td>
-<td class="org-left">Stream Processing</td>
-</tr>
-
-<tr>
-<td class="org-left">Sparkling/Flambo</td>
-<td class="org-left">Distributed jobs on Spark</td>
-</tr>
-
-<tr>
-<td class="org-left">Datomic</td>
-<td class="org-left">Supports "time travel" over database history</td>
-</tr>
-</tbody>
-</table>
-
-
-<div class="slide-footer"></div>
-</section>
-</section>
-<section>
-<section id="slide-org43cfc4a">
-<h2 id="org43cfc4a">What is Machine Learning</h2>
-<div class="outline-text-2" id="text-org43cfc4a">
-</div>
-<div class="slide-footer"></div>
-</section>
-<section id="slide-org095c1fe">
-<h4 id="org095c1fe">Supervised Classification:</h4>
+<section id="slide-orgd89d603">
+<h4 id="orgd89d603">Supervised Classification:</h4>
 
 <div class="figure">
 <p><img src="./images/woof_meow.jpg" alt="woof_meow.jpg" style="margin: 0 auto; display:block;" />
@@ -193,16 +73,14 @@ Smooth transition from research to production
 </div>
 
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orga257052">
-<h3 id="orga257052">Why are Neural Networks popular for classification?</h3>
-<div class="outline-text-3" id="text-orga257052">
+<section id="slide-org828a4c5">
+<h3 id="org828a4c5">Why are Neural Networks popular for classification?</h3>
+<div class="outline-text-3" id="text-org828a4c5">
 </div>
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orgfb07bba">
-<h4 id="orgfb07bba">State of the art performance</h4>
+<section id="slide-org5950b34">
+<h4 id="org5950b34">State of the art performance</h4>
 </section>
 <section >
 <p>
@@ -219,10 +97,9 @@ One of the early successes(1992) for neural nets was reading <a href="http://yan
 99.81% accuracy on MNIST, close to or better than human performance
 </p>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orgd1fd207">
-<h4 id="orgd1fd207">Flexibility</h4>
+<section id="slide-org88dbb6d">
+<h4 id="org88dbb6d">Flexibility</h4>
 <p>
 Neural Nets can accommodate several outputs:
 </p>
@@ -231,10 +108,6 @@ Single target classification (e.g. Spam classification)
 </p>
 <p class="fragment appear">
 Multi target classification (e.g multiple objects in an image)
-</p>
-
-<p class="fragment appear">
-Classifying aspects of human faces such as gender, age, type of expression and skin colour
 </p>
 
 
@@ -246,10 +119,9 @@ Classifying aspects of human faces such as gender, age, type of expression and s
 </section>
 <section >
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orge200ef8">
-<h4 id="orge200ef8">Composable abstractions</h4>
+<section id="slide-orgd788e20">
+<h4 id="orgd788e20">Composability</h4>
 <p class="fragment appear">
 Different layers can be combined in a <a href="http://colah.github.io/posts/2014-07-Conv-Nets-Modular/" class="fragment appear">modular fashion</a> and computations are straightforward
 </p>
@@ -260,15 +132,22 @@ Different layers can be combined in a <a href="http://colah.github.io/posts/2014
 <div class="figure">
 <p><img src="./images/example_captions.jpg" alt="example_captions.jpg" style="margin: 0 auto; display:block;" height="70%," width="70%" />
 </p>
-<p><span class="figure-number">Figure 6: </span>im2txt network provides descriptions of images</p>
+<p><span class="figure-number">Figure 4: </span>im2txt network provides descriptions of images</p>
 </div>
 
-<div class="slide-footer"></div>
+
+
 </section>
 </section>
 <section>
-<section id="slide-org15d0d84">
-<h2 id="org15d0d84">Features of Cortex</h2>
+<section id="slide-orgd2faa30">
+<h2 id="orgd2faa30">Features of Cortex</h2>
+<aside class="notes">
+<p>
+End of Part 1
+</p>
+
+</aside>
 <p>
 Deep learning library written in Clojure
 </p>
@@ -292,29 +171,27 @@ Abstraction layers for CUDA / CPU
 
 </ul>
 
-<div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-orgcb1fe0a">
-<h2 id="orgcb1fe0a">Cortex Examples</h2>
-<div class="outline-text-2" id="text-orgcb1fe0a">
+<section id="slide-orgaa2ed9a">
+<h2 id="orgaa2ed9a">Cortex Examples</h2>
+<div class="outline-text-2" id="text-orgaa2ed9a">
 </div>
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org1427b0a">
-<h3 id="org1427b0a">Predicting office room occupancy</h3>
+<section id="slide-orga56aefc">
+<h3 id="orga56aefc">Predicting office room occupancy</h3>
 
 <div class="figure">
-<p><img src="./images/office_occupancy.jpg" alt="office_occupancy.jpg" style="margin: 0 auto; display:block;" height="70%" />
+<p><img src="./images/office_occupancy.jpg" alt="office_occupancy.jpg" style="margin: 0 auto; display:block;" height="70%" width="70%" />
 </p>
 </div>
 
 </section>
 <section >
 
-<p class="fragment appear">
-Train with 8k instances from <a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+" class="fragment appear">room occupancy</a> dataset 
+<p>
+Train with 8k instances from room occupancy dataset 
 </p>
 
 <p class="fragment appear">
@@ -334,15 +211,20 @@ Goal is to predict when the room is occupied.
 </p>
 </div>
 
-<div class="slide-footer"></div>
+<p>
+#+BEGIN<sub>NOTES</sub>:
+End of Part 1
+#+END<sub>NOTES</sub>
+</p>
 </section>
-<section id="slide-org4c04704">
-<h4 id="org4c04704">Data ingestion</h4>
+<section id="slide-org3dadb30">
+<h4 id="org3dadb30">Data ingestion</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">data-vectors</span> <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> <span style="color: #2d9574;">"resources/occupancy/datatraining.csv"</span>
                        <span style="color: #2d9574;">(</span>slurp<span style="color: #2d9574;">)</span>
-                       <span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">parse lines   </span>
+                       <span style="color: #2aa1ae; background-color: #292e34;">;; </span><span style="color: #2aa1ae; background-color: #292e34;">parse lines and process</span>
+                       <span style="color: #2d9574;">(</span>mapv make-feature-vectors<span style="color: #2d9574;">)</span>   
                        <span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
 <span style="color: #4f97d7;">(</span>take <span style="color: #a45bad;">2</span> data-vectors<span style="color: #4f97d7;">)</span>
 
@@ -353,54 +235,20 @@ Goal is to predict when the room is occupied.
 
 <div class="org-src-container">
 
-<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">[</span><span style="color: #a45bad;">23.18</span> <span style="color: #a45bad;">27.272</span> <span style="color: #a45bad;">426.0</span> <span style="color: #a45bad;">721.25</span> <span style="color: #a45bad;">0.00479298817650529</span> <span style="color: #a45bad;">1.0</span><span style="color: #bc6ec5;">]</span> 
- <span style="color: #bc6ec5;">[</span><span style="color: #a45bad;">23.15</span> <span style="color: #a45bad;">27.2675</span> <span style="color: #a45bad;">429.5</span> <span style="color: #a45bad;">714.0</span> <span style="color: #a45bad;">0.00478344094931065</span> <span style="color: #a45bad;">1.0</span><span style="color: #bc6ec5;">]</span><span style="color: #4f97d7;">)</span>
-</pre>
-</div>
-
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-org6afb4b2">
-<h4 id="org6afb4b2">Create training data format</h4>
-<div class="org-src-container">
-
-<pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">defn</span> <span style="color: #bc6ec5; font-weight: bold;">make-feature-vec</span>
-  <span style="color: #bc6ec5;">[</span>data-vectors<span style="color: #bc6ec5;">]</span>
-  <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> data-vectors 
-       <span style="color: #2d9574;">(</span>mapv <span style="color: #67b11d;">(</span><span style="color: #4f97d7; font-weight: bold;">fn</span><span style="color: #b1951d;">[</span>m<span style="color: #b1951d;">]</span> <span style="color: #b1951d;">{</span><span style="color: #a45bad;">:data</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> m butlast vec<span style="color: #4f97d7;">)</span> <span style="color: #a45bad;">:labels</span> <span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> m last vector<span style="color: #4f97d7;">)</span><span style="color: #b1951d;">}</span><span style="color: #67b11d;">)</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
-
-<span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;&gt;</span> <span style="color: #bc6ec5;">(</span>make-feature-vec data-vectors<span style="color: #bc6ec5;">)</span>
-     <span style="color: #bc6ec5;">(</span>take <span style="color: #a45bad;">2</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
-
-</pre>
-</div>
-
-<hr />
-
-
-<div class="org-src-container">
-
 <pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #bc6ec5;">{</span>:data <span style="color: #2d9574;">[</span><span style="color: #a45bad;">22.15</span> <span style="color: #a45bad;">27.245</span> <span style="color: #a45bad;">0.0</span> <span style="color: #a45bad;">586.5</span> <span style="color: #a45bad;">0.0044959713579516</span><span style="color: #2d9574;">]</span>, :labels <span style="color: #2d9574;">[</span><span style="color: #a45bad;">0.0</span><span style="color: #2d9574;">]</span><span style="color: #bc6ec5;">}</span> 
  <span style="color: #bc6ec5;">{</span>:data <span style="color: #2d9574;">[</span><span style="color: #a45bad;">20.89</span> <span style="color: #a45bad;">23.445</span> <span style="color: #a45bad;">0.0</span> <span style="color: #a45bad;">450.5</span> <span style="color: #a45bad;">0.00357640828064061</span><span style="color: #2d9574;">]</span>, :labels <span style="color: #2d9574;">[</span><span style="color: #a45bad;">1.0</span><span style="color: #2d9574;">]</span><span style="color: #bc6ec5;">}</span><span style="color: #4f97d7;">)</span>
 
 </pre>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orgcaee746">
-<h4 id="orgcaee746">Split the data into train and test</h4>
-
-<div class="slide-footer"></div>
-</section>
-<section id="slide-org512f7fb">
-<h3 id="org512f7fb">Define the layers</h3>
+<section id="slide-orgfecfa37">
+<h3 id="orgfecfa37">Define the layers</h3>
 <p>
 Network is defined as a vector of layers
 </p>
 <p class="fragment appear">
-Input layer take 3 arguments, the <b>x y z</b> dimensions of the input cube
+Input layer take 3 arguments, the <b>x y z</b> dimensions of a cube
 </p>
 <p class="fragment appear">
 Specify the input against the :id key 
@@ -422,10 +270,9 @@ Specify the input against the :id key
 </pre>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org9515b66">
-<h4 id="org9515b66">Network definition</h4>
+<section id="slide-org993caf8">
+<h4 id="org993caf8">Network definition</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">description</span>
@@ -441,14 +288,13 @@ Specify the input against the :id key
 <section >
 
 <div class="figure">
-<p><img src="./images/occupancy_network.png" alt="occupancy_network.png" />
+<p><img src="./images/occupancy_network.png" alt="occupancy_network.png" style="margin: 0 auto; display:block;" height="70%" width="100%" />
 </p>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orgc1672e0">
-<h4 id="orgc1672e0">Training</h4>
+<section id="slide-orgb489d1e">
+<h4 id="orgb489d1e">Training</h4>
 <p>
 Train it for 10 <b>epochs</b>
 </p>
@@ -461,7 +307,6 @@ One epoch == One pass on the dataset
 <pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">trained-occupancy-net</span> 
   <span style="color: #bc6ec5;">(</span><span style="color: #4f97d7; font-weight: bold;">let</span> <span style="color: #2d9574;">[</span><span style="color: #67b11d;">[</span>train-ds test-ds<span style="color: #67b11d;">]</span> train-test-ds<span style="color: #2d9574;">]</span>
     <span style="color: #2d9574;">(</span>train-n description train-ds test-ds                            
-             <span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">run for 10 training epochs</span>
              <span style="color: #a45bad;">:epoch-count</span> <span style="color: #a45bad;">10</span> <span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
 
 </pre>
@@ -478,33 +323,31 @@ Loss for epoch  <span style="color: #a45bad;">10:</span> <span style="color: #4f
 </pre>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org80aa213">
-<h4 id="org80aa213">Evaluate results</h4>
+<section id="slide-org8bce47c">
+<h4 id="org8bce47c">Evaluate results</h4>
 <p>
 Evaluate the accuracy (and other metrics) on the test set
 </p>
 
 <div class="org-src-container">
 
-<pre  class="fragment appear"><span style="color: #4f97d7;">[</span><span style="color: #bc6ec5;">(</span>accuracy actual predicted<span style="color: #bc6ec5;">)</span> <span style="color: #bc6ec5;">(</span>f1-score actual predicted <span style="color: #a45bad;">1.0</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">]</span>
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span>accuracy actual predicted<span style="color: #4f97d7;">)</span>
 </pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment appear"><span style="color: #4f97d7;">[</span><span style="color: #a45bad;">0.9447852760736196</span> <span style="color: #a45bad;">0.8888888888888891</span><span style="color: #4f97d7;">]</span>
+<pre  class="fragment appear"><span style="color: #a45bad;">0.9447852760736196</span>
 </pre>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org899408a">
-<h3 id="org899408a">Recognizing hand-written digits</h3>
+<section id="slide-org411148a">
+<h3 id="org411148a">Recognizing hand-written digits</h3>
 
 <div class="figure">
-<p><img src="./images/mnist-sample.png" alt="mnist-sample.png" style="margin: 0 auto; display:block;" height="70%" />
+<p><img src="./images/mnist-sample.png" alt="mnist-sample.png" style="margin: 0 auto; display:block;" height="70%" width="70%" />
 </p>
 </div>
 
@@ -512,14 +355,13 @@ Evaluate the accuracy (and other metrics) on the test set
 Image of size 28 (length) x 28 (breadth) x 3 (depth)
 </p>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orgddfa08a">
-<h4 id="orgddfa08a">Network definition</h4>
+<section id="slide-orgb651a15">
+<h4 id="orgb651a15">Network definition</h4>
 <div class="org-src-container">
 
-<pre  class="src src-clojure"><span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">input layer for an image of size 28 (length) x 28 (breadth) x 3 (depth)</span>
-<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">28</span> <span style="color: #a45bad;">28</span> <span style="color: #a45bad;">3</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #4f97d7;">)</span>
+<pre  class="src src-clojure"><span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">input layer for an image of size 28 (length) x 28 (breadth) x 1 (depth)</span>
+<span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">layers</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>input <span style="color: #a45bad;">28</span> <span style="color: #a45bad;">28</span> <span style="color: #a45bad;">1</span> <span style="color: #a45bad;">:id</span> <span style="color: #a45bad;">:data</span><span style="color: #4f97d7;">)</span>
 
 </pre>
 </div>
@@ -551,13 +393,14 @@ Image of size 28 (length) x 28 (breadth) x 3 (depth)
 </pre>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org89268c7">
-<h4 id="org89268c7">Training progress</h4>
+<section id="slide-org0a8d140">
+<h4 id="org0a8d140">Training progress</h4>
+</section>
+<section >
 
 <div class="figure">
-<p><img src="./images/mnist_webserver.png" alt="mnist_webserver.png" style="margin: 0 auto; display:block;" height="100%" width="120%" />
+<p><img src="./images/mnist_webserver.png" alt="mnist_webserver.png" style="margin: 0 auto; display:block;" height="80%" width="80%" />
 </p>
 </div>
 
@@ -582,28 +425,18 @@ Image of size 28 (length) x 28 (breadth) x 3 (depth)
 </div>
 
 </section>
-<section >
-
-<div class="figure">
-<p><img src="./images/tboard_mnist_convbias.png" alt="tboard_mnist_convbias.png" />
-</p>
-</div>
-
-<div class="slide-footer"></div>
-</section>
 </section>
 <section>
-<section id="slide-org651d3f1">
-<h2 id="org651d3f1">Backpropagation</h2>
+<section id="slide-orge569ecd">
+<h2 id="orge569ecd">Backpropagation</h2>
 
 <div class="figure">
-<p><img src="./images/dartboard.jpg" alt="dartboard.jpg" />
+<p><img src="./images/dartboard.jpg" alt="dartboard.jpg" style="margin: 0 auto; display:block;" height="50%" width="70%" />
 </p>
 </div>
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orgf8663c3">
-<h4 id="orgf8663c3">Artifacts</h4>
+<section id="slide-org59dcdb1">
+<h4 id="org59dcdb1">Artifacts</h4>
 <p class="fragment appear">
 Forward pass
 </p>
@@ -617,10 +450,9 @@ Accuracy / Loss function
 Gradient
 </p>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org2e3c2ce">
-<h3 id="org2e3c2ce">How to train neural networks (theory)</h3>
+<section id="slide-orgf899b43">
+<h3 id="orgf899b43">How to train neural networks (theory)</h3>
 <p class="fragment appear">
 (Learn by) writing a toy implementation of back propagation 
 </p>
@@ -642,10 +474,9 @@ Sip your coffee and watch the loss function decrease
 </p>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org68457a6">
-<h3 id="org68457a6">Reality</h3>
+<section id="slide-org2b106a8">
+<h3 id="org2b106a8">Reality</h3>
 <p>
 <b>" The problem with Backpropagation is that it is a leaky abstraction."</b>
 -Andrej Karpathy
@@ -658,7 +489,7 @@ Sip your coffee and watch the loss function decrease
 <div class="figure">
 <p><img src="./images/lossfunction_heartrate.png" alt="lossfunction_heartrate.png" style="margin: 0 auto; display:block;" />
 </p>
-<p><span class="figure-number">Figure 17: </span>A heart rate or a loss function? :)</p>
+<p><span class="figure-number">Figure 14: </span>A heart rate or a loss function? :)</p>
 </div>
 
 </section>
@@ -668,7 +499,7 @@ Sip your coffee and watch the loss function decrease
 <div class="figure">
 <p><img src="./images/lossfunction2.png" alt="lossfunction2.png" style="margin: 0 auto; display:block;" />
 </p>
-<p><span class="figure-number">Figure 18: </span>Evades diagnosis</p>
+<p><span class="figure-number">Figure 15: </span>Evades diagnosis</p>
 </div>
 
 <p>
@@ -683,11 +514,18 @@ Check out <a href="https://lossfunctions.tumblr.com/">this page</a> for artistic
 </p>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org96745b5">
-<h3 id="org96745b5">Debug-ability is key</h3>
-<p class="fragment appear">
+<section id="slide-org47a24e3">
+<h3 id="org47a24e3">Debug-ability is crucial</h3>
+
+<div class="figure">
+<p><img src="./images/underthehood.jpg" alt="underthehood.jpg" />
+</p>
+</div>
+
+</section>
+<section >
+<p>
 Swanky UIs are common
 </p>
 
@@ -697,14 +535,13 @@ Swanky REPL are surprisingly rare
 
 </section>
 <section >
-<p class="fragment appear">
+<p>
 <b>“Any Product That Needs a Manual to Work Is Broken” – Elon Musk</b>
 </p>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orga881b77">
-<h3 id="orga881b77">Neural nets and functional programming</h3>
+<section id="slide-orgc294412">
+<h3 id="orgc294412">Neural nets and functional programming</h3>
 <p class="fragment appear">
 Pure functions
 </p>
@@ -732,7 +569,7 @@ Reduce
 
 </section>
 <section >
-<p class="fragment appear">
+<p>
 Iterate 
 </p>
 <div class="org-src-container">
@@ -741,24 +578,21 @@ Iterate
 </pre>
 </div>
 
-<div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-org78f59a4">
-<h2 id="org78f59a4">REPL driven development</h2>
-<div class="outline-text-2" id="text-org78f59a4">
+<section id="slide-orgb2d58ca">
+<h2 id="orgb2d58ca">REPL driven development</h2>
+<div class="outline-text-2" id="text-orgb2d58ca">
 </div>
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org0364044">
-<h3 id="org0364044">Querying network properties (a.k.a -&gt;)</h3>
-<div class="outline-text-3" id="text-org0364044">
+<section id="slide-org0785d12">
+<h3 id="org0785d12">Querying network properties</h3>
+<div class="outline-text-3" id="text-org0785d12">
 </div>
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org3545e99">
-<h4 id="org3545e99">What are the layers in the network</h4>
+<section id="slide-org9ec96e2">
+<h4 id="org9ec96e2">What are the layers in the network</h4>
 <div class="org-src-container">
 
 <pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> occupancy-net <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:nodes</span> keys<span style="color: #4f97d7;">)</span>
@@ -767,10 +601,9 @@ Iterate
 </pre>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orgdb0d64f">
-<h4 id="orgdb0d64f">How are layers connected</h4>
+<section id="slide-org018b2e2">
+<h4 id="org018b2e2">How are layers connected</h4>
 <div class="org-src-container">
 
 <pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> occupancy-net <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:edges</span><span style="color: #4f97d7;">)</span>
@@ -782,10 +615,9 @@ Iterate
 </pre>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orgd2dbb01">
-<h4 id="orgd2dbb01">Examine weights per layer</h4>
+<section id="slide-orgc11eae6">
+<h4 id="orgc11eae6">Examine weights per layer</h4>
 <div class="org-src-container">
 
 <pre  class="src src-clojure"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">defn</span> <span style="color: #bc6ec5; font-weight: bold;">mnist-initial-description</span>
@@ -816,10 +648,9 @@ Iterate
 </pre>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org24d099f">
-<h4 id="org24d099f">Part 2</h4>
+<section id="slide-orgcc6544c">
+<h4 id="orgcc6544c">Part 2</h4>
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -898,10 +729,9 @@ Parameter count: 849780
 </p>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org6b4595e">
-<h3 id="org6b4595e">Visualize the output of a hidden layer (a.k.a dissoc)</h3>
+<section id="slide-org1518b4a">
+<h3 id="org1518b4a">Visualize the output of a hidden layer</h3>
 <p>
 Exploring the Swish activation function
 </p>
@@ -912,13 +742,14 @@ Remove the penultimate layer (labels) and pass a range of inputs
 <div class="org-src-container">
 
 <pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">-&gt;</span> network <span style="color: #a45bad;">:compute-graph</span> <span style="color: #a45bad;">:nodes</span> keys<span style="color: #4f97d7;">)</span>
-<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">(</span><span style="color: #2aa1ae; background-color: #292e34;">:data</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:linear-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:mse-loss-1</span><span style="color: #2aa1ae; background-color: #292e34;">)</span>
+<span style="color: #2aa1ae; background-color: #292e34;">;;</span><span style="color: #2aa1ae; background-color: #292e34;">(</span><span style="color: #2aa1ae; background-color: #292e34;">:data</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:batch-normalization-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:swish-1</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:labels</span><span style="color: #2aa1ae; background-color: #292e34;"> </span><span style="color: #2aa1ae; background-color: #292e34;">:mse-loss-1</span><span style="color: #2aa1ae; background-color: #292e34;">)</span>
 </pre>
 </div>
 
 <div class="org-src-container">
 
-<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #ce537a; font-weight: bold;">execute</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>run <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>dissoc-layers-from-network network <span style="color: #a45bad;">:labels</span><span style="color: #bc6ec5;">)</span> input-data<span style="color: #4f97d7;">)</span>
+<pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">let</span> <span style="color: #bc6ec5;">[</span>network-minus-head <span style="color: #2d9574;">(</span><span style="color: #ce537a; font-weight: bold;">network</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>dissoc-layers-from-network network <span style="color: #a45bad;">:labels</span><span style="color: #2d9574;">)</span><span style="color: #bc6ec5;">]</span>
+  <span style="color: #bc6ec5;">(</span><span style="color: #ce537a; font-weight: bold;">execute</span><span style="color: #b2b2b2; background-color: #292b2e;">/</span>run network-minus-head input-data<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
 </pre>
 </div>
 
@@ -935,14 +766,9 @@ Compare Swish with Tanh and Logistic layers
 </p>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-orgd343417">
-<h3 id="orgd343417">Training (a.k.a iterate)</h3>
-<p>
-Train and test datasets are infinite sequences
-</p>
-
+<section id="slide-org828e711">
+<h3 id="org828e711">Training</h3>
 <div class="org-src-container">
 
 <pre  class="fragment appear"><span style="color: #4f97d7;">(</span><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #7590db;">trained-net</span>
@@ -992,35 +818,29 @@ Check how weights change over epochs
 <div class="figure">
 <p><img src="./images/conv_layer_weights.png" alt="conv_layer_weights.png" />
 </p>
-<p><span class="figure-number">Figure 22: </span>Convolution layer weights</p>
+<p><span class="figure-number">Figure 20: </span>Convolution layer weights</p>
 </div>
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org8d77d40">
-<h3 id="org8d77d40">Listeners</h3>
-<p class="fragment appear">
-To watch progress of the loss function
-</p>
+<section id="slide-org768857b">
+<h3 id="org768857b">Listeners</h3>
 <p class="fragment appear">
 Save the best model/kill training
 </p>
 <p class="fragment appear">
-Observe images/instances being classified
+Broadcast events at key milestones
 </p>
 
-<div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-orgad6f9a1">
-<h2 id="orgad6f9a1">Summary</h2>
-
-
-<div class="slide-footer"></div>
+<section id="slide-org310d95b">
+<h2 id="org310d95b">Summary</h2>
+<div class="outline-text-2" id="text-org310d95b">
+</div>
 </section>
-<section id="slide-org48bfb84">
-<h3 id="org48bfb84">What Cortex needs contributions on</h3>
+<section id="slide-org5ccc533">
+<h3 id="org5ccc533">What you could help Cortex with</h3>
 <p class="fragment appear">
 Support for Recurrent networks (e.g. text) 
 </p>
@@ -1037,12 +857,11 @@ Ingesting pre-trained networks
 Automatic differentiation
 </p>
 
-<div class="slide-footer"></div>
 </section>
 </section>
 <section>
-<section id="slide-orgb392ae4">
-<h2 id="orgb392ae4">Thanks</h2>
+<section id="slide-orgc353359">
+<h2 id="orgc353359">Thanks</h2>
 <p>
 Chris Nuernberger and the Thinktopic team
 </p>
@@ -1054,21 +873,16 @@ Mike Anderson
 <section >
 </section>
 <section >
-</section>
-<section >
-</section>
-<section >
 
-<div class="slide-footer"></div>
 </section>
-<section id="slide-org47ecf2c">
-<h4 id="org47ecf2c">References</h4>
+<section id="slide-orgd46658b">
+<h4 id="orgd46658b">References</h4>
 <ul>
 <li><a href="http://clojuredatascience.com">Clojure Data Science.com</a></li>
-<li>Office occupancy picture (<img src="https://c1.staticflickr.com/1/31/65165707_a9ee8be5e0_b.jpg" alt="65165707_a9ee8be5e0_b.jpg" />)</li>
+<li>Office occupancy picture  <img src="https://c1.staticflickr.com/1/31/65165707_a9ee8be5e0_b.jpg" alt="65165707_a9ee8be5e0_b.jpg" /></li>
+<li><a href="http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+">room occupancy</a> dataset</li>
 
 </ul>
-<div class="slide-footer"></div>
 </section>
 </section>
 </div>
@@ -1102,9 +916,6 @@ multiplex: {
 
 // Optional libraries used to extend on reveal.js
 dependencies: [
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
- { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
  { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
  { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
 });
