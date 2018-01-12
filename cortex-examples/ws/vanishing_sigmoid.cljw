@@ -469,6 +469,11 @@ edge-order
 ;;; * initialized well (with small values between +- 0.6)
 ;;; * Have changed a bit from the first iteration.
 ;;; 
+;;; 
+;;; # Fixing the problem.
+;;; 
+;;; Lets create a similar network, with sensible initial weights for the logistic layer, and test if the network can train a bit better
+;;; 
 ;; **
 
 ;; @@

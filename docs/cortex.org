@@ -1,11 +1,11 @@
-# #+REVEAL_ROOT: file:///home/kiran/src/github/inclojure-cortex/docs/
-#+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
+#+REVEAL_ROOT: file:///home/kiran/src/github/inclojure-cortex/docs/reveal36
+# #+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.6.0/
 #+TITLE:  Deep learning with Cortex
 #+AUTHOR: Kiran Karkera 
 #+EMAIL: Datacraft Sciences
 #+GITHUB: shark8me
 #+TWITTER: kaal_daari
-# #+REVEAL_THEME: night
+#+REVEAL_THEME: solarized
 #+STARTUP: overview
 #+STARTUP: content
 #+STARTUP: showall
@@ -14,8 +14,7 @@
 #+OPTIONS: slideNumber:true
 #+OPTIONS: reveal_title_slide:"<h1>%t</h1><h2>%a</h2><h3>%e</h3>"
 #+OPTIONS: toc:0
-#+REVEAL_EXTRA_CSS: ./night.css
-# #+REVEAL_MARGIN: 0.2
+#+REVEAL_EXTRA_CSS: ./my.css
 #+REVEAL_PLUGINS: (zoom notes )
 #+REVEAL_MAX_SCALE: 5 
 # * An introduction to Cortex
@@ -78,10 +77,9 @@ Multi target classification (e.g multiple objects in an image)
 *** Composability 
 
 #+ATTR_REVEAL: :frag appear
-Different layers can be combined in a [[http://colah.github.io/posts/2014-07-Conv-Nets-Modular/][modular fashion]] and computations are straightforward
+Different layers can be combined in a modular fashion and computations are straightforward
 
 #+REVEAL: split
-#+CAPTION: im2txt network provides descriptions of images
 #+ATTR_HTML: :style margin: 0 auto; display:block; :height 70%, :width 70%
   [[./images/example_captions.jpg]]
 
@@ -134,7 +132,7 @@ Goal is to predict when the room is occupied.
                        ;; parse lines and process
                        (mapv make-feature-vectors)   
                        ))
-(take 2 data-vectors)
+(take 1 data-vectors)
 
 #+END_SRC
 
@@ -142,8 +140,8 @@ Goal is to predict when the room is occupied.
 
 #+ATTR_REVEAL: :frag appear
 #+BEGIN_SRC sh 
-({:data [22.15 27.245 0.0 586.5 0.0044959713579516], :labels [0.0]} 
- {:data [20.89 23.445 0.0 450.5 0.00357640828064061], :labels [1.0]})
+({:data [22.15 27.245 0.0 586.5 0.0044959713579516], 
+  :labels [0.0]})
 
 #+END_SRC
 
@@ -153,21 +151,16 @@ Network is defined as a vector of layers
 #+ATTR_REVEAL: :frag appear
 Input layer take 3 arguments, the *x y z* dimensions of a cube
 #+ATTR_REVEAL: :frag appear
-Specify the input against the :id key 
-
+Input layer for room occupancy is 5(inputs) x 1 x 1 
 #+ATTR_REVEAL: :frag appear
 #+BEGIN_SRC clojure
-
-  ;;input layer for room occupancy is 5(inputs) x 1 x 1 
   (layers/input 5 1 1 :id :data)
-
 #+END_SRC
 
-
 #+ATTR_REVEAL: :frag appear
 #+BEGIN_SRC clojure
-;;data instance
-{:data [22.15 27.245 0.0 586.5 0.0044959713579516], :labels [0.0]}
+{:data [22.15 27.245 0.0 586.5 0.0044959713579516], 
+ :labels [0.0]}
 #+END_SRC
 
 *** Network definition 
@@ -236,10 +229,9 @@ Image of size 28 (length) x 28 (breadth) x 3 (depth)
 
 *** Network definition
 
+Input layer for an image of size 28 (length) x 28 (breadth) x 1 (depth)
 #+BEGIN_SRC clojure
-  ;;input layer for an image of size 28 (length) x 28 (breadth) x 1 (depth)
   (layers/input 28 28 1 :id :data)
-
 #+END_SRC
 
 
@@ -256,11 +248,7 @@ Image of size 28 (length) x 28 (breadth) x 3 (depth)
    (layers/max-pooling 2 0 2)
    (layers/batch-normalization)
    (layers/linear 1000)
-   (layers/relu :center-loss {:label-indexes {:stream :labels}
-                              :label-inverse-counts {:stream :labels}
-                              :labels {:stream :labels}
-                              :alpha 0.9
-                              :lambda 1e-4})
+   (layers/relu)
    (layers/dropout 0.5)
    (layers/linear num-classes)
    (layers/softmax :id :labels)])
@@ -391,21 +379,26 @@ Iterate
 #+ATTR_REVEAL: :frag appear
 #+BEGIN_SRC clojure
 (-> occupancy-net :compute-graph :nodes keys)
-;;
-;;(:data :batch-normalization-1 :linear-1 :labels :mse-loss-1)
 #+END_SRC
-
+-----
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC sh
+(:data :batch-normalization-1 :linear-1 :labels :mse-loss-1)
+#+END_SRC
 *** How are layers connected 
 
 #+ATTR_REVEAL: :frag appear
 #+BEGIN_SRC clojure
-
 (-> occupancy-net :compute-graph :edges)
-;;
-;;([:data :batch-normalization-1] 
-;; [:batch-normalization-1 :linear-1] 
-;; [:linear-1 :labels] 
-;; [:labels :mse-loss-1])
+#+END_SRC
+
+-----
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC sh
+([:data :batch-normalization-1] 
+ [:batch-normalization-1 :linear-1] 
+ [:linear-1 :labels] 
+ [:labels :mse-loss-1])
 #+END_SRC
 
 *** Examine weights per layer 
@@ -422,31 +415,28 @@ Iterate
    (layers/max-pooling 2 0 2)
    (layers/batch-normalization)
    (layers/linear 1000)
-   (layers/relu :center-loss {:label-indexes {:stream :labels}
-                              :label-inverse-counts {:stream :labels}
-                              :labels {:stream :labels}
-                              :alpha 0.9
-                              :lambda 1e-4})
+   (layers/relu)
    (layers/dropout 0.5)
    (layers/linear num-classes)
    (layers/softmax :id :labels)])
 
-;;create the network to accept 28 x 28 pixel inputs, 
-;;10 targets/labels (one each for digits 0-9)
 (def mnist (mnist-initial-description 28 28 10))
-
-(network/print-layer-summary mnist-net (traverse/training-traversal mnist-net))
-
 #+END_SRC
 
-*** Part 2 
-|                 type |            input |           output |  :bias |  :weights |
+#+REVEAL: split
+#+BEGIN_SRC clojure
+(network/print-layer-summary 
+  mnist-net 
+  (traverse/training-traversal mnist-net))
+#+END_SRC
+
+#+REVEAL: split
+|                 :type |            :input |           :output |  :bias |  :weights |
 |----------------------+------------------+------------------+--------+-----------|
 |              :linear |     50x4x4 - 800 |  1x1x1000 - 1000 | [1000] |   [1000 800] |
 |                :relu |  1x1x1000 - 1000 |  1x1x1000 - 1000 |        |              |
 |             :dropout |  1x1x1000 - 1000 |  1x1x1000 - 1000 |        |              |
 |              :linear |  1x1x1000 - 1000 |      1x1x10 - 10 |   [10] |   [10 1000] |
-|             :softmax |      1x1x10 - 10 |      1x1x10 - 10 |        |              |
 
 Parameter count: 849780
 
@@ -459,15 +449,20 @@ Exploring the Swish activation function
 
 #+ATTR_REVEAL: :frag appear
 Remove the penultimate layer (labels) and pass a range of inputs 
-#+ATTR_REVEAL: :frag appear
+#+REVEAL: split
 #+BEGIN_SRC clojure
 (-> network :compute-graph :nodes keys)
-;;(:data :batch-normalization-1 :swish-1 :labels :mse-loss-1)
 #+END_SRC
-
 #+ATTR_REVEAL: :frag appear
+-----
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC sh
+(:data :batch-normalization-1 :swish-1 :labels :mse-loss-1)
+#+END_SRC
+#+REVEAL: split
 #+BEGIN_SRC clojure
-(let [network-minus-head (network/dissoc-layers-from-network network :labels)]
+(let [network-minus-head 
+        (network/dissoc-layers-from-network network :labels)]
   (execute/run network-minus-head input-data))
 #+END_SRC
 
@@ -495,25 +490,26 @@ Returns a sequence with 10 iterations of trained network
 
 #+BEGIN_SRC clojure
 (->> trained-net (mapv :cv-loss))
-;;
-;;[nil 2.2406814049004633 
-;; 2.1851172560486454 2.1851172560486454 
-;; 2.1851172560486454 2.1822464148167136 
-;; 2.1734111466403503 2.1614423794394315 
-;; 2.1614423794394315 2.1614423794394315]
-
 #+END_SRC
-
+-----
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC sh
+[nil 2.2406814049004633 
+ 2.1851172560486454 2.1851172560486454 
+ 2.1851172560486454 2.1822464148167136 
+ 2.1734111466403503 2.1614423794394315 
+ 2.1614423794394315 2.1614423794394315]
+#+END_SRC
 #+REVEAL: split
 
 Check how weights change over epochs
 
 #+BEGIN_SRC clojure
-(-> network :compute-graph :buffers :convolutional-2-weights-1 :buffer)
+(-> network :compute-graph :buffers 
+            :convolutional-2-weights-1 :buffer)
 #+END_SRC
 
 #+REVEAL: split
-#+CAPTION: Convolution layer weights 
   [[./images/conv_layer_weights.png]]
 
 ** Listeners
