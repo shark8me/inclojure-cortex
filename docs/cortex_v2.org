@@ -1,0 +1,636 @@
+#+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
+#+TITLE:  Deep learning with Cortex
+#+AUTHOR: Kiran Karkera 
+#+EMAIL: Datacraft Sciences
+#+GITHUB: shark8me
+#+TWITTER: kaal_daari
+# #+REVEAL_THEME: night
+#+STARTUP: overview
+#+STARTUP: content
+#+STARTUP: showall
+#+STARTUP: showeverything
+#+OPTIONS: num:nil
+#+OPTIONS: slideNumber:true
+#+OPTIONS: reveal_title_slide:"<h1>%t</h1><h2>%a</h2><h3>%e</h3>"
+#+OPTIONS: toc:0
+#+REVEAL_EXTRA_CSS: ./night.css
+#+REVEAL_SLIDE_FOOTER: 
+# #+REVEAL_MARGIN: 0.2
+#+REVEAL_MAX_SCALE: 5 
+# * An introduction to Cortex
+
+* Outline 
+
+Context: Clojure, Cortex, Machine Learning
+#+ATTR_REVEAL: :frag appear
+Overview of Cortex
+#+ATTR_REVEAL: :frag appear
+Example of building networks 
+#+ATTR_REVEAL: :frag appear
+Recipes 
+
+* Context 
+
+Machine learning/data science is an overloaded term
+
+#+REVEAL: split
+
+#+CAPTION: Blind men and the elephant 
+
+#+ATTR_HTML: :style margin: 0 auto; display:block;
+  [[./images/blind_men.jpg]]
+
+** Estimation vs Prediction 
+
+#+ATTR_REVEAL: :frag appear
+ Estimation: coming up with values of unknown parameters   
+
+#+ATTR_REVEAL: :frag appear
+ Prediction: focused on accuracy
+
+#+BEGIN_NOTES
+ - Examine causes of diseases 
+ - Example: image classification 
+#+END_NOTES
+
+** Research vs production use 
+
+#+ATTR_REVEAL: :frag appear
+ Exploration (given a dataset, train a classifier, produce a report) 
+
+#+ATTR_REVEAL: :frag appear
+ Production (putting a trained model into a production environment)
+
+
+* Why use Clojure for Machine Learning?
+
+#+ATTR_REVEAL: :frag appear
+Data-oriented functional programming with a focus on composable sequence processing 
+#+ATTR_REVEAL: :frag appear
+Excellent tooling for REPL-driven development
+#+ATTR_REVEAL: :frag appear
+Interop with Java, Scala and Javascript 
+#+ATTR_REVEAL: :frag appear
+Smooth transition from research to production
+
+#+REVEAL: split
+  [[./images/datascienceaxes.png]]
+
+#+REVEAL: split
+
+| *Library* | *Niche* |
+|Gorilla-repl| Notebooks/visualization |
+|Storm | Stream processing |
+|Onyx | Stream Processing |
+|Sparkling/Flambo | Distributed jobs on Spark |
+|Datomic | Supports "time travel" over database history |
+
+
+* What is Machine Learning 
+
+*** Supervised Classification:
+
+#+ATTR_HTML: :style margin: 0 auto; display:block;
+  [[./images/woof_meow.jpg]]
+
+
+[fn:2] [[https://www.quora.com/What-is-the-difference-between-supervised-and-unsupervised-learning-algorithms/answer/Shehroz-Khan-2?srid=o0Wh][Quora post reference]]
+
+
+** Why are Neural Networks popular for classification?
+
+*** State of the art performance
+
+#+REVEAL: split
+One of the early successes(1992) for neural nets was reading [[http://yann.lecun.com/exdb/publis/pdf/matan-92.pdf][the zip code]] in postal mail.
+
+#+ATTR_HTML: :style margin: 0 auto; display:block;
+  [[./images/MNIST.png]] 
+
+#+ATTR_REVEAL: :frag appear
+99.81% accuracy on MNIST, close to or better than human performance
+
+*** Flexibility
+
+Neural Nets can accommodate several outputs:
+#+ATTR_REVEAL: :frag appear
+Single target classification (e.g. Spam classification)
+#+ATTR_REVEAL: :frag appear
+Multi target classification (e.g multiple objects in an image)
+
+#+CAPTION: Classifying gender, age and skin colour
+
+#+ATTR_REVEAL: :frag appear
+#+ATTR_HTML: :style margin: 0 auto; display:block;
+[[./images/face_gender.png]]
+
+#+REVEAL: split
+
+*** Composability 
+
+#+ATTR_REVEAL: :frag appear
+Different layers can be combined in a [[http://colah.github.io/posts/2014-07-Conv-Nets-Modular/][modular fashion]] and computations are straightforward
+
+#+REVEAL: split
+#+CAPTION: im2txt network provides descriptions of images
+#+ATTR_HTML: :style margin: 0 auto; display:block; :height 70%, :width 70%
+  [[./images/example_captions.jpg]]
+
+* Features of Cortex
+
+Deep learning library written in Clojure
+#+ATTR_REVEAL: :frag appear
+Data centric interface
+#+ATTR_REVEAL: :frag appear
+Performant, Memory efficient training on GPUs
+#+ATTR_REVEAL: :frag appear
+Supports Convolutional NNs (image processing)
+#+ATTR_REVEAL: :frag appear
+Partial support for ingesting pre-trained networks
+#+ATTR_REVEAL: :frag appear
+Abstraction layers for CUDA / CPU
+#+ATTR_REVEAL: :frag appear
+- Enables some level of shared implementation between a Cpu, Cuda, OpenCL
+
+* Cortex Examples
+
+** Predicting office room occupancy 
+
+#+ATTR_HTML: :style margin: 0 auto; display:block; :height 50% 
+[[./images/office_occupancy.jpg]]
+ 
+#+REVEAL: split
+
+#+ATTR_REVEAL: :frag appear
+Train with 8k instances from room occupancy dataset 
+
+#+ATTR_REVEAL: :frag appear
+Contains measurements of light, temperature, humidity and CO2 of an office room. 
+
+#+ATTR_REVEAL: :frag appear
+Goal is to predict when the room is occupied.
+ 
+#+REVEAL: split
+
+#+ATTR_HTML: :style margin: 0 auto; display:block; 
+[[./images/occupancy_dataset.png]]
+
+*** Data ingestion
+
+#+BEGIN_SRC clojure
+
+(def data-vectors (->> "resources/occupancy/datatraining.csv"
+                       (slurp)
+                       ;; parse lines   
+                       ))
+(take 2 data-vectors)
+
+#+END_SRC
+
+----- 
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC sh 
+([23.18 27.272 426.0 721.25 0.00479298817650529 1.0] 
+ [23.15 27.2675 429.5 714.0 0.00478344094931065 1.0])
+#+END_SRC
+
+
+*** Create training data format
+
+
+#+BEGIN_SRC clojure
+
+(defn make-feature-vec
+  [data-vectors]
+  (->> data-vectors 
+       (mapv (fn[m] {:data (-> m butlast vec) :labels (-> m last vector)}))))
+  
+(->> (make-feature-vec data-vectors)
+     (take 2))
+
+#+END_SRC
+
+----- 
+
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC sh 
+({:data [22.15 27.245 0.0 586.5 0.0044959713579516], :labels [0.0]} 
+ {:data [20.89 23.445 0.0 450.5 0.00357640828064061], :labels [1.0]})
+
+#+END_SRC
+
+** Define the layers 
+
+Network is defined as a vector of layers
+#+ATTR_REVEAL: :frag appear
+Input layer take 3 arguments, the *x y z* dimensions of a cube
+#+ATTR_REVEAL: :frag appear
+Specify the input against the :id key 
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+
+  ;;input layer for room occupancy is 5(inputs) x 1 x 1 
+  (layers/input 5 1 1 :id :data)
+
+#+END_SRC
+
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+;;data instance
+{:data [22.15 27.245 0.0 586.5 0.0044959713579516], :labels [0.0]}
+#+END_SRC
+
+*** Network definition 
+
+#+BEGIN_SRC clojure
+
+(def description
+  [(layers/input 5 1 1 :id :data)
+   (layers/batch-normalization)
+   (layers/linear 1)
+   (layers/logistic :id :labels)])
+
+#+END_SRC
+
+#+REVEAL: split
+[[./images/occupancy_network.png]]
+
+*** Training
+
+Train it for 10 *epochs*
+#+ATTR_REVEAL: :frag appear
+One epoch == One pass on the dataset 
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+
+(def trained-occupancy-net 
+  (let [[train-ds test-ds] train-test-ds]
+    (train-n description train-ds test-ds                            
+             :epoch-count 10 )))
+
+#+END_SRC
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC sh
+|     :type |              :value | :lambda | :node-id | :argument |
+|-----------+---------------------+---------+----------+-----------|
+| :mse-loss | 0.03046061750823965 |     1.0 |  :labels |           |
+
+Loss for epoch  10: (current) 0.03046062 (best) 0.03308501 [new best]
+
+#+END_SRC
+
+*** Evaluate results 
+
+Evaluate the accuracy (and other metrics) on the test set
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC sh 
+[(accuracy actual predicted) (f1-score actual predicted 1.0)]
+#+END_SRC
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC sh 
+[0.9447852760736196 0.8888888888888891]
+#+END_SRC
+
+** Recognizing hand-written digits
+
+#+ATTR_HTML: :style margin: 0 auto; display:block; :height 70% 
+[[./images/mnist-sample.png]]
+
+#+ATTR_REVEAL: :frag appear
+Image of size 28 (length) x 28 (breadth) x 3 (depth)
+
+*** Network definition
+
+#+BEGIN_SRC clojure
+  ;;input layer for an image of size 28 (length) x 28 (breadth) x 3 (depth)
+  (layers/input 28 28 3 :id :data)
+
+#+END_SRC
+
+
+#+REVEAL: split
+#+BEGIN_SRC clojure
+
+(defn mnist-initial-description
+  [input-w input-h num-classes]
+  [(layers/input input-w input-h 1 :id :data)
+   (layers/convolutional 5 0 1 20)
+   (layers/max-pooling 2 0 2)
+   (layers/relu)
+   (layers/convolutional 5 0 1 50)
+   (layers/max-pooling 2 0 2)
+   (layers/batch-normalization)
+   (layers/linear 1000)
+   (layers/relu :center-loss {:label-indexes {:stream :labels}
+                              :label-inverse-counts {:stream :labels}
+                              :labels {:stream :labels}
+                              :alpha 0.9
+                              :lambda 1e-4})
+   (layers/dropout 0.5)
+   (layers/linear num-classes)
+   (layers/softmax :id :labels)])
+
+#+END_SRC
+
+*** Training progress 
+
+#+REVEAL: split
+#+ATTR_HTML: :style margin: 0 auto; display:block; :height 100% :width 120%
+[[./images/mnist_webserver.png]]
+
+#+REVEAL: split
+#+REVEAL_HTML: <p><video data-autoplay width="180%" src="./images/5_3.mkv" loop ></video></p>
+
+#+REVEAL: split
+[[./images/mnist_test_loss.png]]
+
+#+REVEAL: split
+[[./images/tensorboard_mnist_weights.png]]
+
+#+REVEAL: split
+[[./images/tboard_mnist_convbias.png]]
+
+* Backpropagation
+
+[[./images/dartboard.jpg]]
+
+
+[fn:1] Xkcd [[https://xkcd.com/1838/][link
+]] 
+*** Artifacts 
+
+#+ATTR_REVEAL: :frag appear
+Forward pass
+#+ATTR_REVEAL: :frag appear
+Backward pass
+#+ATTR_REVEAL: :frag appear
+Accuracy / Loss function
+#+ATTR_REVEAL: :frag appear
+Gradient
+#+ATTR_REVEAL: :frag appear
+
+** How to train neural networks (theory)
+
+#+ATTR_REVEAL: :frag appear
+(Learn by) writing a toy implementation of back propagation 
+
+#+ATTR_REVEAL: :frag appear
+Stack up layers like Lego blocks
+
+#+ATTR_REVEAL: :frag appear
+Sip your coffee and watch the loss function decrease
+
+#+REVEAL: split
+
+#+ATTR_HTML: :style margin: 0 auto; display:block; 
+[[./images/ideallossfunction1.png]]
+
+** Reality
+
+*" The problem with Backpropagation is that it is a leaky abstraction."*
+-Andrej Karpathy
+
+#+REVEAL: split
+
+#+CAPTION: A heart rate or a loss function? :)
+#+ATTR_HTML: :style margin: 0 auto; display:block; 
+  [[./images/lossfunction_heartrate.png]]
+
+#+REVEAL: split
+
+#+CAPTION: Evades diagnosis
+#+ATTR_HTML: :style margin: 0 auto; display:block; 
+  [[./images/lossfunction2.png]]
+
+Check out [[https://lossfunctions.tumblr.com/][this page]] for artistic loss functions
+
+#+REVEAL: split
+#+ATTR_HTML: :style margin: 0 auto; display:block;
+[[./images/xkcd.png]]
+
+** Debug-ability is key
+
+[[./images/underthehood.jpg]]
+
+#+REVEAL: split
+#+ATTR_REVEAL: :frag appear
+Swanky UIs are common
+
+#+ATTR_REVEAL: :frag appear
+Swanky REPL are surprisingly rare
+
+#+REVEAL: split
+#+ATTR_REVEAL: :frag appear
+*“Any Product That Needs a Manual to Work Is Broken” – Elon Musk*
+
+** Neural nets and functional programming 
+
+#+ATTR_REVEAL: :frag appear
+Pure functions
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+(layer inputs)
+#+END_SRC
+
+#+REVEAL: split
+Reduce 
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+(reduce (fn[last-output layer]  
+            (layer last-output)) 
+          
+            input
+            [layer1 layer2 layer3])
+#+END_SRC
+
+
+#+ATTR_REVEAL: :frag appear
+Iterate 
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+(iterate train-fn initial-network)
+#+END_SRC
+
+* REPL driven development 
+
+** Querying network properties (a.k.a ->)
+ 
+*** What are the layers in the network
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+(-> occupancy-net :compute-graph :nodes keys)
+;;
+;;(:data :batch-normalization-1 :linear-1 :labels :mse-loss-1)
+#+END_SRC
+
+*** How are layers connected 
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+
+(-> occupancy-net :compute-graph :edges)
+;;
+;;([:data :batch-normalization-1] 
+;; [:batch-normalization-1 :linear-1] 
+;; [:linear-1 :labels] 
+;; [:labels :mse-loss-1])
+#+END_SRC
+
+*** Examine weights per layer 
+
+#+BEGIN_SRC clojure
+
+(defn mnist-initial-description
+  [input-w input-h num-classes]
+  [(layers/input input-w input-h 1 :id :data)
+   (layers/convolutional 5 0 1 20)
+   (layers/max-pooling 2 0 2)
+   (layers/relu)
+   (layers/convolutional 5 0 1 50)
+   (layers/max-pooling 2 0 2)
+   (layers/batch-normalization)
+   (layers/linear 1000)
+   (layers/relu :center-loss {:label-indexes {:stream :labels}
+                              :label-inverse-counts {:stream :labels}
+                              :labels {:stream :labels}
+                              :alpha 0.9
+                              :lambda 1e-4})
+   (layers/dropout 0.5)
+   (layers/linear num-classes)
+   (layers/softmax :id :labels)])
+
+;;create the network to accept 28 x 28 pixel inputs, 
+;;10 targets/labels (one each for digits 0-9)
+(def mnist (mnist-initial-description 28 28 10))
+
+(network/print-layer-summary mnist-net (traverse/training-traversal mnist-net))
+
+#+END_SRC
+
+*** Part 2 
+|                 type |            input |           output |  :bias |  :weights |
+|----------------------+------------------+------------------+--------+-----------|
+|              :linear |     50x4x4 - 800 |  1x1x1000 - 1000 | [1000] |   [1000 800] |
+|                :relu |  1x1x1000 - 1000 |  1x1x1000 - 1000 |        |              |
+|             :dropout |  1x1x1000 - 1000 |  1x1x1000 - 1000 |        |              |
+|              :linear |  1x1x1000 - 1000 |      1x1x10 - 10 |   [10] |   [10 1000] |
+|             :softmax |      1x1x10 - 10 |      1x1x10 - 10 |        |              |
+
+Parameter count: 849780
+
+#+REVEAL: split
+[[./images/weights_barchart.png]]
+
+** Visualize the output of a hidden layer (a.k.a dissoc)
+
+Exploring the Swish activation function
+
+#+ATTR_REVEAL: :frag appear
+Remove the penultimate layer (labels) and pass a range of inputs 
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+(-> network :compute-graph :nodes keys)
+;;(:data :batch-normalization-1 :swish-1 :labels :mse-loss-1)
+#+END_SRC
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+(let [network-minus-head (network/dissoc-layers-from-network network :labels)]
+  (execute/run network-minus-head input-data))
+#+END_SRC
+
+#+REVEAL: split
+
+Compare Swish with Tanh and Logistic layers
+
+[[./images/swish4.png]]
+
+** Training (a.k.a iterate)
+
+Train and test datasets are infinite sequences
+
+#+ATTR_REVEAL: :frag appear
+#+BEGIN_SRC clojure
+(def trained-net
+ (let [[train-ds test-ds] (get-ds)
+         train-fn #(etrain/train-n % train-ds test-ds)]
+     (->> network
+          (iterate train-fn)
+          (take 10))))
+#+END_SRC
+
+#+REVEAL: split
+Returns a sequence with 10 iterations of trained network
+
+#+BEGIN_SRC clojure
+(->> trained-net (mapv :cv-loss))
+;;
+;;[nil 2.2406814049004633 
+;; 2.1851172560486454 2.1851172560486454 
+;; 2.1851172560486454 2.1822464148167136 
+;; 2.1734111466403503 2.1614423794394315 
+;; 2.1614423794394315 2.1614423794394315]
+
+#+END_SRC
+
+#+REVEAL: split
+
+Check how weights change over epochs
+
+#+BEGIN_SRC clojure
+(-> network :compute-graph :buffers :convolutional-2-weights-1 :buffer)
+#+END_SRC
+
+#+REVEAL: split
+#+CAPTION: Convolution layer weights 
+  [[./images/conv_layer_weights.png]]
+
+** Listeners
+
+#+ATTR_REVEAL: :frag appear
+To watch progress of the loss function
+#+ATTR_REVEAL: :frag appear
+Save the best model/kill training
+#+ATTR_REVEAL: :frag appear
+Observe images/instances being classified
+
+* Summary 
+
+** What you could help Cortex with
+
+#+ATTR_REVEAL: :frag appear
+Support for Recurrent networks (e.g. text) 
+#+ATTR_REVEAL: :frag appear
+Java based alternative is Deeplearning4j
+#+ATTR_REVEAL: :frag appear
+Recent network structures (e.g. Inception / Capsule networks). 
+#+ATTR_REVEAL: :frag appear
+Ingesting pre-trained networks
+#+ATTR_REVEAL: :frag appear
+Automatic differentiation
+
+* Thanks
+
+Chris Nuernberger and the Thinktopic team
+#+ATTR_REVEAL: :frag appear
+Mike Anderson 
+
+#+REVEAL: split
+#+REVEAL: split
+#+REVEAL: split
+#+REVEAL: split
+
+*** References
+
+- [[http://clojuredatascience.com][Clojure Data Science.com]]
+- Office occupancy picture (https://c1.staticflickr.com/1/31/65165707_a9ee8be5e0_b.jpg)
+- [[http://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+][room occupancy]] dataset
