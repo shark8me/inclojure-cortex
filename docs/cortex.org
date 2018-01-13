@@ -5,7 +5,7 @@
 #+EMAIL: Datacraft Sciences
 #+GITHUB: shark8me
 #+TWITTER: kaal_daari
-#+REVEAL_THEME: solarized
+#+REVEAL_THEME: serif
 #+STARTUP: overview
 #+STARTUP: content
 #+STARTUP: showall
@@ -521,7 +521,7 @@ Broadcast events at key milestones
 
 * Summary 
 
-** What you could help Cortex with
+** How you could help Cortex grow
 
 #+ATTR_REVEAL: :frag appear
 Support for Recurrent networks (e.g. text) 
@@ -541,6 +541,8 @@ Chris Nuernberger and the Thinktopic team
 Mike Anderson 
 
 #+REVEAL: split
+
+** Notebook link : https://goo.gl/jb8bEX
 #+REVEAL: split
 
 *** References
