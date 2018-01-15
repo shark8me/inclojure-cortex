@@ -14,7 +14,7 @@ As an example, the vanishing sigmoid worksheet open at this local link in your b
 
 * [Building a network](http://viewer.gorilla-repl.org/view.html?source=github&user=shark8me&repo=inclojure-cortex&path=cortex-examples/ws/occupancy.cljw) to train the room occupancy dataset 
 * [Comparing different activation](http://viewer.gorilla-repl.org/view.html?source=github&user=shark8me&repo=inclojure-cortex&path=cortex-examples/ws/matrix_mult.cljw) functions in Cortex
-* [Replicating](http://viewer.gorilla-repl.org/view.html?source=github&user=shark8me&repo=inclojure-cortex&path=cortex-examples/ws/vanishing_sigmoid.cljw) the [vanishing sigmoid problem] (https://medium.com/@karpathy/yes-you-should-understand-backprop-e2f06eab496b). We explore the gradients and weights of the inner layers .
+* [Replicating](http://viewer.gorilla-repl.org/view.html?source=github&user=shark8me&repo=inclojure-cortex&path=cortex-examples/ws/vanishing_sigmoid.cljw) the [vanishing sigmoid problem](https://medium.com/@karpathy/yes-you-should-understand-backprop-e2f06eab496b). We explore the gradients and weights of the inner layers .
 
 
 ## License
