@@ -19,3 +19,6 @@ checkouts
 .lein-*
 .nrepl-port
 .idea/
+cortex-examples/mnist
+cortex-examples/.gorilla-port
+cortex-examples/trained-networks
